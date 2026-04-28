@@ -140,7 +140,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
 			staticip = "dynamic.pool"
 			cmd := exec.Command("/bin/bash", "-c",
 				fmt.Sprintf(
-					"cd /opt/scripts/ && "+
+					"cd /opt/openvpn-ui/scripts/ && "+
 						"export KEY_NAME=%s &&"+
 						"export TFA_NAME=%s &&"+
 						"export TFA_ISSUER=\"%s\" &&"+
@@ -165,7 +165,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
 			logs.Info("No password and but have ip")
 			cmd := exec.Command("/bin/bash", "-c",
 				fmt.Sprintf(
-					"cd /opt/scripts/ && "+
+					"cd /opt/openvpn-ui/scripts/ && "+
 						"export KEY_NAME=%s &&"+
 						"export TFA_NAME=%s &&"+
 						"export TFA_ISSUER=\"%s\" &&"+
@@ -194,7 +194,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
 			staticip = "dynamic.pool"
 			cmd := exec.Command("/bin/bash", "-c",
 				fmt.Sprintf(
-					"cd /opt/scripts/ && "+
+					"cd /opt/openvpn-ui/scripts/ && "+
 						"export KEY_NAME=%s &&"+
 						"export TFA_NAME=%s &&"+
 						"export TFA_ISSUER=\"%s\" &&"+
@@ -219,7 +219,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
 			logs.Info("Password and IP")
 			cmd := exec.Command("/bin/bash", "-c",
 				fmt.Sprintf(
-					"cd /opt/scripts/ && "+
+					"cd /opt/openvpn-ui/scripts/ && "+
 						"export KEY_NAME=%s &&"+
 						"export TFA_NAME=%s &&"+
 						"export TFA_ISSUER=\"%s\" &&"+
@@ -248,7 +248,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
 func RevokeCertificate(name string, serial string, tfaname string) error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
-			"cd /opt/scripts/ && "+
+			"cd /opt/openvpn-ui/scripts/ && "+
 				"export KEY_NAME=%s &&"+
 				"export TFA_NAME=%s &&"+
 				"./revoke.sh %s %s", name, tfaname, name, serial))
@@ -265,7 +265,7 @@ func RevokeCertificate(name string, serial string, tfaname string) error {
 func Restart() error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
-			"cd /opt/scripts/ && "+
+			"cd /opt/openvpn-ui/scripts/ && "+
 				"./restart.sh"))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
 	output, err := cmd.CombinedOutput()
@@ -281,7 +281,7 @@ func BurnCertificate(CN string, serial string, tfaname string) error {
 	logs.Info("Lib: Burning certificate with parameters: CN=%s, serial=%s, tfaname=%s", CN, serial, tfaname)
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
-			"cd /opt/scripts/ && "+
+			"cd /opt/openvpn-ui/scripts/ && "+
 				"export TFA_NAME=%s &&"+
 				"./rmcert.sh %s %s", tfaname, CN, serial))
 	cmd.Dir = state.GlobalCfg.OVConfigPath
@@ -297,7 +297,7 @@ func BurnCertificate(CN string, serial string, tfaname string) error {
 func RenewCertificate(name string, localip string, serial string, tfaname string) error {
 	cmd := exec.Command("/bin/bash", "-c",
 		fmt.Sprintf(
-			"cd /opt/scripts/ && "+
+			"cd /opt/openvpn-ui/scripts/ && "+
 				"export KEY_NAME=%s &&"+
 				"export TFA_NAME=%s &&"+
 				"./renew.sh %s %s %s", name, tfaname, name, localip, serial))

@@ -1,4 +1,4 @@
-management 0.0.0.0 2080  # Don't change this line. OpenVPN UI uses this feature to manage the server 
+management 127.0.0.1 2080  # Don't change this line. OpenVPN UI uses this feature to manage the server 
 
 dev {{ .Device }}
 port {{ .Port }}

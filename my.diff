@@ -1,0 +1,2310 @@
+diff --git a/.gitignore b/.gitignore
+index 420709c..ca18793 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -3,8 +3,7 @@ data.db
+ openvpn/
+ easy-rsa/pki/vars
+ easy-rsa/easy-rsa.vars
+-openvpn-ui.Bullseye.x86_64.tar.gz
+ easy-rsa/pki/index.txt
+ build/qrencode
+ openvpn-ui.tar.gz
+-qrencode
+\ No newline at end of file
++qrencode
+diff --git a/build/assets/app.conf b/build/assets/app.conf
+deleted file mode 100644
+index 8aa1e1f..0000000
+--- a/build/assets/app.conf
++++ /dev/null
+@@ -1,21 +0,0 @@
+-; we use this when building the app.
+-appname = openvpn-ui
+-httpport = 8080
+-runmode = prod
+-EnableGzip = true
+-EnableAdmin = false
+-sessionon = true
+-CopyRequestBody = true
+-AuthType = "password"
+-DbPath = "./db/data.db"
+-EasyRsaPath = "/usr/share/easy-rsa"
+-OpenVpnPath = "/etc/openvpn"
+-OpenVpnManagementAddress = "openvpn:2080"
+-OpenVpnManagementNetwork = "tcp"
+-OVConfigLogVerbose = "1"
+-
+-# google config
+-googleClientID = your-google-clientid
+-googleClientSecret = your-google-secret
+-googleRedirectURL = http://localhost:8080/auth/google/callback
+-allowedDomains = yourdomain.com,anotherdomain.com
+\ No newline at end of file
+diff --git a/build/assets/backup.sh b/build/assets/backup.sh
+deleted file mode 100644
+index 2037be7..0000000
+--- a/build/assets/backup.sh
++++ /dev/null
+@@ -1,83 +0,0 @@
+-#!/bin/bash
+-#VERSION 1.2 by d3vilh@github.com aka Mr. Philipp
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-if [[ -z $1 || -z $2 || -z $3 ]]; then
+-    echo -e "\n\033[1mScript for Backing up or Restoration of OpenVPN Server Environment\033[0m"
+-    echo -e ' Script usage: \n\n \033[1;32mBackup usage:\033[0m sudo ./backup.sh -b "OpenVPN Server env" "Backup directory"\n  \033[1;32mBackup example:\033[0m sudo ./backup.sh -b ~/openvpn-server backup/openvpn-server-030923\n\n \033[1;34mRestore usage:\033[0m sudo ./backup.sh -r "OpenVPN Server env" "Backup directory"\n  \033[1;34mRestore example:\033[0m sudo ./backup.sh -r ~/openvpn-server backup/openvpn-server-030923\n'
+-    exit 1
+-fi
+-
+-ACTION=$1
+-SERVER_ENV=$2
+-BACKUP_DIR=$3
+-
+-if [[ $ACTION == "-b" ]]; then
+-    # Prompt to confirm restore action
+-    read -p "Are we going to backup enviroment from \"$SERVER_ENV\" to \"$BACKUP_DIR\"? (y/n) " -n 1 -r
+-    echo
+-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+-        # Perform backup action
+-        echo -e "\033[1;32mPerforming backup\033[0m"
+-        echo -e " Backup OpenVPN Server Environment from \"$SERVER_ENV\" to \"$BACKUP_DIR\""
+-        mkdir -p $BACKUP_DIR
+-
+-        # Backup files
+-        cp -Rp $SERVER_ENV/config $BACKUP_DIR
+-        echo " OpenVPN config backed up"
+-        cp -Rp $SERVER_ENV/db $BACKUP_DIR
+-        if [ ! -f "$BACKUP_DIR/db/data.db" ]; then
+-            echo " You pronbably have old version of OpenVPN-UI, backing up your DB with docker cp"
+-            mkdir -p $BACKUP_DIR/db; mkdir -p $SERVER_ENV/db;
+-            sudo docker cp openvpn-ui:/opt/openvpn-ui/data.db $BACKUP_DIR/db/data.db
+-            sudo cp -p $BACKUP_DIR/db/data.db $SERVER_ENV/db/data.db
+-        fi
+-        echo " OpenVPN-UI db backed up"
+-        cp -Rp $SERVER_ENV/pki $BACKUP_DIR
+-        echo " OpenVPN pki backed up"
+-        cp -Rp $SERVER_ENV/staticclients $BACKUP_DIR
+-        echo " OpenVPN staticclients backed up"
+-        cp -Rp $SERVER_ENV/clients $BACKUP_DIR
+-        echo " OpenVPN clients backed up"
+-        cp -Rp $SERVER_ENV/fw-rules.sh $BACKUP_DIR/fw-rules.sh
+-        echo " OpenVPN fw-rules.sh backed up"
+-        cp -Rp $SERVER_ENV/docker-compose.yml $BACKUP_DIR/docker-compose.yml
+-        echo " OpenVPN docker-compose.yml backed up"
+-
+-        echo -e "\033[1;32mBackup created at $BACKUP_DIR\033[0m"
+-    else
+-        echo -e "\033[1;31mBackup creation cancelled!\033[0m"
+-        exit 1
+-    fi
+-elif [[ $ACTION == "-r" ]]; then
+-    # Prompt to confirm restore action
+-    read -p "Are you sure you want to delete enviroment in \"$SERVER_ENV\" and restore from \"$BACKUP_DIR\"? (y/n) " -n 1 -r
+-    echo
+-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+-        # Perform restore action
+-        echo -e "\033[1;34mPerforming Restore \033[0m"
+-        rm -rf $SERVER_ENV/config; cp -Rp $BACKUP_DIR/config $SERVER_ENV
+-        echo " OpenVPN config restored"
+-        rm -rf $SERVER_ENV/db; cp -Rp $BACKUP_DIR/db $SERVER_ENV
+-        echo " OpenVPN-UI db restored"
+-        rm -rf $SERVER_ENV/pki; cp -Rp $BACKUP_DIR/pki $SERVER_ENV
+-        echo " OpenVPN pki restored"
+-        rm -rf $SERVER_ENV/staticclients; cp -Rp $BACKUP_DIR/staticclients $SERVER_ENV
+-        echo " OpenVPN staticclients restored"
+-        rm -rf $SERVER_ENV/clients; cp -Rp $BACKUP_DIR/clients $SERVER_ENV
+-        echo " OpenVPN clients restored"
+-        rm -rf $SERVER_ENV/fw-rules.sh; cp -Rp $BACKUP_DIR/fw-rules.sh $SERVER_ENV/fw-rules.sh
+-        echo " OpenVPN fw-rules.sh restored"
+-        rm -rf $SERVER_ENV/docker-compose.yml; cp -Rp $BACKUP_DIR/docker-compose.yml $SERVER_ENV/docker-compose.yml
+-        echo " OpenVPN docker-compose.yml restored"
+-        echo -e "\033[1;34mRestore Completed!\033[0m"
+-    else
+-        echo -e "\033[1;31mRestore cancelled!\033[0m"
+-        exit 1
+-    fi
+-else
+-    # Invalid action
+-    echo  -e "\033[1;31mInvalid option: $ACTION\033[0m"
+-    exit 1
+-fi
+diff --git a/build/assets/easyrsa-tools.lib b/build/assets/easyrsa-tools.lib
+deleted file mode 100755
+index 0131f63..0000000
+--- a/build/assets/easyrsa-tools.lib
++++ /dev/null
+@@ -1,1245 +0,0 @@
+-#!/bin/sh
+-
+-# Easy-RSA 3 Tools library
+-#
+-# Copyright (C) 2024 - The Open-Source OpenVPN development community.
+-# A full list of contributors can be found on Github at:
+-#   https://github.com/OpenVPN/easy-rsa/graphs/contributors
+-#
+-# This code released under version 2 of the GNU GPL; see COPYING
+-# and the Licensing/ directory of this project for full licensing
+-# details.
+-
+-# Easy-RSA 3.x does not source into the environment directly.
+-# Complain if a user tries to do this:
+-if [ -z "$EASYRSA_TOOLS_CALLER" ]; then
+-	return 1
+-fi
+-
+-# Set tools version
+-export EASYRSA_TOOLS_VERSION=322
+-
+-# Verify OpenVPN binary
+-verify_openvpn() {
+-	# Try to find openvpn
+-	set_var EASYRSA_OPENVPN "$(which openvpn)"
+-	if [ -f "$EASYRSA_OPENVPN" ]; then
+-		verbose \
+-			"verify_openvpn - EASYRSA_OPENVPN='$EASYRSA_OPENVPN'"
+-	else
+-		user_error "Cannot find an OpenVPN binary."
+-	fi
+-} # => verify_openvpn()
+-
+-# OpenVPN TLS Auth/Crypt Key
+-tls_key_gen() {
+-	case "$1" in
+-		tls-crypt-v2)
+-			print "Unavailable."
+-			cleanup
+-		;;
+-		tls-crypt) tls_key_type=TLS-CRYPT ;;
+-		tls-auth) tls_key_type=TLS-AUTH ;;
+-		*) die "Unknown key type: '$1'"
+-	esac
+-
+-	# Over write error message
+-	tls_key_error_msg="
+-If this file is changed then it MUST be redistributed to ALL servers
+-AND clients, to be in effect. Do NOT change this existing file."
+-
+-	# Assign possible TLS key sources
+-	tls_key_file="$EASYRSA_PKI"/private/easyrsa-tls.key
+-	old_tls_key_file="$EASYRSA_PKI"/easyrsa-keepsafe-tls.key
+-
+-	# Forbid overwrite - default TLS key
+-	if [ -f "$tls_key_file" ]; then
+-		tls_key_data="$(cat "$tls_key_file")"
+-		case "$tls_key_data" in
+-			*'TLS-CRYPT'*) tls_key_type=TLS-CRYPT ;;
+-			*'TLS-AUTH'*) tls_key_type=TLS-AUTH ;;
+-			*) tls_key_type=UNKNOWN
+-		esac
+-
+-		user_error "\
+-Cannot overwrite existing $tls_key_type Key:
+-* $tls_key_file
+-$tls_key_error_msg"
+-	fi
+-
+-	# Forbid overwrite - Old TLS key
+-	if [ -f "$old_tls_key_file" ]; then
+-		old_tls_key_data="$(cat "$old_tls_key_file")"
+-		case "$old_tls_key_data" in
+-			*'TLS-CRYPT'*) tls_key_type=TLS-CRYPT ;;
+-			*'TLS-AUTH'*) tls_key_type=TLS-AUTH ;;
+-			*) tls_key_type=UNKNOWN
+-		esac
+-
+-		user_error "\
+-Cannot overwrite existing $tls_key_type Key:
+-* $old_tls_key_file
+-$tls_key_error_msg"
+-	fi
+-
+-	verify_openvpn
+-
+-	tls_key_tmp=
+-	easyrsa_mktemp tls_key_tmp || \
+-		die "tls_key_gen - easyrsa_mktemp tls_key_tmp"
+-
+-	# Generate TLS Key
+-	"$EASYRSA_OPENVPN" --genkey "$1" "$tls_key_tmp" || \
+-		die "tls_key_gen - --genkey $tls_key_type FAIL"
+-
+-	# Insert type label
+-	{
+-		print "# Easy-RSA $tls_key_type Key"
+-		cat "$tls_key_tmp"
+-	} > "$tls_key_file" || \
+-			die "tls_key_gen - Insert type label FAIL"
+-
+-	notice "\
+-$tls_key_type Key generated at:
+-* $tls_key_file
+-$tls_key_error_msg"
+-	verbose "tls_key_gen: openvpn --genkey $tls_key_type OK"
+-} # => tls_key_gen()
+-
+-# Get certificate start date
+-# shellcheck disable=2317 # Unreach - ssl_cert_not_before_date()
+-ssl_cert_not_before_date() {
+-	verbose "DEPRECATED: ssl_cert_not_before_date()"
+-	[ "$#" = 2 ] || die "\
+-ssl_cert_not_before_date - input error"
+-	[ -f "$1" ] || die "\
+-ssl_cert_not_before_date - missing cert"
+-
+-	fn_ssl_out="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$1" -noout -startdate
+-		)" || die "\
+-ssl_cert_not_before_date - failed: -startdate"
+-
+-	fn_ssl_out="${fn_ssl_out#*=}"
+-
+-	force_set_var "$2" "$fn_ssl_out" || die "\
+-ssl_cert_not_before_date - failed to set var '$*'"
+-
+-	unset -v fn_ssl_out
+-} # => ssl_cert_not_before_date()
+-
+-# Get certificate end date
+-ssl_cert_not_after_date() {
+-	verbose "DEPRECATED: ssl_cert_not_after_date()"
+-	[ "$#" = 2 ] || die "\
+-ssl_cert_not_after_date - input error"
+-	[ -f "$1" ] || die "\
+-ssl_cert_not_after_date - missing cert"
+-
+-	fn_ssl_out="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$1" -noout -enddate
+-		)" || die "\
+-ssl_cert_not_after_date - failed: -enddate"
+-
+-	fn_ssl_out="${fn_ssl_out#*=}"
+-
+-	force_set_var "$2" "$fn_ssl_out" || die "\
+-ssl_cert_not_after_date - failed to set var '$*'"
+-
+-	unset -v fn_ssl_out
+-} # => ssl_cert_not_after_date()
+-
+-# SSL -- v3 -- startdate iso_8601
+-# shellcheck disable=2317 # Unreach - iso_8601_cert_startdate()
+-iso_8601_cert_startdate() {
+-	verbose "NEW: iso_8601_cert_startdate"
+-	[ "$#" = 2 ] || die "\
+-iso_8601_cert_startdate: input error"
+-	[ -f "$1" ] || die "\
+-iso_8601_cert_startdate: missing cert"
+-
+-	# On error return, let the caller decide what to do
+-	if fn_ssl_out="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$1" -noout \
+-			-startdate -dateopt iso_8601
+-		)"
+-	then
+-		: # ok
+-	else
+-		# The caller MUST assess this error
+-		verbose "\
+-iso_8601_cert_startdate: GENERATED ERROR"
+-		return 1
+-	fi
+-
+-	fn_ssl_out="${fn_ssl_out#*=}"
+-
+-	force_set_var "$2" "$fn_ssl_out" || die "\
+-iso_8601_cert_startdate: failed to set var '$*'"
+-
+-	unset -v fn_ssl_out
+-} # => iso_8601_cert_startdate()
+-
+-# SSL -- v3 -- enddate iso_8601
+-iso_8601_cert_enddate() {
+-	verbose "NEW: iso_8601_cert_enddate"
+-	[ "$#" = 2 ] || die "\
+-iso_8601_cert_enddate: input error"
+-	[ -f "$1" ] || die "\
+-iso_8601_cert_enddate: missing cert"
+-
+-	# On error return, let the caller decide what to do
+-	if fn_ssl_out="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$1" -noout \
+-			-enddate -dateopt iso_8601
+-		)"
+-	then
+-		: # ok
+-	else
+-		# The caller MUST assess this error
+-		verbose "\
+-iso_8601_cert_enddate: GENERATED ERROR"
+-		return 1
+-	fi
+-
+-	fn_ssl_out="${fn_ssl_out#*=}"
+-
+-	force_set_var "$2" "$fn_ssl_out" || die "\
+-iso_8601_cert_enddate: failed to set var '$*'"
+-
+-	unset -v fn_ssl_out
+-} # => iso_8601_cert_enddate()
+-
+-# Number of days from NOW@today as timestamp seconds
+-days_to_timestamp_s() {
+-	verbose "REQUIRED: days_to_timestamp_s: uses date"
+-	# check input
+-	[ "$#" = 2 ] || die "\
+-days_to_timestamp_s: input error"
+-
+-	in_days="$1"
+-	in_seconds="$(( in_days * 60 * 60 * 24 ))"
+-
+-	# There are NO OS dependencies for this use of date
+-	# OS dependencies
+-	# Linux and Windows
+-	# date.exe does not allow +%s as input
+-	# MacPorts GNU date
+-	if timestamp_s="$(
+-			date +%s 2>/dev/null
+-			)"
+-	then : # ok
+-
+-	# Darwin, BSD
+-	elif timestamp_s="$(
+-			date +%s 2>/dev/null
+-			)"
+-	then : # ok
+-
+-	# busybox
+-	elif timestamp_s="$(
+-			busybox date +%s 2>/dev/null
+-			)"
+-	then : # ok
+-
+-	# Something else
+-	else
+-		die "\
+-days_to_timestamp_s: 'date +%s' failed"
+-	fi
+-
+-	# Add period
+-	timestamp_s="$(( timestamp_s + in_seconds ))"
+-
+-	# Return timestamp_s
+-	force_set_var "$2" "$timestamp_s" || die "\
+-days_to_timestamp_s: force_set_var - $2 - $timestamp_s"
+-
+-	unset -v in_days in_seconds timestamp_s
+-} # => days_to_timestamp_s()
+-
+-# Convert certificate date to timestamp seconds since epoch
+-# Used to verify iso_8601 calculated seconds since epoch
+-cert_date_to_timestamp_s() {
+-	verbose "DEPRECATED: cert_date_to_timestamp_s"
+-	# check input
+-	[ "$#" = 2 ] || die "\
+-cert_date_to_timestamp_s: input error"
+-
+-#die "* NOT ALLOWED: cert_date_to_timestamp_s()"
+-
+-	in_date="$1"
+-
+-	# OS dependencies
+-	# Linux and Windows
+-	# date.exe does not allow +%s as input
+-	# MacPorts GNU date
+-	if timestamp_s="$(
+-			date -d "$in_date" +%s \
+-				2>/dev/null
+-			)"
+-	then : # ok
+-
+-	# Darwin, BSD
+-	elif timestamp_s="$(
+-			date -j -f '%b %d %T %Y %Z' \
+-				"$in_date" +%s 2>/dev/null
+-			)"
+-	then : # ok
+-
+-	# busybox
+-	elif timestamp_s="$(
+-			busybox date -D "%b %e %H:%M:%S %Y" \
+-				-d "$in_date" +%s 2>/dev/null
+-			)"
+-	then : # ok
+-
+-	# Something else
+-	else
+-		die "\
+-cert_date_to_timestamp_s:
+-'date' failed for in_date=$in_date"
+-	fi
+-
+-	# Return timestamp_s
+-	force_set_var "$2" "$timestamp_s" || die "\
+-cert_date_to_timestamp_s: force_set_var - $2 - $timestamp_s"
+-
+-	unset -v in_date timestamp_s
+-} # => cert_date_to_timestamp_s()
+-
+-# Build a Windows date.exe compatible input field
+-# iso_8601 date
+-db_date_to_iso_8601_date() {
+-	verbose "iso_8601: db_date_to_iso_8601_date"
+-	# check input
+-	[ "$#" = 2 ] || die "\
+-db_date_to_iso_8601_date - input error"
+-
+-	# Expected format: '230612235959Z'
+-	in_date="$1"
+-	verbose "db_date_to_iso_8601_date: in_date=$in_date"
+-
+-	# Consume $in_date string
+-	# yyyy is expected to be only 'yy'
+-	yyyy="${in_date%???????????}"
+-	in_date="${in_date#"$yyyy"}"
+-
+-	# When yyyy is only two digits prepend century
+-	if [ "${#yyyy}" = 2 ]; then
+-		yyyy="${yyyy#0}"
+-		if [ "$yyyy" -lt 70 ]; then
+-			if [ "${#yyyy}" = 2 ]; then
+-				yyyy="20${yyyy}"
+-			else
+-				yyyy="200${yyyy}"
+-			fi
+-		else
+-			if [ "${#yyyy}" = 2 ]; then
+-				yyyy="19${yyyy}"
+-			else
+-				yyyy="190${yyyy}"
+-			fi
+-		fi
+-	fi
+-	verbose "db_date_to_iso_8601_date: yyyy=$yyyy"
+-
+-	mm="${in_date%?????????}"
+-	in_date="${in_date#"$mm"}"
+-	dd="${in_date%???????}"
+-	in_date="${in_date#"$dd"}"
+-	HH="${in_date%?????}"
+-	in_date="${in_date#"$HH"}"
+-	MM="${in_date%???}"
+-	in_date="${in_date#"$MM"}"
+-	SS="${in_date%?}"
+-	in_date="${in_date#"$SS"}"
+-	TZ="$in_date"
+-
+-	# Assign iso_8601 date
+-	out_date="${yyyy}-${mm}-${dd} ${HH}:${MM}:${SS}${TZ}"
+-	verbose "db_date_to_iso_8601_date: out_date=$out_date"
+-
+-	# Return out_date
+-	force_set_var "$2" "$out_date" || die "\
+-db_date_to_iso_8601_date: force_set_var - $2 - $out_date"
+-
+-	unset -v in_date out_date yyyy mm dd HH MM SS TZ
+-} # => db_date_to_iso_8601_date()
+-
+-# Certificate expiry
+-will_cert_be_valid() {
+-	# Verify file exists and is a valid cert
+-	[ -f "$1" ] || \
+-		die "will_cert_be_valid - Missing file: $1"
+-	verify_file x509 "$1" || \
+-		die "will_cert_be_valid - Invalid file: $1"
+-
+-	# Verify --days
+-	case "$2" in
+-		0) : ;; # ok
+-		''|*[!1234567890]*|0*)
+-			die "will_cert_be_valid - Non-decimal value: $2"
+-	esac
+-
+-	# is the cert still valid at this future date
+-	ssl_out="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$1" -noout \
+-			-checkend "$2"
+-	)"
+-
+-	# analyse SSL output
+-	case "$ssl_out" in
+-		'Certificate will not expire') return 0 ;;
+-		'Certificate will expire') return 1 ;;
+-		*) die "will_cert_be_valid - Failure"
+-	esac
+-} # => will_cert_be_valid()
+-
+-# SC2295: Expansion inside ${..} need to be quoted separately,
+-# otherwise they match as patterns. (what-ever that means ;-)
+-# Unfortunately, Windows sh.exe has an weird bug.
+-# Try in sh.exe: t='   '; s="a${t}b${t}c"; echo "${s%%"${t}"*}"
+-
+-# Read db
+-# shellcheck disable=SC2295 # nested expand - read_db()
+-read_db() {
+-	TCT='	' # tab character
+-	db_in="$EASYRSA_PKI/index.txt"
+-	pki_r_issued="$EASYRSA_PKI/renewed/issued"
+-	pki_r_by_sno="$EASYRSA_PKI/renewed/certs_by_serial"
+-	unset -v target_found
+-
+-	while read -r db_status db_notAfter db_record; do
+-
+-		verbose "***** Read next record *****"
+-
+-		# Recreate temp-session and
+-		# drop edits to SSL Conf file
+-		remove_secure_session
+-		secure_session
+-		locate_support_files
+-		write_global_safe_ssl_cnf_tmp
+-
+-		# Interpret the db/certificate record
+-		unset -v db_serial db_cn db_revoke_date db_reason
+-		case "$db_status" in
+-		V|E)
+-			# Valid
+-			db_serial="${db_record%%${TCT}*}"
+-			db_record="${db_record#*${TCT}}"
+-			db_cn="${db_record#*/CN=}"; db_cn="${db_cn%%/*}"
+-			cert_issued="$EASYRSA_PKI/issued/$db_cn.crt"
+-			cert_r_issued="$pki_r_issued/$db_cn.crt"
+-			cert_r_by_sno="$pki_r_by_sno/$db_serial.crt"
+-		;;
+-		R)
+-			# Revoked
+-			db_revoke_date="${db_record%%${TCT}*}"
+-			db_reason="${db_revoke_date#*,}"
+-			if [ "$db_reason" = "$db_revoke_date" ]; then
+-				db_reason="None given"
+-			else
+-				db_revoke_date="${db_revoke_date%,*}"
+-			fi
+-			db_record="${db_record#*${TCT}}"
+-
+-			db_serial="${db_record%%${TCT}*}"
+-			db_record="${db_record#*${TCT}}"
+-			db_cn="${db_record#*/CN=}"; db_cn="${db_cn%%/*}"
+-		;;
+-		*) die "Unexpected status: $db_status"
+-		esac
+-
+-		# Output selected status report for this record
+-		case "$report" in
+-		expire)
+-		# Certs which expire before EASYRSA_PRE_EXPIRY_WINDOW days
+-			case "$db_status" in
+-			V|E)
+-				case "$target" in
+-				'') expire_status_v2 "$cert_issued" ;;
+-				*)
+-					if [ "$target" = "$db_cn" ]; then
+-						expire_status_v2 "$cert_issued"
+-					fi
+-				esac
+-			;;
+-			*)
+-				: # Ignore ok
+-			esac
+-		;;
+-		revoke)
+-		# Certs which have been revoked
+-			case "$db_status" in
+-			R)
+-				case "$target" in
+-				'') revoke_status ;;
+-				*)
+-					if [ "$target" = "$db_cn" ]; then
+-						revoke_status
+-					fi
+-				esac
+-			;;
+-			*)
+-				: # Ignore ok
+-			esac
+-		;;
+-		renew)
+-		# Certs which have been renewed but not revoked
+-			case "$db_status" in
+-			V|E)
+-				case "$target" in
+-				'') renew_status ;;
+-				*)
+-					if [ "$target" = "$db_cn" ]; then
+-						renew_status
+-					fi
+-				esac
+-			;;
+-			*)
+-				: # Ignore ok
+-			esac
+-		;;
+-		*) die "Unrecognised report: $report"
+-		esac
+-
+-		# Is db record for target found
+-		if [ "$target" = "$db_cn" ]; then
+-			target_found=1
+-		fi
+-
+-	done < "$db_in"
+-
+-	# Add CA to show-expire
+-	case  "$report" in
+-	expire)
+-		# Extract -endate
+-		ca_enddate="$(
+-			"$EASYRSA_OPENSSL" x509 -in "$EASYRSA_PKI"/ca.crt \
+-				-noout -enddate
+-		)"
+-		ca_enddate="${ca_enddate#*=}"
+-
+-		# Check CA for expiry
+-		if will_cert_be_valid "$EASYRSA_PKI"/ca.crt \
+-			"$pre_expire_window_s"
+-		then
+-			: # cert will still be valid by expiry window
+-		else
+-			# Print CA expiry date
+-			printf '\n%s\n\n' \
+-				"CA certificate will expire on $ca_enddate"
+-		fi
+-	esac
+-
+-	# Check for target found/valid commonName, if given
+-	if [ "$target" ]; then
+-		[ "$target_found" ] || \
+-			warn "Certificate for $target was not found"
+-	fi
+-} # => read_db()
+-
+-# Expire status
+-expire_status_v2() {
+-	# expiry seconds
+-	pre_expire_window_s="$((
+-		EASYRSA_PRE_EXPIRY_WINDOW * 60*60*24
+-		))"
+-
+-	# The certificate for CN should exist but may not
+-	if [ -f "$1" ]; then
+-		verbose "expire_status: cert exists"
+-
+-		# Check if cert will be valid else print details
+-		if will_cert_be_valid "$1" "$pre_expire_window_s"
+-		then
+-			verbose "cert will still be valid by expiry window"
+-		else
+-			# cert expiry date
+-			if [ "$openssl_v3" ]; then
+-				# ISO8601 date - OpenSSL v3 only
+-				iso_8601_cert_enddate "$1" cert_not_after_date
+-			else
+-				# Standard date - OpenSSL v1
+-				ssl_cert_not_after_date "$1" cert_not_after_date
+-			fi
+-
+-			# show expiring cert details
+-			printf '%s%s\n' \
+-				"$db_status | Serial: $db_serial | " \
+-				"$cert_not_after_date | CN: $db_cn"
+-		fi
+-	else
+-		verbose "issued cert does not exist, ignore other certs"
+-	fi
+-} # => expire_status_v2()
+-
+-# Revoke status
+-revoke_status() {
+-	# Translate db date to usable date
+-	cert_revoke_date=
+-	db_date_to_iso_8601_date "$db_revoke_date" cert_revoke_date
+-
+-	printf '%s%s%s\n' \
+-		"$db_status | Serial: $db_serial | " \
+-		"Revoked: $cert_revoke_date | " \
+-		"Reason: $db_reason | CN: $db_cn"
+-} # => revoke_status()
+-
+-# Renewed status
+-# renewed certs only remain in the renewed folder until revoked
+-# Only ONE renewed cert with unique CN can exist in renewed folder
+-renew_status() {
+-	# Does a Renewed cert exist ?
+-	# files in issued are file name, or in serial are SerialNumber
+-	unset -v \
+-		cert_file_in cert_is_issued cert_is_serial renew_is_old
+-
+-	# Find renewed/issued/CN
+-	if [ -f "$cert_r_issued" ]; then
+-		cert_file_in="$cert_r_issued"
+-		cert_is_issued=1
+-	fi
+-
+-	# Find renewed/cert_by_serial/SN
+-	if [ -f "$cert_r_by_sno" ]; then
+-		cert_file_in="$cert_r_by_sno"
+-		cert_is_serial=1
+-		renew_is_old=1
+-	fi
+-
+-	# Both should not exist
+-	if [ "$cert_is_issued" ] && [ "$cert_is_serial" ]; then
+-		die "Too many certs"
+-	fi
+-
+-	# If a renewed cert exists
+-	if [ "$cert_file_in" ]; then
+-		# get the serial number of the certificate
+-		ssl_cert_serial "$cert_file_in" cert_serial
+-
+-		# db serial must match certificate serial, otherwise
+-		# this is an issued cert that replaces a renewed cert
+-		if [ "$db_serial" != "$cert_serial" ]; then
+-			information "\
+-serial mismatch:
+-  db_serial:    $db_serial
+-  cert_serial:  $cert_serial
+-  cert_file_in: $cert_file_in"
+-			return 0
+-		fi
+-
+-		# Use cert date
+-		# Assigns cert_not_after_date
+-		ssl_cert_not_after_date \
+-			"$cert_file_in" cert_not_after_date
+-
+-		# Highlight renewed/cert_by_serial
+-		if [ "$renew_is_old" ]; then
+-			printf '%s%s\n' \
+-				"*** $db_status | Serial: $db_serial | " \
+-				"Expires: $cert_not_after_date | CN: $db_cn"
+-		else
+-			printf '%s%s\n' \
+-				"$db_status | Serial: $db_serial | " \
+-				"Expires: $cert_not_after_date | CN: $db_cn"
+-		fi
+-
+-	else
+-		# Cert is valid but not renewed
+-		: # ok - ignore
+-	fi
+-} # => renew_status()
+-
+-# cert status reports
+-status() {
+-	[ "$#" -gt 0 ] || die "status - input error"
+-	report="$1"
+-	target="$2"
+-
+-	# test fix: https://github.com/OpenVPN/easy-rsa/issues/819
+-	export LC_TIME=C.UTF-8
+-
+-	# If no target file then add Notice
+-	if [ -z "$target" ]; then
+-		# Select correct Notice
+-		case "$report" in
+-		expire)
+-			notice "\
+-* Showing certificates which expire in less than \
+-$EASYRSA_PRE_EXPIRY_WINDOW days (--days):"
+-		;;
+-		revoke)
+-			notice "\
+-* Showing certificates which are revoked:"
+-		;;
+-		renew)
+-			notice "\
+-* Showing certificates which have been renewed but NOT revoked:
+-
+-*** Marks those which require 'rewind-renew' \
+-before they can be revoked."
+-		;;
+-		*) warn "Unrecognised report: $report"
+-		esac
+-	fi
+-
+-	# Create report
+-	read_db
+-} # => status()
+-
+-# renew backend
+-renew() {
+-	# pull filename base:
+-	[ "$1" ] || user_error "\
+-Error: didn't find a file base name as the first argument.
+-Run easyrsa without commands for usage and command help."
+-
+-	# Assign file_name_base and dust off!
+-	file_name_base="$1"
+-	shift
+-
+-	# Assign input files
+-	in_dir="$EASYRSA_PKI"
+-	crt_in="$in_dir/issued/${file_name_base}.crt"
+-	key_in="$in_dir/private/${file_name_base}.key"
+-	req_in="$in_dir/reqs/${file_name_base}.req"
+-	inline_pub="$in_dir/inline/${file_name_base}.inline"
+-	inline_pri="$in_dir/inline/private/${file_name_base}.inline"
+-
+-	# deprecate ALL options
+-	while [ "$1" ]; do
+-		case "$1" in
+-			nopass)
+-				warn "\
+-Option 'nopass' is not supported by command 'renew'."
+-			;;
+-			*) user_error "Unknown option: $1"
+-		esac
+-		shift
+-	done
+-
+-	# Verify certificate
+-	if [ -f "$crt_in" ]; then
+-		verify_file x509 "$crt_in" || user_error "\
+-Input file is not a valid certificate:
+-* $crt_in"
+-	else
+-		user_error "\
+-Missing certificate file:
+-* $crt_in"
+-	fi
+-
+-	# Forbid self-signed cert from being expired/renewed/revoked
+-	if forbid_selfsign "$crt_in"; then
+-		user_error "Cannot $cmd a self-signed certificate."
+-	fi
+-
+-	# Verify request
+-	if [ -f "$req_in" ]; then
+-		verify_file req "$req_in" || user_error "\
+-Input file is not a valid request:
+-* $req_in"
+-	else
+-		user_error "\
+-Missing request file:
+-* $req_in"
+-	fi
+-
+-	# Get cert commonName
+-	cert_CN="$(
+-			display_dn x509 "$crt_in" | grep 'commonName'
+-		)" || die "renew - display_dn of cert failed"
+-
+-	# Get req commonName
+-	req_CN="$(
+-			display_dn req "$req_in" | grep 'commonName'
+-		)" || die "renew - display_dn of req failed"
+-
+-	# For renew, cert_CN must match req_CN
+-	[ "$cert_CN" = "$req_CN" ] || user_error \
+-		"Certificate cannot be renewed due to commonName mismatch"
+-	verbose "renew - cert_CN MATCH req_CN"
+-
+-	# get the serial number of the certificate
+-	ssl_cert_serial "$crt_in" cert_serial || \
+-		die "$cmd: Failed to get cert serial number!"
+-
+-	# Duplicate cert by serial file
+-	dup_dir="$EASYRSA_PKI/certs_by_serial"
+-	dup_crt_by_serial="$dup_dir/${cert_serial}.pem"
+-
+-	# Set out_dir
+-	out_dir="$EASYRSA_PKI/renewed"
+-	crt_out="$out_dir/issued/${file_name_base}.crt"
+-
+-	# NEVER over-write a renewed cert, revoke it first
+-	if [ -f "$crt_out" ]; then
+-		user_error "\
+-Cannot renew this certificate, a conflicting file exists:
+-* certificate: $crt_out
+-
+-Use command 'revoke-renewed' to revoke this certificate."
+-	fi
+-
+-	# Extract certificate usage from old cert
+-	ssl_cert_x509v3_eku "$crt_in" cert_type
+-
+-	# create temp-file for full cert text
+-	full_crt_tmp=
+-	easyrsa_mktemp full_crt_tmp || \
+-		die "easyrsa_mktemp full_crt_tmp"
+-
+-	# write full cert text tempfile data
+-	"$EASYRSA_OPENSSL" x509 -in "$crt_in" \
+-		-noout -text > "$full_crt_tmp" || \
+-			die "write full cert text"
+-
+-	# Use SAN from old cert ONLY
+-	if grep -q 'X509v3 Subject Alternative Name' \
+-		"$full_crt_tmp"
+-	then
+-		EASYRSA_SAN="$(
+-			grep -A 1 'X509v3 Subject Alternative Name' \
+-				"$full_crt_tmp" | \
+-					sed -e s/'^\ *'// \
+-						-e /'X509v3 Subject Alternative Name'/d \
+-						-e s/'IP Address:'/'IP:'/g
+-		)" || die "renew - EASYRSA_SAN: easyrsa_openssl subshell"
+-		verbose "renew: EASYRSA_SAN: ${EASYRSA_SAN}"
+-
+-		# --san-crit
+-		unset -v EASYRSA_SAN_CRIT
+-		if grep -q 'X509v3 Subject Alternative Name: critical' \
+-			"$full_crt_tmp"
+-		then
+-			export EASYRSA_SAN_CRIT='critical,'
+-			verbose "renew: --san-crit ENABLED"
+-		fi
+-
+-		export EASYRSA_EXTRA_EXTS="\
+-$EASYRSA_EXTRA_EXTS
+-subjectAltName = ${EASYRSA_SAN_CRIT}${EASYRSA_SAN}"
+-		verbose "renew: EASYRSA_EXTRA_EXTS: ${EASYRSA_EXTRA_EXTS}"
+-	fi
+-
+-	# --bc-crit
+-	if grep -q 'X509v3 Basic Constraints: critical' \
+-		"$full_crt_tmp"
+-	then
+-		export EASYRSA_BC_CRIT=1
+-		verbose "renew: --bc-crit ENABLED"
+-	fi
+-
+-	# --ku-crit
+-	if grep -q 'X509v3 Key Usage: critical' \
+-		"$full_crt_tmp"
+-	then
+-		export EASYRSA_KU_CRIT=1
+-		verbose "renew: --ku-crit ENABLED"
+-	fi
+-
+-	# --eku-crit
+-	if grep -q 'X509v3 Extended Key Usage: critical' \
+-		"$full_crt_tmp"
+-	then
+-		export EASYRSA_EKU_CRIT=1
+-		verbose "renew: --eku-crit ENABLED"
+-	fi
+-
+-	# Disable options not supported by renew
+-	unset -v EASYRSA_AUTO_SAN EASYRSA_NEW_SUBJECT
+-
+-	# confirm operation by displaying Warning
+-	confirm "Continue with 'renew' ? " yes "\
+-WARNING: This process is destructive!
+-
+-These files will be MOVED to the 'renewed' sub-directory:
+-* $crt_in
+-
+-These files will be DELETED:
+-All PKCS files for commonName: $file_name_base
+-
+-The inline credentials files:
+-* $inline_pub
+-* $inline_pri"
+-
+-	# move renewed files
+-	# so we can reissue certificate with the same name
+-	renew_move
+-	error_undo_renew_move=1
+-
+-	# Set to modify sign-req confirmation message
+-	local_request=1
+-
+-	# renew certificate
+-	# EASYRSA_BATCH=1
+-	if sign_req "$cert_type" "$file_name_base"
+-	then
+-		unset -v error_undo_renew_move
+-	else
+-		# If renew failed then restore cert.
+-		# Otherwise, issue a warning
+-		renew_restore_move
+-		die "Renewal has failed to build a new certificate."
+-	fi
+-
+-	# Success messages
+-	notice "\
+-Renew was successful.
+-
+-                    * IMPORTANT *
+-
+-Renew has created a new certificate, to replace the old one.
+-
+-To revoke the old certificate, once the new one has been deployed,
+-use command 'revoke-renewed $file_name_base'"
+-} # => renew()
+-
+-# Restore files on failure to renew
+-renew_restore_move() {
+-	# restore crt file to PKI folders
+-	rrm_err=
+-	if mv "$restore_crt_out" "$restore_crt_in"; then
+-		: # ok
+-	else
+-		warn "Failed to restore: $restore_crt_in"
+-		rrm_err=1
+-	fi
+-
+-	# messages
+-	if [ "$rrm_err" ]; then
+-		warn "Failed to restore renewed files."
+-	else
+-		notice "\
+-Renew FAILED but files have been successfully restored."
+-	fi
+-} # => renew_restore_move()
+-
+-# renew_move
+-# moves renewed certificates to the 'renewed' folder
+-# allows reissuing certificates with the same name
+-renew_move() {
+-	# make sure renewed dirs exist
+-	easyrsa_mkdir "$out_dir"
+-	easyrsa_mkdir "$out_dir"/issued
+-
+-	# move crt to renewed folders
+-	# After this point, renew is possible!
+-	restore_crt_in="$crt_in"
+-	restore_crt_out="$crt_out"
+-	mv "$crt_in" "$crt_out" || \
+-		die "Failed to move: $crt_in"
+-
+-	# Remove files that can be recreated:
+-	# remove any pkcs files
+-	for pkcs in p12 p7b p8 p1; do
+-		# issued
+-		rm -f "$in_dir/issued/$file_name_base.$pkcs"
+-		# private
+-		rm -f "$in_dir/private/$file_name_base.$pkcs"
+-	done
+-
+-	# remove inline files
+-	rm -f "$inline_pub" "$inline_pri" || warn \
+-		"renew_move - Error trying to remove inline files."
+-} # => renew_move()
+-
+-# Verify certificate against CA
+-verify_cert() {
+-	# pull filename base:
+-	[ "$1" ] || user_error "\
+-Error: didn't find a <file-name-base> as the first argument.
+-Run easyrsa without commands for usage and command help."
+-
+-	# Assign file_name_base and dust off!
+-	file_name_base="$1"
+-	shift
+-
+-	# function opts support
+-	while [ "$1" ]; do
+-		case "$1" in
+-			# batch flag, return status [0/1] to calling
+-			# program.  Otherwise, exit 0 on completion.
+-			batch) EASYRSA_BATCH=1 ;;
+-			*) warn "Ignoring unknown command option: '$1'"
+-		esac
+-		shift
+-	done
+-
+-	in_dir="$EASYRSA_PKI"
+-	ca_crt="$in_dir/ca.crt"
+-	crt_in="$in_dir/issued/$file_name_base.crt"
+-
+-	# Cert file must exist
+-	[ -f "$crt_in" ] || user_error "\
+-No certificate found for the input:
+-* '$crt_in'"
+-
+-	# Verify file is a valid cert
+-	verify_file x509 "$crt_in" || user_error "\
+-Input is not a valid certificate:
+-* $crt_in"
+-
+-	# Silent SSL or not
+-	if [ "$EASYRSA_SILENT_SSL" ]; then
+-		# Test SSL out
+-		# openssl direct call because error is expected
+-		if "$EASYRSA_OPENSSL" verify \
+-			-CAfile "$ca_crt" "$crt_in" >/dev/null
+-		then
+-			verify_cert_ok=1
+-		else
+-			unset -v verify_cert_ok
+-		fi
+-	else
+-		if "$EASYRSA_OPENSSL" verify \
+-			-CAfile "$ca_crt" "$crt_in"
+-		then
+-			verify_cert_ok=1
+-		else
+-			unset -v verify_cert_ok
+-		fi
+-	fi
+-
+-	# Return cert status
+-	if [ "$verify_cert_ok" ]; then
+-		notice "\
+-  Certificate name:    $file_name_base
+-  Verification status: GOOD"
+-	else
+-		notice "\
+-  Certificate name:    $file_name_base
+-  Verification status: FAILED"
+-
+-		# Exit with error (batch mode)
+-		if [ "$EASYRSA_BATCH" ]; then
+-			# exit with error at cleanup
+-			easyrsa_exit_with_error=1
+-			# Return error for internal callers
+-			return 1
+-		fi
+-	fi
+-} # => verify_cert()
+-
+-# Renew CA certificate
+-renew_ca_cert() {
+-	# dirs and files
+-	ca_key_file="$EASYRSA_PKI"/private/ca.key
+-	ca_cert_file="$EASYRSA_PKI"/ca.crt
+-	exp_ca_cert_list="$EASYRSA_PKI"/expired-ca.list
+-
+-	# Set fixed variables
+-	x509=1
+-	date_stamp=1
+-	f_name="renew_ca_cert()"
+-
+-	# Set default CA commonName
+-	[ "$EASYRSA_REQ_CN" = ChangeMe ] || \
+-		warn "\
+-$cmd does not support setting an external commonName."
+-
+-	# Copy Old CA commonName as default
+-	export EASYRSA_REQ_CN="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$ca_cert_file" \
+-		-noout -subject -nameopt utf8,multiline | \
+-			grep 'commonName' | sed -e \
+-			s\`^[[:blank:]]*commonName[[:blank:]]*=[[:blank:]]\`\`
+-	)"
+-
+-	# Set ssl batch mode, as required
+-	[ "$EASYRSA_BATCH" ] && ssl_batch=1
+-
+-	# create local SSL cnf
+-	write_easyrsa_ssl_cnf_tmp
+-
+-	# Assign new cert temp-file
+-	out_cert_tmp=
+-	easyrsa_mktemp out_cert_tmp || \
+-		die "$f_name easyrsa_mktemp out_cert_tmp"
+-
+-	# Assign old cert temp-file
+-	old_cert_tmp=
+-	easyrsa_mktemp old_cert_tmp || \
+-		die "$f_name easyrsa_mktemp old_cert_tmp"
+-
+-	# Write complete CA cert to old cert temp-file
+-	"$EASYRSA_OPENSSL" x509 -in "$ca_cert_file" \
+-		-text > "$old_cert_tmp" || \
+-			die "$f_name Write CA cert to temp-file"
+-
+-	# Find or create x509 CA file
+-	if [ -f "$EASYRSA_EXT_DIR/ca" ]; then
+-		# Use the x509-types/ca file
+-		x509_type_file="$EASYRSA_EXT_DIR/ca"
+-	else
+-		# Use a temp file
+-		write_x509_type_tmp ca
+-		x509_type_file="$write_x509_file_tmp"
+-	fi
+-
+-	# basicConstraints critical
+-	if grep -q 'Basic Constraints: critical' "$old_cert_tmp"
+-	then
+-		crit_tmp=
+-		easyrsa_mktemp crit_tmp || \
+-			die "$f_name easyrsa_mktemp BC crit_tmp"
+-
+-		add_critical_attrib basicConstraints "$x509_type_file" \
+-			"$crit_tmp" || die "$f_name BC add_critical_attrib"
+-
+-		# Use the new tmp-file with critical attribute
+-		x509_type_file="$crit_tmp"
+-		verbose "renew_ca_cert: basicConstraints critical OK"
+-	fi
+-
+-	# keyUsage critical
+-	if grep -q 'Key Usage: critical' "$old_cert_tmp"
+-	then
+-		crit_tmp=
+-		easyrsa_mktemp crit_tmp || \
+-			die "$f_name easyrsa_mktemp KU crit_tmp"
+-
+-		add_critical_attrib keyUsage "$x509_type_file" \
+-			"$crit_tmp" || die "$f_name KU add_critical_attrib"
+-
+-		# Use the new tmp-file with critical attribute
+-		x509_type_file="$crit_tmp"
+-		verbose "renew_ca_cert: keyUsage critical OK"
+-	fi
+-
+-	# Find or create x509 COMMON file
+-	if [ -f "$EASYRSA_EXT_DIR/COMMON" ]; then
+-		# Use the x509-types/COMMON file
+-		x509_COMMON_file="$EASYRSA_EXT_DIR/COMMON"
+-	else
+-		# Use a temp file
+-		write_x509_type_tmp COMMON
+-		x509_COMMON_file="$write_x509_file_tmp"
+-	fi
+-
+-	# Check for insert-marker in ssl config file
+-	if ! grep -q '^#%CA_X509_TYPES_EXTRA_EXTS%' \
+-		"$EASYRSA_SSL_CONF"
+-	then
+-		die "\
+-This openssl config file does not support X509-type 'ca'.
+-* $EASYRSA_SSL_CONF
+-
+-Please update 'openssl-easyrsa.cnf' to the latest Easy-RSA release."
+-	fi
+-
+-	# Assign awkscript to insert EASYRSA_EXTRA_EXTS
+-	# shellcheck disable=SC2016 # No expand '' - build_ca()
+-	awkscript='\
+-{if ( match($0, "^#%CA_X509_TYPES_EXTRA_EXTS%") )
+-{ while ( getline<"/dev/stdin" ) {print} next }
+-{print} }'
+-
+-	# Assign tmp-file for config
+-	adjusted_ssl_cnf_tmp=""
+-	easyrsa_mktemp adjusted_ssl_cnf_tmp || \
+-		die "$f_name easyrsa_mktemp adjusted_ssl_cnf_tmp"
+-
+-	# Insert x509-types COMMON and 'ca' and EASYRSA_EXTRA_EXTS
+-	{
+-		# X509 files
+-		cat "$x509_type_file" "$x509_COMMON_file"
+-
+-		# User extensions
+-		[ "$EASYRSA_EXTRA_EXTS" ] && \
+-			print "$EASYRSA_EXTRA_EXTS"
+-
+-	} | awk "$awkscript" "$EASYRSA_SSL_CONF" \
+-			> "$adjusted_ssl_cnf_tmp" || \
+-				die "$f_name Copy X509_TYPES to config failed"
+-	verbose "$f_name insert x509 and extensions OK"
+-
+-	# Use this new SSL config for the rest of this function
+-	EASYRSA_SSL_CONF="$adjusted_ssl_cnf_tmp"
+-
+-	# Generate new CA cert:
+-	easyrsa_openssl req -utf8 -new \
+-		-key "$ca_key_file" \
+-		-out "$out_cert_tmp" \
+-		${ssl_batch:+ -batch} \
+-		${x509:+ -x509} \
+-		${date_stamp:+ -days "$EASYRSA_CA_EXPIRE"} \
+-		${EASYRSA_DIGEST:+ -"$EASYRSA_DIGEST"} \
+-		${EASYRSA_NO_PASS:+ "$no_password"} \
+-		${EASYRSA_PASSIN:+ -passin "$EASYRSA_PASSIN"} \
+-		# EOL
+-
+-	# Collect New CA text
+-	new_ca_text="$(
+-		"$EASYRSA_OPENSSL" x509 -in "$out_cert_tmp" -noout -text
+-	)"
+-
+-	# Confirm renewed certificate installation
+-	confirm "Install the new CA certificate ? " yes "
+-NEW CA CERTIFICATE:
+-
+-$new_ca_text
+-
+-WARNING !!!
+-
+-Your CA certificate is ready to be renewed. (Details above)
+-
+-This new CA certificate will completely replace the old one.
+-The old CA will be archived to the 'expired-ca.list' file.
+-
+-Please check the details above are correct, before continuing."
+-
+-	# Prepare header file for updated old CA list
+-	header_tmp=
+-	easyrsa_mktemp header_tmp || \
+-		die "$f_name easyrsa_mktemp header_tmp"
+-
+-	# header and separator text
+-	hdr='# Easy-RSA expired CA certificate list:'
+-	spr='# ====================================='
+-
+-	# make full header temp-file
+-	printf '%s\n%s\n\n' "$hdr" "$spr" > "$header_tmp" || \
+-		die "$f_name printf header to header-temp"
+-
+-	# Prepare old cert list
+-	if [ -f "$exp_ca_cert_list" ]; then
+-		# Assign old cert list temp file
+-		exp_cert_list_tmp=
+-		easyrsa_mktemp exp_cert_list_tmp || \
+-			die "$f_name easyrsa_mktemp exp_cert_list_tmp"
+-
+-		# write list to temp-fie, remove header not separators
+-		sed -e s/"^${hdr}$"// \
+-			"$exp_ca_cert_list" > "$exp_cert_list_tmp" || \
+-				die "$f_name sed exp_ca_cert_list"
+-	fi
+-
+-	# Add full old CA Cert to old CA Cert list file
+-	if [ -f "$exp_cert_list_tmp" ]; then
+-		cat "$header_tmp" "$old_cert_tmp" "$exp_cert_list_tmp" \
+-			> "$exp_ca_cert_list" || \
+-				die "$f_name cat exp_cert_list_tmp"
+-	else
+-		cat "$header_tmp" "$old_cert_tmp" \
+-			> "$exp_ca_cert_list" || \
+-				die "$f_name cat old_cert_tmp"
+-	fi
+-
+-	# Install renewed CA Cert temp-file as current CA cert
+-	mv -f "$out_cert_tmp" "$ca_cert_file" || \
+-		die "Failed to install renewed CA temp-file!"
+-
+-	notice "\
+-CA certificate has been successfully renewed.
+-
+-Your old CA cerificate has been added to the expired CA list at:
+-* $exp_ca_cert_list
+-
+-Your renewed CA cerificate is at:
+-* $ca_cert_file"
+-} # => renew_ca_cert()
+-
+-# vim: ft=sh nu ai sw=8 ts=8 noet
+\ No newline at end of file
+diff --git a/build/assets/genclient.sh b/build/assets/genclient.sh
+deleted file mode 100755
+index 740faf5..0000000
+--- a/build/assets/genclient.sh
++++ /dev/null
+@@ -1,119 +0,0 @@
+-#!/bin/bash
+-#VERSION 1.4 by d3vilh@github.com aka Mr. Philipp. Updated with Easyrsa 3 support.
+-# Exit immediately if a command exits with a non-zero status.
+-set -e
+-
+-# .ovpn file path
+-CERT_NAME=$1
+-CERT_IP=$2
+-CERT_PASS=$3
+-# These VARS shoud be in your ENV before running certgen: TFA_NAME, ISSUER, EASYRSA_CERT_EXPIRE, EASYRSA_REQ_EMAIL, EASYRSA_REQ_COUNTRY, EASYRSA_REQ_PROVINCE, EASYRSA_REQ_CITY, EASYRSA_REQ_ORG, EASYRSA_REQ_OU
+-
+-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo "EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR"
+-OVPN_FILE_PATH="$OPENVPN_DIR/clients/$CERT_NAME.ovpn"
+-OATH_SECRETS="$OPENVPN_DIR/clients/oath.secrets"   # 2FA secrets file
+-
+-# Validate username and check for duplicates
+-if  [[ -z $CERT_NAME ]]; then
+-    echo 'Name cannot be empty. Exiting...'
+-    exit 1
+-elif [[ -f $OVPN_FILE_PATH ]]; then
+-    echo "User with name $CERT_NAME already exists under openvpn/clients. Exiting..."
+-    exit 1
+-fi
+-
+-export EASYRSA_BATCH=1 # see https://superuser.com/questions/1331293/easy-rsa-v3-execute-build-ca-and-gen-req-silently
+-
+-echo 'Patching easy-rsa.3.1.1 openssl-easyrsa.cnf...' 
+-sed -i '/serialNumber_default/d' "$EASY_RSA/openssl-easyrsa.cnf"
+-
+-echo 'Generate client certificate...'
+-echo -e "Will use following parameters: \nEASYRSA_CERT_EXPIRE: $EASYRSA_CERT_EXPIRE\nEASYRSA_REQ_EMAIL: $EASYRSA_REQ_EMAIL" #\nEASYRSA_REQ_COUNTRY: $EASYRSA_REQ_COUNTRY\nEASYRSA_REQ_PROVINCE: $EASYRSA_REQ_PROVINCE\nEASYRSA_REQ_CITY: $EASYRSA_REQ_CITY\nEASYRSA_REQ_ORG: $EASYRSA_REQ_ORG\nEASYRSA_REQ_OU: $EASYRSA_REQ_OU"
+-echo -e "EasyRSA VARS will be used:\n$(cat $EASY_RSA/vars)"
+-
+-# Copy easy-rsa variables
+-cd $EASY_RSA
+-
+-# Generate certificates
+-if  [[ -z $CERT_PASS ]]; then
+-    echo 'Without password...'
+-    ./easyrsa --batch --req-cn="$CERT_NAME" --days="$EASYRSA_CERT_EXPIRE" --req-email="$EASYRSA_REQ_EMAIL" gen-req "$CERT_NAME" nopass 
+-    #subject="/C=$EASYRSA_REQ_COUNTRY/ST=$EASYRSA_REQ_PROVINCE/L=\"$EASYRSA_REQ_CITY\"/O=\"$EASYRSA_REQ_ORG\"/OU=\"$EASYRSA_REQ_OU\""
+-else
+-    echo 'With password...'
+-    # See https://stackoverflow.com/questions/4294689/how-to-generate-an-openssl-key-using-a-passphrase-from-the-command-line
+-    # ... and https://stackoverflow.com/questions/22415601/using-easy-rsa-how-to-automate-client-server-creation-process
+-    # ... and https://github.com/OpenVPN/easy-rsa/blob/master/doc/EasyRSA-Advanced.md
+-    (echo -e '\n') | ./easyrsa --batch --req-cn="$CERT_NAME" --days="$EASYRSA_CERT_EXPIRE" --req-email="$EASYRSA_REQ_EMAIL" --passin=pass:"${CERT_PASS}" --passout=pass:"${CERT_PASS}" gen-req "$CERT_NAME" 
+-    #subject="/C=$EASYRSA_REQ_COUNTRY/ST=$EASYRSA_REQ_PROVINCE/L=\"$EASYRSA_REQ_CITY\"/O=\"$EASYRSA_REQ_ORG\"/OU=\"$EASYRSA_REQ_OU\""
+-fi
+-
+-# Sign request. Bypass "yes" with export EASYRSA_BATCH=1 
+-./easyrsa sign-req client "$CERT_NAME"
+-# Fix for /name in index.txt
+-
+-# Check if 2FA was specified. If not - set to none.
+-if [ -z "$TFA_NAME" ]; then
+-    TFA_NAME="none"
+-fi
+-
+-echo "Fixing Database..."
+-sed -i'.bak' "$ s/$/\/name=${CERT_NAME}\/LocalIP=${CERT_IP}\/2FAName=${TFA_NAME}/" $EASY_RSA/pki/index.txt
+-echo "Database fixed:"
+-tail -1 $EASY_RSA/pki/index.txt
+-# Certificate properties
+-CA="$(cat $EASY_RSA/pki/ca.crt )"
+-CERT="$(awk '/-----BEGIN CERTIFICATE-----/{flag=1;next}/-----END CERTIFICATE-----/{flag=0}flag' ./pki/issued/${CERT_NAME}.crt | tr -d '\0')"
+-KEY="$(cat $EASY_RSA/pki/private/${CERT_NAME}.key)"
+-TLS_AUTH="$(cat $EASY_RSA/pki/ta.key)"
+-
+-echo 'Fixing permissions for pki/issued...'
+-chmod +r $EASY_RSA/pki/issued
+-
+-echo 'Generating .ovpn file...'
+-echo "$(cat $OPENVPN_DIR/config/client.conf)
+-<ca>
+-$CA
+-</ca>
+-<cert>
+-$CERT
+-</cert>
+-<key>
+-$KEY
+-</key>
+-<tls-auth>
+-$TLS_AUTH
+-</tls-auth>
+-" > "$OVPN_FILE_PATH"
+-
+-echo -e "OpenVPN Client configuration successfully generated!\nCheckout openvpn-server/clients/$CERT_NAME.ovpn"
+-
+-# Check if $TFA_NAME was specified and not equal to "none". then create 2FA and QR code
+-if [[ ! -z $TFA_NAME ]] && [[ $TFA_NAME != "none" ]]; then
+-    echo -e "Generating 2FA ...\nName: $TFA_NAME\nIssuer: $TFA_ISSUER"
+-
+-    # Userhash. Random 30 chars
+-    USERHASH=$(head -c 10 /dev/urandom | openssl sha256 | cut -d ' ' -f2 | cut -b 1-30)
+-
+-    # Base32 secret from oathtool output
+-    BASE32=$(oathtool --totp -v "$USERHASH" | grep Base32 | awk '{print $3}')
+-
+-    # QRCODE STRING
+-    QRSTRING="otpauth://totp/$TFA_ISSUER:$TFA_NAME?secret=$BASE32"
+-
+-    # QR code for user to pass to Google Authenticator or OpenVPN-UI
+-    echo "User String for QR:"
+-    echo $QRSTRING
+-
+-    /opt/scripts/qrencode "$QRSTRING" > $OPENVPN_DIR/clients/$CERT_NAME.png
+-
+-    # New string for secrets file
+-    echo "oath.secrets entry for BackEnd:"
+-    echo "$TFA_NAME:$USERHASH" | tee -a $OATH_SECRETS
+-
+-    else
+-    echo 'No 2FA specified. exiting'
+-
+-fi
+\ No newline at end of file
+diff --git a/build/assets/generate_ca_and_server_certs.sh b/build/assets/generate_ca_and_server_certs.sh
+deleted file mode 100755
+index 2e8e15a..0000000
+--- a/build/assets/generate_ca_and_server_certs.sh
++++ /dev/null
+@@ -1,129 +0,0 @@
+-#!/bin/bash -e
+-#VERSION 1.2 by d3vilh@github.com aka Mr. Philipp
+-
+-#Variables
+-ACTION=$1  #passed via OpenVPN-UI GUI
+-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo "EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR"
+-TEMP_PKI_DIR=/tmp/pki
+-mkdir -p $TEMP_PKI_DIR
+-
+-cd $EASY_RSA
+- 
+-if [ "$ACTION" = "copy_vars" ]; then
+-  # Copy easy-rsa variables
+-  cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+-  echo 'New vars applied.'
+-fi
+-
+-if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f $OPENVPN_DIR/pki/issued/server.crt || ! -f $OPENVPN_DIR/pki/dh.pem || ! -f $OPENVPN_DIR/pki/ta.key || ! -f $OPENVPN_DIR/pki/crl.pem || "$ACTION" = "init_all" || "$ACTION" = "gen_crl" ]] && ! [[ "$ACTION" = "copy_vars" ]]; then
+-    export EASYRSA_BATCH=1 # see https://superuser.com/questions/1331293/easy-rsa-v3-execute-build-ca-and-gen-req-silently
+-
+-    # Copy easy-rsa variables
+-    cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+-
+-    echo "Following EASYRSA variables will be used:"
+-    cat $EASY_RSA/pki/vars | awk '{$1=""; print $0}';
+-
+-  if [[ "$ACTION" = "init-pki" && ! -f $EASY_RSA/openssl-easyrsa.cnf ]]; then
+-      # Building the CA with WA to avoid issues with .pki container volume which not possible to remove due to its origin
+-      echo 'Setting up public key infrastructure...'
+-      $EASY_RSA/easyrsa --pki-dir=$TEMP_PKI_DIR init-pki
+-
+-      echo 'Moving PKI directory...'
+-      mv $TEMP_PKI_DIR/* $EASY_RSA/pki/
+-      cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+-
+-    elif [[ "$ACTION" = "build_ca" && ! -f $OPENVPN_DIR/pki/ca.crt ]]; then
+-      echo 'Generating Certificate authority...'
+-      $EASY_RSA/easyrsa build-ca nopass
+-
+-    elif [[ "$ACTION" = "gen_req" && ! -f $OPENVPN_DIR/pki/issued/server.crt ]]; then
+-      # Creating the Server Certificate, Key, and Encryption Files
+-      echo 'Creating the Server Certificate...'
+-      $EASY_RSA/easyrsa gen-req server nopass
+-
+-      echo 'Sign request...'
+-      $EASY_RSA/easyrsa sign-req server server
+-
+-    elif [[ "$ACTION" = "gen_dh" && ! -f $OPENVPN_DIR/pki/dh.pem ]]; then
+-      echo 'Generate Diffie-Hellman key...'
+-      $EASY_RSA/easyrsa gen-dh
+-
+-    elif [[ "$ACTION" = "gen_ta" && ! -f $OPENVPN_DIR/pki/ta.key ]]; then
+-      # Generate HMAC signature in "openvpn" container with Docker API or in host
+-      echo 'Generate HMAC signature...'
+-      # Check if the "openvpn" command exists
+-      if ! command -v openvpn &> /dev/null
+-      then 
+-        echo 'Running in Docker container...'
+-        # Get the container ID of the "openvpn" container
+-        CONTAINER_ID=$(curl --unix-socket /var/run/docker.sock "http://v1.40/containers/json?filters=%7B%22name%22%3A%5B%22%5Eopenvpn$%22%5D%7D" | jq -r '.[0].Id')
+-        # Create the exec instance
+-        EXEC_ID=$(curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"AttachStdin": true, "AttachStdout": true, "AttachStderr": true, "Cmd": ["openvpn", "--genkey", "--secret", "'"$OPENVPN_DIR"'/pki/ta.key"], "DetachKeys": "ctrl-p,ctrl-q", "Tty": true}' -X POST "http://v1.40/containers/$CONTAINER_ID/exec" | jq -r '.Id')
+-        # Start the exec instance
+-        curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Detach": false, "Tty": true}' -X POST "http://v1.40/exec/$EXEC_ID/start"
+-      else
+-         # Run the "openvpn --genkey --secret pki/ta.key" command on localhost
+-         echo 'Running in host...'
+-         openvpn --genkey --secret $OPENVPN_DIR/pki/ta.key
+-      fi
+-
+-    elif [ "$ACTION" = "gen_crl" ]; then
+-      echo 'Create certificate revocation list (CRL)...'
+-      $EASY_RSA/easyrsa gen-crl
+-      chmod +r $EASY_RSA/pki/crl.pem
+-
+-    elif [ "$ACTION" = "init_all" ]; then
+-      # Init all Begin
+-      cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+-
+-      echo "Following EASYRSA variables will be used:"
+-      cat $EASY_RSA/pki/vars | awk '{$1=""; print $0}';
+-
+-      echo 'Setting up public key infrastructure...'
+-      $EASY_RSA/easyrsa --pki-dir=$TEMP_PKI_DIR init-pki
+-
+-      echo 'Moving PKI directory...'
+-      mv $TEMP_PKI_DIR/* $EASY_RSA/pki/
+-
+-      cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+-
+-      echo 'Generating Certificate authority...'
+-      $EASY_RSA/easyrsa build-ca nopass
+-
+-      echo 'Creating the Server Certificate...'
+-      $EASY_RSA/easyrsa gen-req server nopass
+-
+-      echo 'Sign request...'
+-      $EASY_RSA/easyrsa sign-req server server
+-
+-      echo 'Generate Diffie-Hellman key...'
+-      $EASY_RSA/easyrsa gen-dh
+-
+-      echo 'Generate HMAC signature...'
+-      if ! command -v openvpn &> /dev/null
+-      then 
+-        echo 'Running in Docker container...'
+-        CONTAINER_ID=$(curl --unix-socket /var/run/docker.sock "http://v1.40/containers/json?filters=%7B%22name%22%3A%5B%22%5Eopenvpn$%22%5D%7D" | jq -r '.[0].Id')
+-        EXEC_ID=$(curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"AttachStdin": true, "AttachStdout": true, "AttachStderr": true, "Cmd": ["openvpn", "--genkey", "--secret", "'"$OPENVPN_DIR"'/pki/ta.key"], "DetachKeys": "ctrl-p,ctrl-q", "Tty": true}' -X POST "http://v1.40/containers/$CONTAINER_ID/exec" | jq -r '.Id')
+-        curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Detach": false, "Tty": true}' -X POST "http://v1.40/exec/$EXEC_ID/start"
+-      else
+-         echo 'Running in host...'
+-         openvpn --genkey --secret $OPENVPN_DIR/pki/ta.key
+-      fi
+-
+-      echo 'Create certificate revocation list (CRL)...'
+-      $EASY_RSA/easyrsa gen-crl
+-      chmod +r $EASY_RSA/pki/crl.pem
+-      # Init all End
+-    else
+-      echo "Invalid input argument: $ACTION Exiting."
+-      exit 1
+-  fi
+-
+-   echo 'All done.'
+-else
+-    echo 'PKI already set up.'
+-fi
+diff --git a/build/assets/oath.sh b/build/assets/oath.sh
+deleted file mode 100644
+index 409aff4..0000000
+--- a/build/assets/oath.sh
++++ /dev/null
+@@ -1,39 +0,0 @@
+-#!/bin/sh
+-# v.0.1 by @d3vilh@github.com aka Mr. Philipp
+-# d3vilh/openvpn-server drafted 2FA support
+-#
+-# MFA verification by OpenVPN server using oath-tool
+-# This should be part of OpenVPN server container (github.com/d3vilh/openvpn-server). 
+-# This particular script is just example and does not use by OpenVPN-UI at all.
+-
+-# VARIABLES
+-PASSFILE=$1    # Password file passed by openvpn-server with "auth-user-pass-verify /opt/app/bin/oath.sh via-file" in server.conf
+-OPENVPN_DIR=/etc/openvpn
+-OATH_SECRETS=$OPENVPN_DIR/clients/oath.secrets
+-LOG_FILE=/var/log/openvpn/oath.log
+-
+-echo -e "$(date) Openvpn dir: $OPENVPN_DIR\nOath secrets: $OATH_SECRETS\nLog file: $LOG_FILE\nPassfile: $PASSFILE\n" | tee -a $LOG_FILE
+-
+-# Geting user and password passed by external user to OpenVPN server tmp file
+-user=$(head -1 $PASSFILE)
+-pass=$(tail -1 $PASSFILE) 
+-
+-echo "$(date) - Authentication attempt for user $user" | tee -a $LOG_FILE # echo "$(date) - Password: $pass" | tee -a $LOG_FILE
+-
+-# Parsing oath.secrets to getting secret entry, ignore case
+-secret=$(grep -i -m 1 "$user:" $OATH_SECRETS | cut -d: -f2) # echo "$(date) - Secret: $secret" | tee -a $LOG_FILE
+-
+-# Getting 2FA code with oathtool based on our secret, exiting with 0 if match:
+-code=$(oathtool --totp $secret) # echo "$(date) - Code: $code" | tee -a $LOG_FILE
+-
+-if [ "$code" = "$pass" ];
+-then
+-    echo "OK"
+-        exit 0
+-else 
+-echo "FAIL"
+-fi
+-
+-# If we make it here, auth hasn't succeeded, don't grant access
+-echo "$(date) - Authentication failed for user $user" | tee -a $LOG_FILE
+-exit 1
+\ No newline at end of file
+diff --git a/build/assets/remove.sh b/build/assets/remove.sh
+deleted file mode 100755
+index dd0c500..0000000
+--- a/build/assets/remove.sh
++++ /dev/null
+@@ -1,44 +0,0 @@
+-#!/bin/bash
+-#VERSION 1.2 by d3vilh@github.com aka Mr. Philipp
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-# Variables
+-ACTION=$1  #passed via OpenVPN-UI GUI
+-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo 'EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR'
+-PKI_DIR=$EASY_RSA/pki
+-CERT_DIR=$OPENVPN_DIR/clients
+-STATIC_CLIENT_DIR=$OPENVPN_DIR/staticclients
+-OVPN_DB_DIR=$OPENVPN_DIR/db
+-
+-if [ "$ACTION" = "remove_pki" ]; then
+-  # Remove PKI
+-  echo 'Removing PKI.'
+-  rm -rf $PKI_DIR/*
+-elif [ "$ACTION" = "remove_ovpn" ]; then
+-  # Remove *.ovpn files from /etc/openvpn/clients
+-  echo -e 'Removing *.ovpn files.\n'
+-  rm -rf $CERT_DIR/*.ovpn
+-elif [ "$ACTION" = "remove_static_clients" ]; then
+-  # Remove static clients
+-  echo -e 'Removing static clients.\n'
+-  rm -rf $STATIC_CLIENT_DIR/*
+-elif [ "$ACTION" = "remove_ovpn_db" ]; then
+-  # Remove Openvpn-UI DB
+-  echo -e 'Removing Openvpn-UI DB.\n'
+-  rm -rf $OVPN_DB_DIR/data.db
+-elif [ "$ACTION" = "remove_all" ]; then
+-  # Remove all
+-  echo 'Removing PKI.'
+-  rm -rf $PKI_DIR/*
+-  echo -e 'PKI removed.\nRemoving *.ovpn files.\n'
+-  rm -rf $CERT_DIR/*.ovpn
+-  echo -e 'All *.ovpn removed.\nRemoving static clients.\n'
+-  rm -rf $STATIC_CLIENT_DIR/*
+-  echo -e 'Static clients removed.\n'
+-else
+-  echo "Invalid input argument: $ACTION. Exiting."
+-  exit 1
+-fi
+\ No newline at end of file
+diff --git a/build/assets/renew.sh b/build/assets/renew.sh
+deleted file mode 100755
+index a217391..0000000
+--- a/build/assets/renew.sh
++++ /dev/null
+@@ -1,32 +0,0 @@
+-#!/bin/bash
+-#VERSION 1.2 by d3vilh@github.com aka Mr. Philipp
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-#Variables
+-CERT_NAME=$1
+-CERT_IP=$2
+-CERT_SERIAL=$3
+-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo 'EasyRSA path: $EASY_RSA'
+-
+-# Check if 2FA was specified. If not - set to none.
+-if [ -z "$TFA_NAME" ]; then
+-    TFA_NAME="none"
+-fi
+-
+-if [ -n "$1" ]; then
+-  export EASYRSA_BATCH=1
+-
+-  # Renew certificate.
+-  echo "Renew certificate: $CERT_NAME with $TFA_NAME with localip: $CERT_IP and serial: $CERT_SERIAL"
+-  cd $EASY_RSA
+-  ./easyrsa renew "$CERT_NAME" # nopass  #as of now only nopass is supported
+-  
+-  # Fix for new /name in index.txt (adding name and ip to the last line)
+-  sed -i'.bak' "$ s/$/\/name=${CERT_NAME}\/LocalIP=${CERT_IP}\/2FAName=${TFA_NAME}/" $EASY_RSA/pki/index.txt
+-  echo 'All Done, hlopche!'
+-else
+-  echo "Invalid input argument: $CERT_NAME Exiting."
+-  exit 1
+-fi
+\ No newline at end of file
+diff --git a/build/assets/restart.sh b/build/assets/restart.sh
+deleted file mode 100755
+index 0b1bd52..0000000
+--- a/build/assets/restart.sh
++++ /dev/null
+@@ -1,30 +0,0 @@
+-#!/bin/bash
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-#Variables
+-ACTION=$1  #passed via OpenVPN-UI GUI
+-
+-# if ACTION is not defined then define it as openvpn-server
+-if [ -z "$ACTION" ]; then
+-      ACTION="openvpn-server"
+-fi
+-
+-if [ "$ACTION" = "openvpn-server" ]; then  # Restartnig openvpn server
+-      # Get the container ID for ^openvpn$
+-      CONTAINER_ID=$(curl --unix-socket /var/run/docker.sock "http://v1.40/containers/json?filters=%7B%22name%22%3A%5B%22%5Eopenvpn$%22%5D%7D" | grep '"Id":' | cut -d '"' -f 4)
+-      # Restart the container
+-      curl --unix-socket /var/run/docker.sock -X POST "http://v1.40/containers/$CONTAINER_ID/restart"
+-      # Print the restarted container ID
+-      echo "Restarted container $CONTAINER_ID"
+- elif [ "$ACTION" = "openvpn-ui" ]; then  # Restartnig openvpn-ui
+-      # Get the container ID for ^openvpn-ui$
+-      CONTAINER_ID=$(curl --unix-socket /var/run/docker.sock "http://v1.40/containers/json?filters=%7B%22name%22%3A%5B%22%5Eopenvpn-ui$%22%5D%7D" | grep '"Id":' | cut -d '"' -f 4)
+-      # Restart the container
+-      curl --unix-socket /var/run/docker.sock -X POST "http://v1.40/containers/$CONTAINER_ID/restart"
+-      # Print the restarted container ID
+-      echo "Restarted container $CONTAINER_ID"
+- else
+-      echo "Invalid input argument: $ACTION Exiting..."
+-      exit 1
+-fi
+\ No newline at end of file
+diff --git a/build/assets/revoke.sh b/build/assets/revoke.sh
+deleted file mode 100755
+index 78571a4..0000000
+--- a/build/assets/revoke.sh
++++ /dev/null
+@@ -1,95 +0,0 @@
+-#!/bin/bash
+-#VERSION 1.2 by d3vilh@github.com aka Mr. Philipp
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-#Variables
+-CERT_NAME=$1
+-CERT_SERIAL=$2
+-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo 'EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR'
+-INDEX=$EASY_RSA/pki/index.txt
+-PERSHIY=`cat $INDEX | grep "/CN=$CERT_NAME/" | head -1 | awk '{ print $3}'`
+-OVPN_FILE_PATH="$OPENVPN_DIR/clients/$CERT_NAME.ovpn"
+-
+-export EASYRSA_BATCH=1 # see https://superuser.com/questions/1331293/easy-rsa-v3-execute-build-ca-and-gen-req-silently
+-
+-# Check if the user has two certificates in index.txt
+-if [[ $(cat $INDEX | grep -c "/CN=$CERT_NAME/") -eq 2 ]]; then
+-    # Check if first serial is the same as requested to revoke and if yes - revoke new cert and old cert
+-    if [[ $PERSHIY = $CERT_SERIAL ]]; then
+-        echo "Revoking renewed certificate..."
+-
+-        # removing the end of the line starting from /name=$NAME for the line that matches the $serial pattern
+-        sed  -i'.bak' "/$CERT_SERIAL/s/\/name=$CERT_NAME.*//" $INDEX
+-        echo "index.txt patched"
+-        cd $EASY_RSA
+-        
+-        #moving new cert to old dir
+-        echo "Runing: easyrsa revoke-renewed $CERT_NAME"
+-        # Revoke renewed certificate
+-        ./easyrsa revoke-renewed "$CERT_NAME"
+-        echo -e "Old certificate revoked! \nRemoving old cert from the DB"
+-
+-        # Removing old cert from the DB
+-        sed -i'.bak' "/${CERT_SERIAL}/d" $INDEX
+-        echo "Old cert with serial $CERT_SERIAL removed from the DB"
+-
+-        # removing *.ovpn file because it has old certificate
+-        echo "removing *.ovpn file"
+-        rm -f $OVPN_FILE_PATH
+-    
+-        echo 'Generate New .ovpn file...'
+-        CA="$(cat $EASY_RSA/pki/ca.crt )"
+-        CERT="$(cat $EASY_RSA/pki/issued/${CERT_NAME}.crt | grep -zEo -e '-----BEGIN CERTIFICATE-----(\n|.)*-----END CERTIFICATE-----' | tr -d '\0')"
+-        KEY="$(cat $EASY_RSA/pki/private/${CERT_NAME}.key)"
+-        TLS_AUTH="$(cat $EASY_RSA/pki/ta.key)"
+-        echo "$(cat $OPENVPN_DIR/config/client.conf)
+-<ca>
+-$CA
+-</ca>
+-<cert>
+-$CERT
+-</cert>
+-<key>
+-$KEY
+-</key>
+-<tls-auth>
+-$TLS_AUTH
+-</tls-auth>
+-" > "$OVPN_FILE_PATH"
+-        echo -e "Old Certificate revoked!\nCreate new Create certificate revocation list (CRL)..."
+-        ./easyrsa gen-crl
+-        chmod +r $EASY_RSA/pki/crl.pem
+-    else
+-        cd $EASY_RSA
+-        # Fix index.txt by removing the user from the list following the serial number
+-        echo "Removing New Certificate..."
+-        mv $EASY_RSA/pki/renewed/issued/$CERT_NAME.crt  $EASY_RSA/pki/issued/$CERT_NAME.crt
+-        rm -f $EASY_RSA/pki/inline/$CERT_NAME.inline
+-        # Removing old cert from the DB
+-        sed -i'.bak' "/${CERT_SERIAL}/d" $INDEX
+-        # Create new Create certificate revocation list (CRL)
+-        echo -e "New Certificate revoked!\nCreate new certificate revocation list (CRL)..."
+-        ./easyrsa gen-crl
+-        chmod +r $EASY_RSA/pki/crl.pem
+-    fi
+-else
+-    echo "Revoking certificate..."
+-    # removing the end of the line starting from /name=$NAME for the line that matches the $serial pattern
+-    sed  -i'.bak' "/$CERT_SERIAL/s/\/name=$CERT_NAME.*//" $INDEX
+-    cd $EASY_RSA
+-    # Revoke certificate
+-    ./easyrsa revoke "$CERT_NAME"
+-
+-    echo 'Create new Create certificate revocation list (CRL)...'
+-    ./easyrsa gen-crl
+-    chmod +r $EASY_RSA/pki/crl.pem
+-    # restoring the index.txt, new /name in index.txt (adding name and ip to the last line)
+-    #sed -i'.bak' "$ s/$/\/name=${CERT_NAME}\/LocalIP=${CERT_IP}\/2FAName=${TFA_NAME}/" $EASY_RSA/pki/index.txt
+-    # adding name, ip and 2fa-name to the same CERT serial
+-    sed -i'.bak' "/${CERT_SERIAL}/ s/$/\/name=${CERT_NAME}\/LocalIP=${CERT_IP}\/2FAName=${TFA_NAME}/" $EASY_RSA/pki/index.txt
+-fi
+-
+-echo -e 'Done!\nIf you want to disconnect the user please restart the service using docker-compose restart openvpn.'
+diff --git a/build/assets/rmcert.sh b/build/assets/rmcert.sh
+deleted file mode 100755
+index be7f3f3..0000000
+--- a/build/assets/rmcert.sh
++++ /dev/null
+@@ -1,71 +0,0 @@
+-#!/bin/bash
+-#VERSION 1.2 by d3vilh@github.com aka Mr. Philipp
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-#Variables
+-CERT_NAME=$1
+-CERT_SERIAL=$2
+-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo 'EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR'
+-OVPN_FILE_PATH="$OPENVPN_DIR/clients/$CERT_NAME.ovpn"
+-QR_CODE_PATH="$OPENVPN_DIR/clients/$CERT_NAME.png" # 2FA QR code
+-OATH_SECRETS="$OPENVPN_DIR/clients/oath.secrets"   # 2FA secrets file
+-INDEX="$EASY_RSA/pki/index.txt"
+-
+-echo "Removing user: $CERT_NAME with Serial: $CERT_SERIAL"
+-
+-# Define if cert is valid or revoked
+-STATUS_CH=$(grep -e ${CERT_NAME}$ -e${CERT_NAME}/ ${INDEX} | awk '{print $1}' | tr -d '\n')
+-if [[ $STATUS_CH = "V" ]]; then
+-    echo "Cert is VALID\nShould not remove: $CERT_NAME with serial: $CERT_SERIAL\nExiting..."
+-    exit 1
+-else
+-    echo "Cert is REVOKED\nContinue to remove: $CERT_NAME with serial: $CERT_SERIAL"
+-fi
+-
+-# Check if the user has two certificates in index.txt
+-if [[ $(cat $INDEX | grep -c "/CN=$CERT_NAME/") -eq 2 ]]; then
+-    echo "Removing renewed certificate..."
+-    sed -i'.bak' "/${CERT_SERIAL}/d" $INDEX
+-    # removing *.ovpn file because it has old certificate
+-    rm -f $OVPN_FILE_PATH
+-    
+-    echo 'Generating New .ovpn file...'
+-    CA="$(cat $EASY_RSA/pki/ca.crt )"
+-    CERT="$(cat $EASY_RSA/pki/issued/${CERT_NAME}.crt | grep -zEo -e '-----BEGIN CERTIFICATE-----(\n|.)*-----END CERTIFICATE-----' | tr -d '\0')"
+-    KEY="$(cat $EASY_RSA/pki/private/${CERT_NAME}.key)"
+-    TLS_AUTH="$(cat $EASY_RSA/pki/ta.key)"
+-    echo "$(cat $OPENVPN_DIR/config/client.conf)
+-<ca>
+-$CA
+-</ca>
+-<cert>
+-$CERT
+-</cert>
+-<key>
+-$KEY
+-</key>
+-<tls-auth>
+-$TLS_AUTH
+-</tls-auth>
+-" > "$OVPN_FILE_PATH"
+-    echo "New .ovpn file created."
+-
+-else
+-    echo "Removing certificate...\nRemoving *.ovpn file" 
+-    rm -f $OVPN_FILE_PATH
+-    rm -f $QR_CODE_PATH
+-    # Remove user from oath.secrets
+-    if [ -f "$OATH_SECRETS" ]; then
+-      sed -i'.bak' "/${TFA_NAME}/d" "$OATH_SECRETS"
+-    else
+-      echo "No $OATH_SECRETS nothing to remove"
+-    fi
+-    # Removing the user from the list following the serial number
+-    sed -i'.bak' "/${CERT_SERIAL}/d" $INDEX
+-    echo "Database fixed."
+-fi
+-
+-echo 'Remove done!\nIf you want to disconnect the user please restart the OpenVPN service or container.'
+diff --git a/build/assets/start.sh b/build/assets/start.sh
+deleted file mode 100755
+index d04b6d2..0000000
+--- a/build/assets/start.sh
++++ /dev/null
+@@ -1,33 +0,0 @@
+-#!/bin/bash
+-# Exit immediately if a command exits with a non-zero status
+-set -e
+-
+-# Directory where OpenVPN configuration files are stored
+-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+-echo "Init. OVPN path: $OPENVPN_DIR"
+-
+-# Change to the /opt directory
+-cd /opt/
+-
+-# If the provisioned file does not exist in the OpenVPN directory, prepare the certificates and create the provisioned file
+-if [ ! -f $OPENVPN_DIR/.provisioned ]; then
+-  #echo "Preparing certificates"
+-  mkdir -p $OPENVPN_DIR
+-
+-  # Uncomment line below to generate CA and server certificates (should be done on the side of OpenVPN container or server however)
+-  #./scripts/generate_ca_and_server_certs.sh
+-
+-  # Create the provisioned file
+-  touch $OPENVPN_DIR/.provisioned
+-  echo "First OpenVPN UI start."
+-fi
+-
+-# Change to the OpenVPN GUI directory
+-cd /opt/openvpn-ui
+-
+-# Create the database directory if it does not exist
+-mkdir -p db
+-
+-# Start the OpenVPN GUI
+-echo "Starting OpenVPN UI!"
+-./openvpn-ui
+diff --git a/build/standalone-install.sh b/build/standalone-install.sh
+index aca4b8e..a9efc26 100755
+--- a/build/standalone-install.sh
++++ b/build/standalone-install.sh
+@@ -8,8 +8,9 @@ GOVERSION="1.22.3"
+ # Description
+ echo "This script will install OpenVPN-UI and all the dependencies on your local environment. No containers will be used."
+ # Ask for confirmation
+-read -p "Do you want to continue? (y/n)" -n 1 -r
++read -p "Do you want to continue? (Y/n)" -n 1 -r
+ echo    # move to a new line
++REPLY="${REPLY:-Y}"
+ if [[ ! $REPLY =~ ^[Yy]$ ]]
+ then
+     exit 1
+@@ -61,8 +62,9 @@ then
+ fi
+ 
+ # Update your system
+-read -p "Would you like to run apt-get update? (y/n) " -n 1 -r
++read -p "Would you like to run apt-get update? (y/N) " -n 1 -r
+ echo    # move to a new line
++REPLY="${REPLY:-N}"
+ if [[ $REPLY =~ ^[Yy]$ ]]
+ then
+     # Update your system
+@@ -71,8 +73,9 @@ then
+ fi
+ 
+ # Install necessary tools
+-read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (y/n) " -n 1 -r
++read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (Y/n) " -n 1 -r
+ echo    # move to a new line
++REPLY="${REPLY:-Y}"
+ if [[ $REPLY =~ ^[Yy]$ ]]
+ then
+     # Install necessary tools
+@@ -81,8 +84,9 @@ then
+ fi
+ 
+ # Go Modules download
+-read -p "Would you like to download all necessary Go modules? (y/n) " -n 1 -r
++read -p "Would you like to download all necessary Go modules? (Y/n) " -n 1 -r
+ echo    # move to a new line
++REPLY="${REPLY:-Y}"
+ if [[ $REPLY =~ ^[Yy]$ ]]
+ then
+     # Download all Go modules
+@@ -90,8 +94,9 @@ then
+     go mod download
+ fi
+ 
+-read -p "Would you like to install Beego v2? (y/n) " -n 1 -r
++read -p "Would you like to install Beego v2? (Y/n) " -n 1 -r
+ echo    # move to a new line
++REPLY="${REPLY:-Y}"
+ if [[ $REPLY =~ ^[Yy]$ ]]
+ then
+     # Install Beego
+@@ -99,13 +104,13 @@ then
+     go install github.com/beego/bee/v2@develop
+ fi
+ 
+-# Installing OpenVPN-UI and qrencode
+-read -p "Would you like to build OpenVPN-UI and qrencode binaries? (y/n) " -n 1 -r
++# Installing qrencode
++read -p "Would you like to build qrencode binaries? (y/N) " -n 1 -r
+ echo    # move to a new line
++REPLY="${REPLY:-N}"
+ if [[ $REPLY =~ ^[Yy]$ ]]
+ then
+-    # Install OpenVPN-UI and qrencode
+-    echo "Installing OpenVPN-UI and qrencode"
++    echo "Installing qrencode"
+     source ~/.bashrc # reload bashrc to get bee command
+     echo "Cloning qrencode into build directory"
+     git clone https://github.com/d3vilh/qrencode
+@@ -115,6 +120,33 @@ then
+     export CGO_ENABLED=1
+     export CC=musl-gcc 
+ 
++    # Build qrencode
++    echo "Building qrencode"
++    cd qrencode
++    go build -o qrencode main.go
++    chmod +x qrencode
++    #echo "Moving qrencode to GOPATH"
++    #mv qrencode $(go env GOPATH)/bin
++    echo "Moving qrencode to ../../scripts"
++    mv qrencode ../../scripts
++    cd ../
++fi
++
++# Installing OpenVPN-UI
++read -p "Would you like to build OpenVPN-UI binaries? (Y/n) " -n 1 -r
++echo    # move to a new line
++REPLY="${REPLY:-Y}"
++if [[ $REPLY =~ ^[Yy]$ ]]
++then
++    # Install OpenVPN-UI and qrencode
++    echo "Installing OpenVPN-UI"
++    source ~/.bashrc # reload bashrc to get bee command
++
++    # Set environment variables
++    export GO111MODULE='auto'
++    export CGO_ENABLED=1
++    export CC=musl-gcc 
++
+     # Packing openvpn-ui
+     cd ../
+     echo "Building and packing OpenVPN-UI"
+@@ -124,15 +156,6 @@ then
+     source ~/.bashrc
+     bee version
+     bee pack -exr='^vendor|^ace.tar.bz2|^data.db|^build|^README.md|^docs'
+-
+-    # Build qrencode
+-    echo "Building qrencode"
+-    cd build/qrencode
+-    go build -o qrencode main.go
+-    chmod +x qrencode
+-    echo "Moving qrencode to GOPATH"
+-    mv qrencode $(go env GOPATH)/bin
+-    cd ../
+ fi
+ 
+ printf "\033[1;34mAll done.\033[0m\n"
+\ No newline at end of file
+diff --git a/conf/app.conf b/conf/app.conf
+index b232399..6192aa8 100644
+--- a/conf/app.conf
++++ b/conf/app.conf
+@@ -13,7 +13,7 @@ AuthType = "password"
+ ; LdapTransport = "plain"
+ ; LdapInsecureSkipVerify = true
+ ;EasyRsaPath = "/usr/share/easy-rsa"
+-EasyRsaPath = "./easy-rsa"
+-OpenVpnPath = "./openvpn"
+-OpenVpnManagementAddress = "openvpn:2080"
++EasyRsaPath = "/etc/openvpn/server/easy-rsa"
++OpenVpnPath = "/etc/openvpn/server"
++OpenVpnManagementAddress = "127.0.0.1:2080"
+ OpenVpnManagementNetwork = "tcp"
+\ No newline at end of file
+diff --git a/conf/openvpn-server-config.tpl b/conf/openvpn-server-config.tpl
+index 4ea43d0..f1244b5 100644
+--- a/conf/openvpn-server-config.tpl
++++ b/conf/openvpn-server-config.tpl
+@@ -1,4 +1,4 @@
+-management 0.0.0.0 2080  # Don't change this line. OpenVPN UI uses this feature to manage the server 
++management 127.0.0.1 2080  # Don't change this line. OpenVPN UI uses this feature to manage the server 
+ 
+ dev {{ .Device }}
+ port {{ .Port }}
+diff --git a/controllers/logs.go b/controllers/logs.go
+index 194f494..bf70057 100644
+--- a/controllers/logs.go
++++ b/controllers/logs.go
+@@ -34,7 +34,8 @@ func (c *LogsController) Get() {
+ 		return
+ 	}
+ 
+-	fName := settings.OVConfigPath + "/log/openvpn.log"
++//	fName := settings.OVConfigPath + "/log/openvpn.log"
++	fName := "/var/log/openvpn/openvpn.log"
+ 	file, err := os.Open(fName)
+ 	if err != nil {
+ 		logs.Error(err)
+diff --git a/lib/certificates.go b/lib/certificates.go
+index d3338fe..fc1ed95 100644
+--- a/lib/certificates.go
++++ b/lib/certificates.go
+@@ -140,7 +140,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
+ 			staticip = "dynamic.pool"
+ 			cmd := exec.Command("/bin/bash", "-c",
+ 				fmt.Sprintf(
+-					"cd /opt/scripts/ && "+
++					"cd /opt/openvpn-ui/scripts/ && "+
+ 						"export KEY_NAME=%s &&"+
+ 						"export TFA_NAME=%s &&"+
+ 						"export TFA_ISSUER=\"%s\" &&"+
+@@ -165,7 +165,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
+ 			logs.Info("No password and but have ip")
+ 			cmd := exec.Command("/bin/bash", "-c",
+ 				fmt.Sprintf(
+-					"cd /opt/scripts/ && "+
++					"cd /opt/openvpn-ui/scripts/ && "+
+ 						"export KEY_NAME=%s &&"+
+ 						"export TFA_NAME=%s &&"+
+ 						"export TFA_ISSUER=\"%s\" &&"+
+@@ -194,7 +194,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
+ 			staticip = "dynamic.pool"
+ 			cmd := exec.Command("/bin/bash", "-c",
+ 				fmt.Sprintf(
+-					"cd /opt/scripts/ && "+
++					"cd /opt/openvpn-ui/scripts/ && "+
+ 						"export KEY_NAME=%s &&"+
+ 						"export TFA_NAME=%s &&"+
+ 						"export TFA_ISSUER=\"%s\" &&"+
+@@ -219,7 +219,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
+ 			logs.Info("Password and IP")
+ 			cmd := exec.Command("/bin/bash", "-c",
+ 				fmt.Sprintf(
+-					"cd /opt/scripts/ && "+
++					"cd /opt/openvpn-ui/scripts/ && "+
+ 						"export KEY_NAME=%s &&"+
+ 						"export TFA_NAME=%s &&"+
+ 						"export TFA_ISSUER=\"%s\" &&"+
+@@ -248,7 +248,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
+ func RevokeCertificate(name string, serial string, tfaname string) error {
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"export KEY_NAME=%s &&"+
+ 				"export TFA_NAME=%s &&"+
+ 				"./revoke.sh %s %s", name, tfaname, name, serial))
+@@ -265,7 +265,7 @@ func RevokeCertificate(name string, serial string, tfaname string) error {
+ func Restart() error {
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"./restart.sh"))
+ 	cmd.Dir = state.GlobalCfg.OVConfigPath
+ 	output, err := cmd.CombinedOutput()
+@@ -281,7 +281,7 @@ func BurnCertificate(CN string, serial string, tfaname string) error {
+ 	logs.Info("Lib: Burning certificate with parameters: CN=%s, serial=%s, tfaname=%s", CN, serial, tfaname)
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"export TFA_NAME=%s &&"+
+ 				"./rmcert.sh %s %s", tfaname, CN, serial))
+ 	cmd.Dir = state.GlobalCfg.OVConfigPath
+@@ -297,7 +297,7 @@ func BurnCertificate(CN string, serial string, tfaname string) error {
+ func RenewCertificate(name string, localip string, serial string, tfaname string) error {
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"export KEY_NAME=%s &&"+
+ 				"export TFA_NAME=%s &&"+
+ 				"./renew.sh %s %s %s", name, tfaname, name, localip, serial))
+diff --git a/lib/dangerzone.go b/lib/dangerzone.go
+index 38c17de..c03b347 100644
+--- a/lib/dangerzone.go
++++ b/lib/dangerzone.go
+@@ -12,7 +12,7 @@ func DeletePKI(name string) error {
+ 	//logs.Info("Lib: Deleting:", name)
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"./remove.sh %s", name))
+ 	cmd.Dir = state.GlobalCfg.OVConfigPath
+ 	output, err := cmd.CombinedOutput()
+@@ -28,7 +28,7 @@ func InitPKI(name string) error {
+ 	//logs.Info("Lib: Runing init for:", name)
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"./generate_ca_and_server_certs.sh %s", name))
+ 	cmd.Dir = state.GlobalCfg.OVConfigPath
+ 	output, err := cmd.CombinedOutput()
+@@ -44,7 +44,7 @@ func RestartContainer(name string) error {
+ 	//logs.Info("Lib: Restarting:", name)
+ 	cmd := exec.Command("/bin/bash", "-c",
+ 		fmt.Sprintf(
+-			"cd /opt/scripts/ && "+
++			"cd /opt/openvpn-ui/scripts/ && "+
+ 				"./restart.sh %s", name))
+ 	cmd.Dir = state.GlobalCfg.OVConfigPath
+ 	output, err := cmd.CombinedOutput()

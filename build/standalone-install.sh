@@ -8,8 +8,9 @@ GOVERSION="1.22.3"
 # Description
 echo "This script will install OpenVPN-UI and all the dependencies on your local environment. No containers will be used."
 # Ask for confirmation
-read -p "Do you want to continue? (y/n)" -n 1 -r
+read -p "Do you want to continue? (Y/n)" -n 1 -r
 echo    # move to a new line
+REPLY="${REPLY:-Y}"
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
     exit 1
@@ -61,8 +62,9 @@ then
 fi
 
 # Update your system
-read -p "Would you like to run apt-get update? (y/n) " -n 1 -r
+read -p "Would you like to run apt-get update? (y/N) " -n 1 -r
 echo    # move to a new line
+REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Update your system
@@ -71,8 +73,9 @@ then
 fi
 
 # Install necessary tools
-read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (y/n) " -n 1 -r
+read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (Y/n) " -n 1 -r
 echo    # move to a new line
+REPLY="${REPLY:-Y}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Install necessary tools
@@ -81,8 +84,9 @@ then
 fi
 
 # Go Modules download
-read -p "Would you like to download all necessary Go modules? (y/n) " -n 1 -r
+read -p "Would you like to download all necessary Go modules? (Y/n) " -n 1 -r
 echo    # move to a new line
+REPLY="${REPLY:-Y}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Download all Go modules
@@ -90,8 +94,9 @@ then
     go mod download
 fi
 
-read -p "Would you like to install Beego v2? (y/n) " -n 1 -r
+read -p "Would you like to install Beego v2? (Y/n) " -n 1 -r
 echo    # move to a new line
+REPLY="${REPLY:-Y}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Install Beego
@@ -99,16 +104,43 @@ then
     go install github.com/beego/bee/v2@develop
 fi
 
-# Installing OpenVPN-UI and qrencode
-read -p "Would you like to build OpenVPN-UI and qrencode binaries? (y/n) " -n 1 -r
+# Installing qrencode
+read -p "Would you like to build qrencode binaries? (y/N) " -n 1 -r
 echo    # move to a new line
+REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    # Install OpenVPN-UI and qrencode
-    echo "Installing OpenVPN-UI and qrencode"
+    echo "Installing qrencode"
     source ~/.bashrc # reload bashrc to get bee command
     echo "Cloning qrencode into build directory"
     git clone https://github.com/d3vilh/qrencode
+
+    # Set environment variables
+    export GO111MODULE='auto'
+    export CGO_ENABLED=1
+    export CC=musl-gcc 
+
+    # Build qrencode
+    echo "Building qrencode"
+    cd qrencode
+    go build -o qrencode main.go
+    chmod +x qrencode
+    #echo "Moving qrencode to GOPATH"
+    #mv qrencode $(go env GOPATH)/bin
+    echo "Moving qrencode to ../../scripts"
+    mv qrencode ../../scripts
+    cd ../
+fi
+
+# Installing OpenVPN-UI
+read -p "Would you like to build OpenVPN-UI binaries? (Y/n) " -n 1 -r
+echo    # move to a new line
+REPLY="${REPLY:-Y}"
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    # Install OpenVPN-UI and qrencode
+    echo "Installing OpenVPN-UI"
+    source ~/.bashrc # reload bashrc to get bee command
 
     # Set environment variables
     export GO111MODULE='auto'
@@ -124,15 +156,6 @@ then
     source ~/.bashrc
     bee version
     bee pack -exr='^vendor|^ace.tar.bz2|^data.db|^build|^README.md|^docs'
-
-    # Build qrencode
-    echo "Building qrencode"
-    cd build/qrencode
-    go build -o qrencode main.go
-    chmod +x qrencode
-    echo "Moving qrencode to GOPATH"
-    mv qrencode $(go env GOPATH)/bin
-    cd ../
 fi
 
 printf "\033[1;34mAll done.\033[0m\n"

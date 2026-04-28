@@ -9,8 +9,8 @@ CERT_IP=$2
 CERT_PASS=$3
 # These VARS shoud be in your ENV before running certgen: TFA_NAME, ISSUER, EASYRSA_CERT_EXPIRE, EASYRSA_REQ_EMAIL, EASYRSA_REQ_COUNTRY, EASYRSA_REQ_PROVINCE, EASYRSA_REQ_CITY, EASYRSA_REQ_ORG, EASYRSA_REQ_OU
 
-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+EASY_RSA=$(grep -E "^EasyRsaPath\s*=" /opt/openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" /opt/openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
 echo "EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR"
 OVPN_FILE_PATH="$OPENVPN_DIR/clients/$CERT_NAME.ovpn"
 OATH_SECRETS="$OPENVPN_DIR/clients/oath.secrets"   # 2FA secrets file
@@ -30,8 +30,9 @@ echo 'Patching easy-rsa.3.1.1 openssl-easyrsa.cnf...'
 sed -i '/serialNumber_default/d' "$EASY_RSA/openssl-easyrsa.cnf"
 
 echo 'Generate client certificate...'
+#echo -e "EasyRSA VARS will be used:\n$(cat $EASY_RSA/vars)"
+echo -e "EasyRSA VARS will be used:\n$(cat $EASY_RSA/pki/vars)"
 echo -e "Will use following parameters: \nEASYRSA_CERT_EXPIRE: $EASYRSA_CERT_EXPIRE\nEASYRSA_REQ_EMAIL: $EASYRSA_REQ_EMAIL" #\nEASYRSA_REQ_COUNTRY: $EASYRSA_REQ_COUNTRY\nEASYRSA_REQ_PROVINCE: $EASYRSA_REQ_PROVINCE\nEASYRSA_REQ_CITY: $EASYRSA_REQ_CITY\nEASYRSA_REQ_ORG: $EASYRSA_REQ_ORG\nEASYRSA_REQ_OU: $EASYRSA_REQ_OU"
-echo -e "EasyRSA VARS will be used:\n$(cat $EASY_RSA/vars)"
 
 # Copy easy-rsa variables
 cd $EASY_RSA
@@ -107,7 +108,7 @@ if [[ ! -z $TFA_NAME ]] && [[ $TFA_NAME != "none" ]]; then
     echo "User String for QR:"
     echo $QRSTRING
 
-    /opt/scripts/qrencode "$QRSTRING" > $OPENVPN_DIR/clients/$CERT_NAME.png
+    /opt/openvpn-ui/scripts/qrencode "$QRSTRING" > $OPENVPN_DIR/clients/$CERT_NAME.png
 
     # New string for secrets file
     echo "oath.secrets entry for BackEnd:"

@@ -34,7 +34,8 @@ func (c *LogsController) Get() {
 		return
 	}
 
-	fName := settings.OVConfigPath + "/log/openvpn.log"
+//	fName := settings.OVConfigPath + "/log/openvpn.log"
+	fName := "/var/log/openvpn/openvpn.log"
 	file, err := os.Open(fName)
 	if err != nil {
 		logs.Error(err)

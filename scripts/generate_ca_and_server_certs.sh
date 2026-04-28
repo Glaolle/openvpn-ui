@@ -3,8 +3,8 @@
 
 #Variables
 ACTION=$1  #passed via OpenVPN-UI GUI
-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
-OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+EASY_RSA=$(grep -E "^EasyRsaPath\s*=" /opt/openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" /opt/openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
 echo "EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR"
 TEMP_PKI_DIR=/tmp/pki
 mkdir -p $TEMP_PKI_DIR
@@ -67,7 +67,8 @@ if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f
       else
          # Run the "openvpn --genkey --secret pki/ta.key" command on localhost
          echo 'Running in host...'
-         openvpn --genkey --secret $OPENVPN_DIR/pki/ta.key
+         openvpn --genkey secret $OPENVPN_DIR/config/ta.key
+         cp $OPENVPN_DIR/config/ta.key $EASY_RSA/pki
       fi
 
     elif [ "$ACTION" = "gen_crl" ]; then
@@ -111,7 +112,8 @@ if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f
         curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Detach": false, "Tty": true}' -X POST "http://v1.40/exec/$EXEC_ID/start"
       else
          echo 'Running in host...'
-         openvpn --genkey --secret $OPENVPN_DIR/pki/ta.key
+#         openvpn --genkey --secret $OPENVPN_DIR/pki/ta.key
+         openvpn --genkey secret $OPENVPN_DIR/pki/ta.key
       fi
 
       echo 'Create certificate revocation list (CRL)...'

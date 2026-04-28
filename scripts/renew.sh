@@ -7,7 +7,7 @@ set -e
 CERT_NAME=$1
 CERT_IP=$2
 CERT_SERIAL=$3
-EASY_RSA=$(grep -E "^EasyRsaPath\s*=" ../openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
+EASY_RSA=$(grep -E "^EasyRsaPath\s*=" /opt/openvpn-ui/conf/app.conf | cut -d= -f2 | tr -d '"' | tr -d '[:space:]')
 echo 'EasyRSA path: $EASY_RSA'
 
 # Check if 2FA was specified. If not - set to none.
