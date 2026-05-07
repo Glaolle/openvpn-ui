@@ -37,6 +37,9 @@ set_var EasyRSACrlDays		180' > "$OPENVPN_DIR/config/easy-rsa.vars"
   # Uncomment line below to generate CA and server certificates (should be done on the side of OpenVPN container or server however)
   ./scripts/generate_ca_and_server_certs.sh init_all
 
+  cp ./scripts/server.conf $OPENVPN_DIR
+  systemctl enable --now openvpn-server@server
+
   # Create the provisioned file
   touch $OPENVPN_DIR/.provisioned
   echo "First OpenVPN UI start."
