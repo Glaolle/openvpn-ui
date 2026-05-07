@@ -36,8 +36,8 @@ if [[ $ACTION == "-b" ]]; then
         echo " OpenVPN-UI db backed up"
         cp -Rp $SERVER_ENV/pki $BACKUP_DIR
         echo " OpenVPN pki backed up"
-        cp -Rp $SERVER_ENV/staticclients $BACKUP_DIR
-        echo " OpenVPN staticclients backed up"
+        cp -Rp $SERVER_ENV/ccd $BACKUP_DIR
+        echo " OpenVPN ccd backed up"
         cp -Rp $SERVER_ENV/clients $BACKUP_DIR
         echo " OpenVPN clients backed up"
         cp -Rp $SERVER_ENV/fw-rules.sh $BACKUP_DIR/fw-rules.sh
@@ -63,8 +63,8 @@ elif [[ $ACTION == "-r" ]]; then
         echo " OpenVPN-UI db restored"
         rm -rf $SERVER_ENV/pki; cp -Rp $BACKUP_DIR/pki $SERVER_ENV
         echo " OpenVPN pki restored"
-        rm -rf $SERVER_ENV/staticclients; cp -Rp $BACKUP_DIR/staticclients $SERVER_ENV
-        echo " OpenVPN staticclients restored"
+        rm -rf $SERVER_ENV/ccd; cp -Rp $BACKUP_DIR/ccd $SERVER_ENV
+        echo " OpenVPN ccd restored"
         rm -rf $SERVER_ENV/clients; cp -Rp $BACKUP_DIR/clients $SERVER_ENV
         echo " OpenVPN clients restored"
         rm -rf $SERVER_ENV/fw-rules.sh; cp -Rp $BACKUP_DIR/fw-rules.sh $SERVER_ENV/fw-rules.sh

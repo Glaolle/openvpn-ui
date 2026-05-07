@@ -73,9 +73,9 @@ then
 fi
 
 # Install necessary tools
-read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (Y/n) " -n 1 -r
+read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (y/N) " -n 1 -r
 echo    # move to a new line
-REPLY="${REPLY:-Y}"
+REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Install necessary tools
@@ -84,9 +84,9 @@ then
 fi
 
 # Go Modules download
-read -p "Would you like to download all necessary Go modules? (Y/n) " -n 1 -r
+read -p "Would you like to download all necessary Go modules? (y/N) " -n 1 -r
 echo    # move to a new line
-REPLY="${REPLY:-Y}"
+REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Download all Go modules
@@ -94,9 +94,9 @@ then
     go mod download
 fi
 
-read -p "Would you like to install Beego v2? (Y/n) " -n 1 -r
+read -p "Would you like to install Beego v2? (y/N) " -n 1 -r
 echo    # move to a new line
-REPLY="${REPLY:-Y}"
+REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     # Install Beego

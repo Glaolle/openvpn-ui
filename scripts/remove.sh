@@ -10,7 +10,7 @@ OPENVPN_DIR=$(grep -E "^OpenVpnPath\s*=" /opt/openvpn-ui/conf/app.conf | cut -d=
 echo 'EasyRSA path: $EASY_RSA OVPN path: $OPENVPN_DIR'
 PKI_DIR=$EASY_RSA/pki
 CERT_DIR=$OPENVPN_DIR/clients
-STATIC_CLIENT_DIR=$OPENVPN_DIR/staticclients
+STATIC_CLIENT_DIR=$OPENVPN_DIR/ccd
 OVPN_DB_DIR=$OPENVPN_DIR/db
 
 if [ "$ACTION" = "remove_pki" ]; then

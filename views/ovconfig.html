@@ -15,11 +15,11 @@
   <!-- form start -->
   <form role="form" action="{{urlfor "OVConfigController.Post"}}" method="post">
     {{ .xsrfdata }}
-    <div class="card-boddy">
+<!--    <div class="card-boddy">
       <button type="button" style="width: 135px;" class="btn btn-primary" data-toggle="modal" data-target="#config-view-modal">Edit config</button> &nbsp; &nbsp;
       <a href="javascript:$.MyAPP.Restart('SIGUSR1')" class="btn btn-warning btn-primary" style="width: 135px;" title="Conditional Restart (SIGUSR1)">Restart Server</a>
       <span style="color:grey;"> &nbsp; OpenVPN Server Conditional Restart will apply new configuration and re-initiate all active clients sessions.</span> 
-    </div>
+    </div>  -->
       <!-- /.card-body -->
   </form>
   </div>  
@@ -121,7 +121,7 @@
 
      <div class="form-group">
       <label for="name">Client-Config-Dir</label> <!-- strong><span style="color:#337ab7" title="New format in this version">!</span></strong -->
-      <input type="text" class="form-control" name="OVConfigClientConfigDir" id="OVConfigClientConfigDir" placeholder="/etc/openvpn/staticclients"
+      <input type="text" class="form-control" name="OVConfigClientConfigDir" id="OVConfigClientConfigDir" placeholder="/etc/openvpn/server/ccd"
        value="{{ .Settings.OVConfigClientConfigDir }}">
       <span id="helpBlock" class="text-muted"> Directory, which the OpenVPN server will scan on every incoming connection, searching for a client-specific configuration file. 
        <a href="https://community.openvpn.net/openvpn/wiki/HOWTO#Modifyingaliveserverconfiguration" target="_blank">Info</a>

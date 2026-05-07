@@ -126,7 +126,7 @@ func CreateDefaultOVConfig(configDir string, ovConfigPath string, address string
 			MaxClients:               100,
 			OVConfigUser:             "nobody",
 			OVConfigGroup:            "nogroup",
-			OVConfigClientConfigDir:  "/etc/openvpn/staticclients",
+			OVConfigClientConfigDir:  "/etc/openvpn/server/ccd",
 			IfconfigPoolPersist:      "pki/ipp.txt",
 			Ca:                       "pki/ca.crt",
 			Cert:                     "pki/issued/server.crt",

@@ -78,18 +78,18 @@ if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f
 
     elif [ "$ACTION" = "init_all" ]; then
       # Init all Begin
-      cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+      #cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
 
-      echo "Following EASYRSA variables will be used:"
-      cat $EASY_RSA/pki/vars | awk '{$1=""; print $0}';
+      #echo "Following EASYRSA variables will be used:"
+      #cat $EASY_RSA/pki/vars | awk '{$1=""; print $0}';
 
-      echo 'Setting up public key infrastructure...'
-      $EASY_RSA/easyrsa --pki-dir=$TEMP_PKI_DIR init-pki
+      #echo 'Setting up public key infrastructure...'
+      #$EASY_RSA/easyrsa --pki-dir=$TEMP_PKI_DIR init-pki
 
-      echo 'Moving PKI directory...'
-      mv $TEMP_PKI_DIR/* $EASY_RSA/pki/
+      #echo 'Moving PKI directory...'
+      #mv $TEMP_PKI_DIR/* $EASY_RSA/pki/
 
-      cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
+      #cp $OPENVPN_DIR/config/easy-rsa.vars $EASY_RSA/pki/vars
 
       echo 'Generating Certificate authority...'
       $EASY_RSA/easyrsa build-ca nopass
@@ -112,7 +112,6 @@ if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f
         curl --unix-socket /var/run/docker.sock -H "Content-Type: application/json" -d '{"Detach": false, "Tty": true}' -X POST "http://v1.40/exec/$EXEC_ID/start"
       else
          echo 'Running in host...'
-#         openvpn --genkey --secret $OPENVPN_DIR/pki/ta.key
          openvpn --genkey secret $OPENVPN_DIR/pki/ta.key
       fi
 

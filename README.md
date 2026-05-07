@@ -106,7 +106,7 @@ services:
            - ./pki:/etc/openvpn/pki
            - ./clients:/etc/openvpn/clients
            - ./config:/etc/openvpn/config
-           - ./staticclients:/etc/openvpn/staticclients
+           - ./ccd:/etc/openvpn/server/ccd
            - ./log:/var/log/openvpn
            - ./fw-rules.sh:/opt/app/fw-rules.sh
            - ./server.conf:/etc/openvpn/server.conf
@@ -217,7 +217,7 @@ docker run  --interactive --tty --rm \
   -v ./pki:/etc/openvpn/pki \
   -v ./clients:/etc/openvpn/clients \
   -v ./config:/etc/openvpn/config \
-  -v ./staticclients:/etc/openvpn/staticclients \
+  -v ./ccd:/etc/openvpn/server/ccd \
   -v ./log:/var/log/openvpn \
   -v ./fw-rules.sh:/opt/app/fw-rules.sh \
   -v ./server.conf:/etc/openvpn/server.conf \
@@ -697,7 +697,7 @@ All the Server and Client configuration located in Docker volume and can be ease
 |   |-- safessl-easyrsa.cnf
 |   |-- serial
 |   |-- ta.key
-|-- staticclients    //Directory where stored all the satic clients configuration
+|-- ccd    //Directory where stored all the satic clients configuration
 ```
 
 ### Generating .OVPN client profiles

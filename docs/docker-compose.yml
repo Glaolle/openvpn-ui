@@ -15,7 +15,7 @@ services:
            - ./pki:/etc/openvpn/pki
            - ./clients:/etc/openvpn/clients
            - ./config:/etc/openvpn/config
-           - ./staticclients:/etc/openvpn/staticclients
+           - ./ccd:/etc/openvpn/server/ccd
            - ./log:/var/log/openvpn
            - ./fw-rules.sh:/opt/app/fw-rules.sh
        cap_add:

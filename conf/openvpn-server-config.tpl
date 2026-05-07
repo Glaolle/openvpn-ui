@@ -9,7 +9,7 @@ topology {{ .OVConfigTopology }}
 keepalive {{ .Keepalive }}
 max-clients {{ .MaxClients }}
 
-persist-key
+#persist-key
 persist-tun
 explicit-exit-notify 1
 

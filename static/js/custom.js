@@ -21,9 +21,9 @@ $.MyAPP.Disconnect = function (cname){
 $.MyAPP.Restart = function (sname){
   console.log(sname)
   $.ajax({
-    type: "DELETE",
+    type: "POST",
     dataType: "json",
-    url: "/signal",
+    url: "api/v1/signal",
     data: JSON.stringify({ "sname": sname }),
     success: function(data) {
       location.reload();
