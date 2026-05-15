@@ -1,0 +1,17 @@
+[Unit]
+Description=Openvpn Web Interface
+After=network.target
+
+[Service]
+# Ensure the path exists and contains your binary/config folders
+WorkingDirectory=/opt/openvpn-ui
+ExecStart=/opt/openvpn-ui/openvpn-ui
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+
+# Environment variables if needed
+Environment=BEEGO_RUNMODE=prod
+
+[Install]
+WantedBy=multi-user.target
