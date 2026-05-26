@@ -47,9 +47,9 @@ if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f
       echo 'Sign request...'
       $EASY_RSA/easyrsa sign-req server server
 
-    elif [[ "$ACTION" = "gen_dh" && ! -f $OPENVPN_DIR/pki/dh.pem ]]; then
-      echo 'Generate Diffie-Hellman key...'
-      $EASY_RSA/easyrsa gen-dh
+#    elif [[ "$ACTION" = "gen_dh" && ! -f $OPENVPN_DIR/pki/dh.pem ]]; then
+#      echo 'Generate Diffie-Hellman key...'
+#      $EASY_RSA/easyrsa gen-dh
 
     elif [[ "$ACTION" = "gen_ta" && ! -f $OPENVPN_DIR/pki/ta.key ]]; then
       # Generate HMAC signature in "openvpn" container with Docker API or in host
@@ -100,8 +100,8 @@ if [[ ! -f $EASY_RSA/openssl-easyrsa.cnf || ! -f $OPENVPN_DIR/pki/ca.crt || ! -f
       echo 'Sign request...'
       $EASY_RSA/easyrsa sign-req server server
 
-      echo 'Generate Diffie-Hellman key...'
-      $EASY_RSA/easyrsa gen-dh
+#      echo 'Generate Diffie-Hellman key...'
+#      $EASY_RSA/easyrsa gen-dh
 
       echo 'Generate HMAC signature...'
       if ! command -v openvpn &> /dev/null

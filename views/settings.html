@@ -57,12 +57,22 @@
       </div>
 
       <div class="form-group">
-        <label class="col-form-label" for="name">EasyRSA ConfigPath</label> <strong><span style="color:#337ab7" title="New format in this version">!</span></strong>
+        <label class="col-form-label" for="name">EasyRSA ConfigPath</label>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fas fa-folder"></i></span>
           </div>
           <input type="text" class="form-control" id="EasyRSAPath" name="EasyRSAPath" title="EasyRSA configuration path." placeholder="/usr/share/easy-rsa" value="{{ .Settings.EasyRSAPath }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label" for="name">AutoPrefix</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-exchange"></i></span>
+          </div>
+          <input type="text" class="form-control" id="AutoPrefix" name="AutoPrefix" title="AutoPrefix for Nginx." placeholder="/test" value="{{ .Settings.AutoPrefix }}">
         </div>
       </div>
 

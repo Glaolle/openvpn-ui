@@ -32,7 +32,10 @@ set_var EasyRSAKeySize		2048
 set_var EasyRSACaExpire		3650
 set_var EasyRSACertExpire	825
 set_var EasyRSACertRenew	30
-set_var EasyRSACrlDays		180' > "$OPENVPN_DIR/config/easy-rsa.vars"
+set_var EasyRSACrlDays		180
+set_var EASYRSA_ALGO		"ec"
+set_var EASYRSA_CURVE		"secp384r1"
+' > "$OPENVPN_DIR/config/easy-rsa.vars"
 
   # Uncomment line below to generate CA and server certificates (should be done on the side of OpenVPN container or server however)
   ./scripts/generate_ca_and_server_certs.sh init_all

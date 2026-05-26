@@ -12,3 +12,5 @@ set_var EASYRSA_CA_EXPIRE    {{ .EasyRSACaExpire }}
 set_var EASYRSA_CERT_EXPIRE  {{ .EasyRSACertExpire }}
 set_var EASYRSA_CERT_RENEW   {{ .EasyRSACertRenew }}
 set_var EASYRSA_CRL_DAYS     {{ .EasyRSACrlDays }}
+set_var EASYRSA_ALGO         "{{ .EasyRSAAlgo }}"
+set_var EASYRSA_CURVE        "{{ .EasyRSACurve }}"

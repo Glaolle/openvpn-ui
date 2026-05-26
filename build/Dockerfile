@@ -3,7 +3,7 @@
 
 # LINE 33 is WA for current version of easy-rsa, it will be removed in future!! 
 
-FROM DEFINE-YOUR-ARCH
+FROM alpine
 LABEL maintainer="Mr.Philipp <d3vilh@github.com>"
 LABEL version="0.9.5.6"
 WORKDIR /opt

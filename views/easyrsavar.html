@@ -95,6 +95,20 @@
       </div>
 
       <div class="form-group">
+        <label for="name">EASYRSA_KEY_ALGO</label>
+        <input type="text" class="form-control" id="EasyRSAAlgo" name="EasyRSAAlgo" placeholder="ec"
+          value="{{ .Settings.EasyRSAAlgo }}">
+        <span id="helpBlock" class="text-muted">Choices for crypto alg are: (each in lower-case) - rsa, ec, ed.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">EASYRSA_CURVE</label>
+        <input type="text" class="form-control" id="EasyRSACurve" name="EasyRSACurve" placeholder="secp384r1"
+          value="{{ .Settings.EasyRSACurve }}">
+        <span id="helpBlock" class="text-muted">Define the named curve, used in ec & ed modes.</span>
+      </div>
+
+      <div class="form-group">
         <label for="name">EASYRSA_KEY_SIZE</label>
         <input type="text" class="form-control" id="EasyRSAKeySize" name="EasyRSAKeySize" placeholder="2048"
           value="{{ .Settings.EasyRSAKeySize }}">

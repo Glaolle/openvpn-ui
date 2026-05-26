@@ -18,6 +18,8 @@ type Settings struct {
 	OVConfigPath string `orm:"size(64);unique" form:"OVConfigPath" valid:"Required;"`
 	EasyRSAPath  string `orm:"size(64);unique" form:"EasyRSAPath" valid:"Required;"`
 
+	AutoPrefix  string `orm:"size(64);unique" form:"AutoPrefix" valid:"Required;"`
+
 	//	ServerAddress     string `orm:"size(64);unique" form:"ServerAddress" valid:"Required;"`
 	//	OpenVpnServerPort string `orm:"size(64);unique" form:"OpenVpnServerPort" valid:"Required;"`
 

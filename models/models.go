@@ -87,12 +87,18 @@ func CreateDefaultSettings() (*Settings, error) {
 		return nil, err
 	}
 
+	autoPrefix, err := web.AppConfig.String("AutoPrefix")
+	if err != nil {
+		return nil, err
+	}
+
 	s := Settings{
 		Profile:      "default",
 		MIAddress:    miAddress,
 		MINetwork:    miNetwork,
 		OVConfigPath: ovConfigPath,
 		EasyRSAPath:  easyRSAPath,
+		AutoPrefix:  autoPrefix,
 		//	ServerAddress:     serverAddress,
 		//	OpenVpnServerPort: serverPort,
 	}
@@ -132,7 +138,7 @@ func CreateDefaultOVConfig(configDir string, ovConfigPath string, address string
 			Cert:                     "pki/issued/server.crt",
 			Key:                      "pki/private/server.key",
 			Crl:                      "pki/crl.pem",
-			Dh:                       "pki/dh.pem",
+			Dh:                       "none",
 			TLSControlChannel:        "tls-crypt pki/ta.key",
 			TLSMinVersion:            "tls-version-min 1.2",
 			TLSRemoteCert:            "remote-cert-tls client",
@@ -186,7 +192,7 @@ func CreateDefaultOVClientConfig(configDir string, ovConfigPath string, address 
 			OVClientUser:      "nobody",
 			OVClientGroup:     "nogroup",
 			PersistTun:        "persist-tun",
-			PersistKey:        "persist-key",
+			PersistKey:        "#persist-key",
 			RemoteCertTLS:     "remote-cert-tls server",
 			Cipher:            "AES-256-GCM",
 			RedirectGateway:   "redirect-gateway def1",
@@ -236,6 +242,8 @@ func CreateDefaultEasyRSAConfig(configDir string, easyRSAPath string, address st
 			EasyRSACertExpire:  825,
 			EasyRSACertRenew:   30,
 			EasyRSACrlDays:     180,
+			EasyRSAAlgo:        "ec",
+			EasyRSACurve:       "secp384r1",
 		},
 	}
 	o := orm.NewOrm()
