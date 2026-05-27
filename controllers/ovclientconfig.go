@@ -87,7 +87,7 @@ func (c *OVClientConfigController) Post() {
 	} else {
 		flash.Success("Post: Config has been updated")
 		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
-		if err := client.Signal("SIGHUP"); err != nil {
+		if err := client.Signal("SIGUSR1"); err != nil {
 			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
 		}
 	}
