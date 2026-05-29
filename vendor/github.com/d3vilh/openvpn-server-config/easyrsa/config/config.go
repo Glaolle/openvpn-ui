@@ -22,9 +22,7 @@ var defaultConfig = Config{
 	EasyRSACertExpire:  825,
 	EasyRSACertRenew:   30,
 	EasyRSACrlDays:     180,
-        EasyRSAAlgo:        "ec",
-        EasyRSACurve:       "secp384r1",
-  }
+}
 
 // Config model
 type Config struct {
@@ -42,8 +40,6 @@ type Config struct {
 	EasyRSACertExpire int
 	EasyRSACertRenew  int
 	EasyRSACrlDays    int
-        EasyRSAAlgo        string
-        EasyRSACurve       string
 }
 
 // New returns config object with default values
