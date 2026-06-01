@@ -37,6 +37,7 @@ func (c *ProfileController) NestPrepare() {
 }
 
 func (c *ProfileController) Get() {
+	// #nosec G203
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["profile"] = c.Userinfo
 	c.TplName = "profile.html"
@@ -63,7 +64,7 @@ func (c *ProfileController) Post() {
 	user := models.User{}
 	if err := c.ParseForm(&user); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -78,7 +79,7 @@ func (c *ProfileController) Post() {
 
 	hash, err := passlib.Hash(user.Password)
 	if err != nil {
-		flash.Error("Unable to hash password")
+		flash.Error("%s", "Unable to hash password")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -87,9 +88,9 @@ func (c *ProfileController) Post() {
 	c.Userinfo.Password = hash
 	o := orm.NewOrm()
 	if _, err := o.Update(c.Userinfo); err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 	} else {
-		flash.Success("Profile has been updated!")
+		flash.Success("%s", "Profile has been updated!")
 	}
 	flash.Store(&c.Controller)
 	c.List()
@@ -159,7 +160,7 @@ func (c *ProfileController) Create() {
 	var existingUser models.User
 	err := o.QueryTable("user").Filter("Login", user.Login).One(&existingUser)
 	if err == nil {
-		flash.Warning("User with login \"" + user.Login + "\" is already exists!")
+		flash.Warning("%s", "User with login \""+user.Login+"\" is already exists!")
 		flash.Store(&c.Controller)
 		logs.Info("User already exists:", user.Login)
 		c.List()
@@ -194,7 +195,7 @@ func (c *ProfileController) Create() {
 	if created, _, err := o.ReadOrCreate(&newUser, "Name"); err == nil {
 		if created {
 			logs.Info("New user with login \"" + user.Login + "\" created successfully.")
-			flash.Success("New user with login \"" + user.Login + "\" created successfully.")
+			flash.Success("%s", "New user with login \""+user.Login+"\" created successfully.")
 			flash.Store(&c.Controller)
 		} else {
 			logs.Debug(newUser)
@@ -242,12 +243,12 @@ func (c *ProfileController) DeleteUser() {
 
 	if _, err := o.Delete(&user); err != nil {
 		logs.Error("Failed to delete user \""+user.Login+"\" profile:", err)
-		flash.Error("Failed to delete user \"" + user.Login + "\" profile")
+		flash.Error("%s", "Failed to delete user \""+user.Login+"\" profile")
 		return
 	}
 
 	logs.Info("New user with login \""+user.Login+"\" deleted successfully. It had user ID: ", id)
-	flash.Success("User  \"" + user.Login + "\" deleted successfully.")
+	flash.Success("%s", "User  \""+user.Login+"\" deleted successfully.")
 	flash.Store(&c.Controller)
 	c.List()
 }
@@ -266,7 +267,7 @@ func (c *ProfileController) EditUser() {
 	user := models.User{Id: int64(id)}
 	if err := o.Read(&user); err != nil {
 		logs.Error("Failed to read user \""+user.Name+"\" profile:", err)
-		flash.Error("Failed to read user \"" + user.Name + "\" profile")
+		flash.Error("%s", "Failed to read user \""+user.Name+"\" profile")
 		return
 	}
 
@@ -286,12 +287,12 @@ func (c *ProfileController) EditUser() {
 
 	if _, err := o.Update(&user); err != nil {
 		logs.Error("Failed to update user \""+user.Name+"\" profile:", err)
-		flash.Error("Failed to update user \"" + user.Name + "\" profile")
+		flash.Error("%s", "Failed to update user \""+user.Name+"\" profile")
 		return
 	}
 
 	logs.Info("Updated user profile with ID", id)
-	flash.Success("User \"" + user.Name + "\" updated successfully")
+	flash.Success("%s", "User \""+user.Name+"\" updated successfully")
 	flash.Store(&c.Controller)
 	c.List()
 }

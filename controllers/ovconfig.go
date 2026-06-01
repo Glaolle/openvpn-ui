@@ -44,6 +44,7 @@ func (c *OVConfigController) Get() {
 		return
 	}
 	c.Data["ServerConfig"] = string(serverConf)
+	// #nosec G203
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	cfg := models.OVConfig{Profile: "default"}
 	_ = cfg.Read("Profile")
@@ -64,7 +65,7 @@ func (c *OVConfigController) Post() {
 	logs.Info("Form data before parsing: %v", c.Ctx.Request.Form)
 	if err := c.ParseForm(&cfg); err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -81,7 +82,7 @@ func (c *OVConfigController) Post() {
 	err := config.SaveToFile(filepath.Join(c.ConfigDir, "openvpn-server-config.tpl"), cfg.Config, destPath)
 	if err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -89,12 +90,12 @@ func (c *OVConfigController) Post() {
 	logs.Info("Post: Updating configuration in database")
 	o := orm.NewOrm()
 	if _, err := o.Update(&cfg); err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 	} else {
 		flash.Success("Post: Config has been updated")
 		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
 		if err := client.Signal("SIGUSR1"); err != nil {
-			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+			flash.Warning("%s", "Config has been updated but OpenVPN server was NOT reloaded: "+err.Error())
 		}
 	}
 
@@ -102,7 +103,7 @@ func (c *OVConfigController) Post() {
 	serverConf, err := os.ReadFile(destPath)
 	if err != nil {
 		logs.Error("Error reading server config from file:", err)
-		flash.Error("Error reading server config from file")
+		flash.Error("%s", "Error reading server config from file")
 		return
 	}
 	c.Data["ServerConfig"] = string(serverConf)
@@ -120,7 +121,7 @@ func (c *OVConfigController) Edit() {
 	//logs.Info("Post: Parsing form data")
 	if err := c.ParseForm(&cfg); err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -135,17 +136,17 @@ func (c *OVConfigController) Edit() {
 	err := lib.ConfSaveToFile(destPath, c.GetString("ServerConfig"))
 	if err != nil {
 		logs.Error("Error saving server config to file:", err)
-		flash.Error("Error saving server config to file")
+		flash.Error("%s", "Error saving server config to file")
 		return
 	} else {
 		//logs.Info("Edit: Server config saved to file:", destPath)
-		flash.Success("Config has been updated")
+		flash.Success("%s", "Config has been updated")
 	}
 
 	serverConf, err := os.ReadFile(destPath)
 	if err != nil {
 		logs.Error("Error reading server config from file:", err)
-		flash.Error("Error reading server config from file")
+		flash.Error("%s", "Error reading server config from file")
 		return
 	}
 	c.Data["ServerConfig"] = string(serverConf)

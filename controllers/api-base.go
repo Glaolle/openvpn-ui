@@ -39,14 +39,14 @@ func (c *APIBaseController) ServeJSONMessage(message string) {
 	r := NewJSONResponse()
 	r.Message = message
 	c.Data["json"] = r
-	c.ServeJSON()
+	_ = c.ServeJSON()
 }
 
 func (c *APIBaseController) ServeJSONData(data interface{}) {
 	r := NewJSONResponse()
 	r.Data = data
 	c.Data["json"] = r
-	c.ServeJSON()
+	_ = c.ServeJSON()
 }
 
 func (c *APIBaseController) ServeJSONError(message string) {
@@ -56,5 +56,5 @@ func (c *APIBaseController) ServeJSONError(message string) {
 	}
 	logs.Warning(message)
 	c.Ctx.Output.SetStatus(400)
-	c.ServeJSON()
+	_ = c.ServeJSON()
 }

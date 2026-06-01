@@ -33,7 +33,7 @@ func (c *BaseController) Prepare() {
 			c.Userinfo = &user
 		} else {
 			c.IsLogin = false
-			c.DelSession("userinfo")
+			_ = c.DelSession("userinfo")
 		}
 	} else {
 		c.IsLogin = false

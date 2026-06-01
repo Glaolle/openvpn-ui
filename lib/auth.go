@@ -54,9 +54,9 @@ func authenticateLdap(login, password string) (*models.User, error) {
 	}
 
 	if ldapTransport == "tls" {
-		connection, err = ldap.DialTLS("tcp", address, &tls.Config{InsecureSkipVerify: skipVerify})
+		connection, err = ldap.DialURL("ldaps://"+address, ldap.DialWithTLSConfig(&tls.Config{InsecureSkipVerify: skipVerify}))
 	} else {
-		connection, err = ldap.Dial("tcp", address)
+		connection, err = ldap.DialURL("ldap://" + address)
 	}
 
 	if err != nil {

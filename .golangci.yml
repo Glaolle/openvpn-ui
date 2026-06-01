@@ -1,0 +1,12 @@
+# .golangci.yml
+linters:
+  enable:
+    - goimports # Проверка импортов
+    - unused # Неиспользуемый код
+    - gosec # Безопасность
+    - ineffassign # Неэффективные присвоения
+linters-settings:
+  gosec:
+    excludes:
+      - G204
+      - G306

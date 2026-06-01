@@ -106,7 +106,7 @@ func (c *CertificatesController) DisplayImage() {
 	c.Ctx.Output.Header("Content-Type", "image/png")
 
 	// Write the image data directly to the response body
-	c.Ctx.Output.Body(data)
+	_ = c.Ctx.Output.Body(data)
 }
 
 func (c *CertificatesController) showCerts() {
@@ -133,7 +133,7 @@ func (c *CertificatesController) Post() {
 	cParams := NewCertParams{}
 	if err := c.ParseForm(&cParams); err != nil {
 		logs.Error(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 	} else {
 		if vMap := validateCertParams(cParams); vMap != nil {
@@ -142,10 +142,10 @@ func (c *CertificatesController) Post() {
 			logs.Info("Controller: Creating certificate with parameters: Name=%s, Staticip=%s, Passphrase=%s, ExpireDays=%s, Email=%s, Country=%s, Province=%s, City=%s, Org=%s, OrgUnit=%s, TFAName=%s, TFAIssuer=%s", cParams.Name, cParams.Staticip, cParams.Passphrase, cParams.ExpireDays, cParams.Email, cParams.Country, cParams.Province, strconv.Quote(cParams.City), strconv.Quote(cParams.Org), strconv.Quote(cParams.OrgUnit), cParams.TFAName, cParams.TFAIssuer)
 			if err := lib.CreateCertificate(cParams.Name, cParams.Staticip, cParams.Passphrase, cParams.ExpireDays, cParams.Email, cParams.Country, cParams.Province, strconv.Quote(cParams.City), strconv.Quote(cParams.Org), strconv.Quote(cParams.OrgUnit), cParams.TFAName, cParams.TFAIssuer); err != nil {
 				logs.Error(err)
-				flash.Error(err.Error())
+				flash.Error("%s", err.Error())
 				flash.Store(&c.Controller)
 			} else {
-				flash.Success("Success! Certificate for the name \"" + cParams.Name + "\" has been created")
+				flash.Success("%s", "Success! Certificate for the name \""+cParams.Name+"\" has been created")
 				flash.Store(&c.Controller)
 			}
 		}
@@ -169,7 +169,7 @@ func (c *CertificatesController) Revoke() {
 		//flash.Error(err.Error())
 		//flash.Store(&c.Controller)
 	} else {
-		flash.Success("Success! Certificate for the name \"" + name + "\" and serial  \"" + serial + "\" has been revoked")
+		flash.Success("%s", "Success! Certificate for the name \""+name+"\" and serial  \""+serial+"\" has been revoked")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -177,7 +177,7 @@ func (c *CertificatesController) Revoke() {
 
 // @router /certificates/restart [get]
 func (c *CertificatesController) Restart() {
-	lib.Restart()
+	_ = lib.Restart()
 	c.Redirect(c.URLFor("CertificatesController.Get"), 302)
 	// return
 }
@@ -195,7 +195,7 @@ func (c *CertificatesController) Burn() {
 		//flash.Error(err.Error())
 		//flash.Store(&c.Controller)
 	} else {
-		flash.Success("Success! Certificate for the name \"" + CN + "\" and serial  \"" + serial + "\"  has been removed")
+		flash.Success("%s", "Success! Certificate for the name \""+CN+"\" and serial  \""+serial+"\"  has been removed")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()
@@ -214,7 +214,7 @@ func (c *CertificatesController) Renew() {
 		//flash.Error(err.Error())
 		//flash.Store(&c.Controller)
 	} else {
-		flash.Success("Success! Certificate for the name \"" + name + "\"  and IP \"" + localip + "\" and Serial \"" + serial + "\" has been renewed")
+		flash.Success("%s", "Success! Certificate for the name \""+name+"\"  and IP \""+localip+"\" and Serial \""+serial+"\" has been renewed")
 		flash.Store(&c.Controller)
 	}
 	c.showCerts()

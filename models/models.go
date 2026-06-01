@@ -9,6 +9,7 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	clientconfig "github.com/d3vilh/openvpn-server-config/client/client-config"
+//	easyrsaconfig "openvpn-ui/models/config/easyrsa/config"
 	easyrsaconfig "github.com/d3vilh/openvpn-server-config/easyrsa/config"
 	"github.com/d3vilh/openvpn-server-config/server/config"
 	"gopkg.in/hlandau/passlib.v1"
@@ -98,7 +99,7 @@ func CreateDefaultSettings() (*Settings, error) {
 		MINetwork:    miNetwork,
 		OVConfigPath: ovConfigPath,
 		EasyRSAPath:  easyRSAPath,
-		AutoPrefix:  autoPrefix,
+		AutoPrefix:   autoPrefix,
 		//	ServerAddress:     serverAddress,
 		//	OpenVpnServerPort: serverPort,
 	}

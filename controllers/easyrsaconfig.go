@@ -41,6 +41,7 @@ func (c *EasyRSAConfigController) Get() {
 	}
 	c.Data["EasyRSAConf"] = string(easyRSAConfig)
 
+	// #nosec G203
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	cfg := models.EasyRSAConfig{Profile: "default"}
 	_ = cfg.Read("Profile")
@@ -55,7 +56,7 @@ func (c *EasyRSAConfigController) Post() {
 	_ = cfg.Read("Profile")
 	if err := c.ParseForm(&cfg); err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -66,7 +67,7 @@ func (c *EasyRSAConfigController) Post() {
 	err := easyrsaconfig.SaveToFile(filepath.Join(c.ConfigDir, "easyrsa-vars.tpl"), cfg.Config, destPath)
 	if err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -75,19 +76,19 @@ func (c *EasyRSAConfigController) Post() {
 	err = easyrsaconfig.SaveToFile(filepath.Join(c.ConfigDir, "easyrsa-vars.tpl"), cfg.Config, destPath)
 	if err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
 
 	o := orm.NewOrm()
 	if _, err := o.Update(&cfg); err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 	} else {
 		flash.Success("Config has been updated")
 		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
 		if err := client.Signal("SIGUSR1"); err != nil {
-			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+			flash.Warning("%s", "Config has been updated but OpenVPN server was NOT reloaded: "+err.Error())
 		}
 	}
 

@@ -15,6 +15,7 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	oauth2api "google.golang.org/api/oauth2/v2"
+	"google.golang.org/api/option"
 )
 
 // Initialize OAuth2 configuration
@@ -68,6 +69,7 @@ func (c *LoginController) Login() {
 	}
 
 	c.TplName = "login.html"
+	// #nosec G203
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	if !c.Ctx.Input.IsPost() {
 		return
@@ -79,21 +81,21 @@ func (c *LoginController) Login() {
 
 	authType, err := web.AppConfig.String("AuthType")
 	if err != nil {
-		flash.Warning(err.Error())
+		flash.Warning("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
 	user, err := lib.Authenticate(login, password, authType)
 
 	if err != nil {
-		flash.Warning(err.Error())
+		flash.Warning("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
 	user.Lastlogintime = time.Now()
 	err = user.Update("Lastlogintime")
 	if err != nil {
-		flash.Warning(err.Error())
+		flash.Warning("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -134,7 +136,7 @@ func (c *LoginController) GoogleCallback() {
 	}
 
 	client := oauthConf.Client(context.Background(), token)
-	service, err := oauth2api.New(client)
+	service, err := oauth2api.NewService(context.Background(), option.WithHTTPClient(client))
 	if err != nil {
 		c.Ctx.WriteString("Failed to create OAuth2 service: " + err.Error())
 		return
@@ -161,7 +163,7 @@ func (c *LoginController) GoogleCallback() {
 	if !allowed {
 		c.Data["error"] = "Your Email is not allowed to login"
 		c.TplName = "login.html"
-		c.Render()
+		_ = c.Render()
 		return
 	}
 
@@ -201,7 +203,7 @@ func (c *LoginController) GoogleCallback() {
 	if !user.Allowed {
 		c.Data["error"] = "Access denied"
 		c.TplName = "login.html"
-		c.Render()
+		_ = c.Render()
 		return
 	}
 

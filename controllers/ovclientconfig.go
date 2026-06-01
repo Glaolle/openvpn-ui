@@ -43,6 +43,7 @@ func (c *OVClientConfigController) Get() {
 		return
 	}
 	c.Data["ClientTemplate"] = string(clientTemplate)
+	// #nosec G203
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	cfg := models.OVClientConfig{Profile: "default"}
 	_ = cfg.Read("Profile")
@@ -61,7 +62,7 @@ func (c *OVClientConfigController) Post() {
 	//logs.Info("Post: Parsing form data")
 	if err := c.ParseForm(&cfg); err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -75,7 +76,7 @@ func (c *OVClientConfigController) Post() {
 	err := clientconfig.SaveToFile(filepath.Join(c.ConfigDir, "openvpn-client-config.tpl"), cfg.Config, destPath)
 	if err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -83,12 +84,12 @@ func (c *OVClientConfigController) Post() {
 	//logs.Info("Post: Updating configuration in database")
 	o := orm.NewOrm()
 	if _, err := o.Update(&cfg); err != nil {
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 	} else {
 		flash.Success("Post: Config has been updated")
 		client := mi.NewClient(state.GlobalCfg.MINetwork, state.GlobalCfg.MIAddress)
 		if err := client.Signal("SIGUSR1"); err != nil {
-			flash.Warning("Config has been updated but OpenVPN server was NOT reloaded: " + err.Error())
+			flash.Warning("%s", "Config has been updated but OpenVPN server was NOT reloaded: "+err.Error())
 		}
 	}
 
@@ -96,7 +97,7 @@ func (c *OVClientConfigController) Post() {
 	clientTemplate, err := os.ReadFile(destPath)
 	if err != nil {
 		logs.Error("Error reading Client template from file:", err)
-		flash.Error("Error reading Client template from file")
+		flash.Error("%s", "Error reading Client template from file")
 		return
 	}
 	c.Data["ClientTemplate"] = string(clientTemplate)
@@ -114,7 +115,7 @@ func (c *OVClientConfigController) Edit() {
 	//logs.Info("Post: Parsing form data")
 	if err := c.ParseForm(&cfg); err != nil {
 		logs.Warning(err)
-		flash.Error(err.Error())
+		flash.Error("%s", err.Error())
 		flash.Store(&c.Controller)
 		return
 	}
@@ -129,17 +130,17 @@ func (c *OVClientConfigController) Edit() {
 	err := lib.ConfSaveToFile(destPath, c.GetString("ClientTemplate"))
 	if err != nil {
 		logs.Error("Error saving Client template to file:", err)
-		flash.Error("Error saving Client template to file")
+		flash.Error("%s", "Error saving Client template to file")
 		return
 	} else {
 		//logs.Info("Edit: Client template saved to file:", destPath)
-		flash.Success("Client template has been updated")
+		flash.Success("%s", "Client template has been updated")
 	}
 
 	clientTempl, err := os.ReadFile(destPath)
 	if err != nil {
 		logs.Error("Error reading Client template from file:", err)
-		flash.Error("Error reading Client template from file")
+		flash.Error("%s", "Error reading Client template from file")
 		return
 	}
 	c.Data["ClientTemplate"] = string(clientTempl)
