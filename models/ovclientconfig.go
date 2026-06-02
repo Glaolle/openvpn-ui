@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/beego/beego/v2/client/orm"
-	clientconfig "github.com/d3vilh/openvpn-server-config/client/client-config"
+	clientconfig "github.com/glaolle/openvpn-ui/internal/clientconfig"
 )
 
 // OVClientConfig holds values for OpenVPN Client config file

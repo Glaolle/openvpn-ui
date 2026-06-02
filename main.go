@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-ui/lib"
-	"github.com/d3vilh/openvpn-ui/models"
-	"github.com/d3vilh/openvpn-ui/routers"
-	"github.com/d3vilh/openvpn-ui/state"
+	"github.com/glaolle/openvpn-ui/lib"
+	"github.com/glaolle/openvpn-ui/models"
+	"github.com/glaolle/openvpn-ui/routers"
+	"github.com/glaolle/openvpn-ui/state"
 )
 
 func main() {

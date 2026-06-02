@@ -8,11 +8,11 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-server-config/server/config"
-	mi "github.com/d3vilh/openvpn-server-config/server/mi"
-	"github.com/d3vilh/openvpn-ui/lib"
-	"github.com/d3vilh/openvpn-ui/models"
-	"github.com/d3vilh/openvpn-ui/state"
+	"github.com/glaolle/openvpn-ui/internal/server/config"
+	mi "github.com/glaolle/openvpn-ui/internal/server/mi"
+	"github.com/glaolle/openvpn-ui/lib"
+	"github.com/glaolle/openvpn-ui/models"
+	"github.com/glaolle/openvpn-ui/state"
 )
 
 type OVConfigController struct {

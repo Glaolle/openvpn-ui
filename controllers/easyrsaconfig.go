@@ -8,11 +8,11 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	easyrsaconfig "github.com/d3vilh/openvpn-server-config/easyrsa/config"
-	mi "github.com/d3vilh/openvpn-server-config/server/mi"
-	"github.com/d3vilh/openvpn-ui/lib"
-	"github.com/d3vilh/openvpn-ui/models"
-	"github.com/d3vilh/openvpn-ui/state"
+	easyrsaconfig "github.com/glaolle/openvpn-ui/internal/easyrsaconfig"
+	mi "github.com/glaolle/openvpn-ui/internal/server/mi"
+	"github.com/glaolle/openvpn-ui/lib"
+	"github.com/glaolle/openvpn-ui/models"
+	"github.com/glaolle/openvpn-ui/state"
 )
 
 type EasyRSAConfigController struct {

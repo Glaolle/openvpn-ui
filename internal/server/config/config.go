@@ -114,7 +114,7 @@ func GetText(tpl string, c Config) (string, error) {
 		return "", err
 	}
 	buf := new(bytes.Buffer)
-	t.Execute(buf, c)
+	_ = t.Execute(buf, c)
 	return buf.String(), nil
 }
 

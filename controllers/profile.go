@@ -9,8 +9,8 @@ import (
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/core/validation"
 	"github.com/beego/beego/v2/server/web"
-	"github.com/d3vilh/openvpn-ui/lib"
-	"github.com/d3vilh/openvpn-ui/models"
+	"github.com/glaolle/openvpn-ui/lib"
+	"github.com/glaolle/openvpn-ui/models"
 )
 
 type NewUser struct {

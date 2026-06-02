@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 
-	mi "github.com/d3vilh/openvpn-server-config/server/mi"
-	"github.com/d3vilh/openvpn-ui/state"
+	mi "github.com/glaolle/openvpn-ui/internal/server/mi"
+	"github.com/glaolle/openvpn-ui/state"
 )
 
 // APISignalController sends signals to OpenVPN daemon

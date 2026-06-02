@@ -66,8 +66,8 @@ func ParseStats(input string) (*LoadStats, error) {
 // ParseStatus gets status information from string
 func ParseStatus(input string) (*Status, error) {
 	s := Status{}
-	s.ClientList = make([]*OVClient, 0, 0)
-	s.RoutingTable = make([]*RoutingPath, 0, 0)
+	s.ClientList = make([]*OVClient, 0)
+	s.RoutingTable = make([]*RoutingPath, 0)
 	a := strings.Split(trim(input), "\n")
 	for _, line := range a {
 		fields := strings.Split(trim(line), ",")
@@ -154,8 +154,5 @@ func stripPrefix(s, prefix string) string {
 }
 
 func isSuccess(s string) bool {
-	if strings.HasPrefix(s, "SUCCESS: ") {
-		return true
-	}
-	return false
+	return strings.HasPrefix(s, "SUCCESS: ")
 }

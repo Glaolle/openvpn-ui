@@ -57,12 +57,6 @@ github.com/cespare/xxhash/v2
 ## explicit; go 1.25.0
 github.com/cloudfoundry/gosigar
 github.com/cloudfoundry/gosigar/sys/windows
-# github.com/d3vilh/openvpn-server-config v0.3.5
-## explicit
-github.com/d3vilh/openvpn-server-config/client/client-config
-github.com/d3vilh/openvpn-server-config/easyrsa/config
-github.com/d3vilh/openvpn-server-config/server/config
-github.com/d3vilh/openvpn-server-config/server/mi
 # github.com/felixge/httpsnoop v1.0.4
 ## explicit; go 1.13
 github.com/felixge/httpsnoop

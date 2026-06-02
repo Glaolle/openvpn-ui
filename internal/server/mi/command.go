@@ -12,7 +12,7 @@ import (
 // SendCommand passes command to a given connection (adds logging and EOL character)
 func SendCommand(conn net.Conn, cmd string) error {
 	log.Debug("Sending command: " + cmd)
-	if _, err := fmt.Fprintf(conn, cmd+"\n"); err != nil {
+	if _, err := fmt.Fprintf(conn, "%s", cmd+"\n"); err != nil {
 		return err
 	}
 	log.Debug("Command ", cmd, " successfuly send")
@@ -25,7 +25,7 @@ func ReadResponse(reader *bufio.Reader) (string, error) {
 	var result = ""
 	i := 0
 
-	for finished == false {
+	for !finished {
 		line, err := reader.ReadString('\n')
 		if err != nil {
 			log.Error(line, err)

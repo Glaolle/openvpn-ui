@@ -22,9 +22,9 @@ var defaultConfig = Config{
 	EasyRSACertExpire:  825,
 	EasyRSACertRenew:   30,
 	EasyRSACrlDays:     180,
-        EasyRSAAlgo:        "ec",
-        EasyRSACurve:       "secp384r1",
-  }
+	EasyRSAAlgo:        "ec",
+	EasyRSACurve:       "secp384r1",
+}
 
 // Config model
 type Config struct {
@@ -42,8 +42,8 @@ type Config struct {
 	EasyRSACertExpire int
 	EasyRSACertRenew  int
 	EasyRSACrlDays    int
-        EasyRSAAlgo        string
-        EasyRSACurve       string
+	EasyRSAAlgo       string
+	EasyRSACurve      string
 }
 
 // New returns config object with default values
@@ -59,7 +59,7 @@ func GetText(tpl string, c Config) (string, error) {
 		return "", err
 	}
 	buf := new(bytes.Buffer)
-	t.Execute(buf, c)
+	_ = t.Execute(buf, c)
 	return buf.String(), nil
 }
 

@@ -8,10 +8,9 @@ import (
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-	clientconfig "github.com/d3vilh/openvpn-server-config/client/client-config"
-//	easyrsaconfig "openvpn-ui/models/config/easyrsa/config"
-	easyrsaconfig "github.com/d3vilh/openvpn-server-config/easyrsa/config"
-	"github.com/d3vilh/openvpn-server-config/server/config"
+	clientconfig "github.com/glaolle/openvpn-ui/internal/clientconfig"
+	easyrsaconfig "github.com/glaolle/openvpn-ui/internal/easyrsaconfig"
+	"github.com/glaolle/openvpn-ui/internal/server/config"
 	"gopkg.in/hlandau/passlib.v1"
 )
 
