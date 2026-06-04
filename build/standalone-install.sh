@@ -3,13 +3,13 @@
 #
 
 # All the variables
-GOVERSION="1.22.3"
+GOVERSION="1.26.0"
 
 # Description
 echo "This script will install OpenVPN-UI and all the dependencies on your local environment. No containers will be used."
 # Ask for confirmation
 read -p "Do you want to continue? (Y/n)" -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-Y}"
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -63,7 +63,7 @@ fi
 
 # Update your system
 read -p "Would you like to run apt-get update? (y/N) " -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -74,7 +74,7 @@ fi
 
 # Install necessary tools
 read -p "Would you like to install the dependencies (sed, gcc, git, musl-tools, easy-rsa, curl, jq, oathtool)? (y/N) " -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -85,7 +85,7 @@ fi
 
 # Go Modules download
 read -p "Would you like to download all necessary Go modules? (y/N) " -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -95,7 +95,7 @@ then
 fi
 
 read -p "Would you like to install Beego v2? (y/N) " -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -106,7 +106,7 @@ fi
 
 # Installing qrencode
 read -p "Would you like to build qrencode binaries? (y/N) " -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-N}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -134,12 +134,10 @@ fi
 
 # Installing OpenVPN-UI
 read -p "Would you like to build OpenVPN-UI binaries? (Y/n) " -n 1 -r
-echo    # move to a new line
+#echo    # move to a new line
 REPLY="${REPLY:-Y}"
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    # Install OpenVPN-UI and qrencode
-    echo "Installing OpenVPN-UI"
     source ~/.bashrc # reload bashrc to get bee command
 
     # Set environment variables
@@ -153,8 +151,8 @@ then
     # Execute bee pack
     export PATH=$PATH:$(go env GOPATH)/bin
     go env -w GOFLAGS="-buildvcs=false"
-    source ~/.bashrc
-    bee version
+#    source ~/.bashrc
+#    bee version
     bee pack -exr='^vendor|^ace.tar.bz2|^data.db|^build|^README.md|^docs'
 fi
 

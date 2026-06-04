@@ -19,15 +19,3 @@ verb {{ .Verbose }}
 {{ .CustomConfOne }}
 {{ .CustomConfTwo }}
 {{ .CustomConfThree }}
-<ca>
-{{ .Ca }}
-</ca>
-<cert>
-{{ .Cert }}
-</cert>
-<key>
-{{ .Key }}
-</key>
-<tls-crypt>
-{{ .Ta }}
-</tls-crypt>
