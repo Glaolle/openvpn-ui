@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/glaolle/openvpn-ui/models"
+	//"github.com/glaolle/openvpn-ui/models"
 )
 
 type LogsController struct {
@@ -26,18 +26,18 @@ func (c *LogsController) Get() {
 		Title: "Logs",
 	}
 
-	settings := models.Settings{Profile: "default"}
-	if err := settings.Read("Profile"); err != nil {
-		logs.Error(err)
-		return
-	}
+	// settings := models.Settings{Profile: "default"}
+	// if err := settings.Read("Profile"); err != nil {
+	// 	logs.Error(err)
+	// 	return
+	// }
 
-	if err := settings.Read("OVConfigPath"); err != nil {
-		logs.Error(err)
-		return
-	}
+	// if err := settings.Read("OVConfigPath"); err != nil {
+	// 	logs.Error(err)
+	// 	return
+	// }
 
-	//	fName := settings.OVConfigPath + "/log/openvpn.log"
+	//fName := settings.OVConfigPath + "/log/openvpn.log"
 	fName := "/var/log/openvpn/openvpn.log"
 	file, err := os.Open(fName)
 	if err != nil {
@@ -45,20 +45,23 @@ func (c *LogsController) Get() {
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	var logs []string
+	var logStrings []string
 	for scanner.Scan() {
 		line := scanner.Text()
 		//	if strings.Index(line, " MANAGEMENT: ") == -1 {
 		if !strings.Contains(line, " MANAGEMENT: ") {
-			logs = append(logs, strings.Trim(line, "\t"))
+			logStrings = append(logStrings, strings.Trim(line, "\t"))
 		}
 	}
-	start := len(logs) - 300 // :P
+	if scanner.Err() != nil {
+		logs.Error("Scanner error: %s", scanner.Err())
+	}
+	start := len(logStrings) - 300 // :P
 	if start < 0 {
 		start = 0
 	}
-	c.Data["logs"] = logs[start:]
-	//c.Data["logs"] = reverse(logs[start:])
+	c.Data["logs"] = logStrings[start:]
+	//c.Data["logs"] = reverse(logStrings[start:])
 }
 
 //func reverse(lines []string) []string {

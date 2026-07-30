@@ -11,14 +11,16 @@ import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/glaolle/openvpn-ui/lib"
 	"github.com/glaolle/openvpn-ui/models"
+	"github.com/glaolle/openvpn-ui/state"
 )
 
 type NewUser struct {
-	NewLogin      string `orm:"size(64);unique" form:"NewLogin" valid:"Required;"`
-	NewName       string `orm:"size(64);unique" form:"NewName" valid:"Required;"`
-	NewIsAdmin    bool   `orm:"default(false)" form:"IsAdmin" valid:"Required;"`
-	NewEmail      string `orm:"size(64)" form:"NewEmail" valid:"Required;Email"`
-	NewPassword   string `orm:"size(32)" form:"NewPassword" valid:"Required;MinSize(6)"`
+	NewLogin   string `orm:"size(64);unique" form:"NewLogin" valid:"Required;"`
+	NewName    string `orm:"size(64);unique" form:"NewName" valid:"Required;"`
+	NewIsAdmin bool   `orm:"default(false)" form:"IsAdmin" valid:"Required;"`
+	NewEmail   string `orm:"size(64)" form:"NewEmail" valid:"Required;Email"`
+	//NewPassword   string `orm:"size(32)" form:"NewPassword" valid:"Required;MinSize(6)"`
+	NewPassword   string `orm:"size(32)" form:"NewPassword" valid:"Required"`
 	NewRepassword string `orm:"-" form:"NewRepassword" valid:"Required"`
 }
 
@@ -56,6 +58,7 @@ func (c *ProfileController) Get() {
 }
 
 func (c *ProfileController) Post() {
+	logs.Info("Start post user")
 	c.TplName = "profile.html"
 	c.Data["profile"] = c.Userinfo
 
@@ -124,6 +127,7 @@ func validateNewUser(nuser NewUser) map[string]map[string]string {
 
 // @router /profile/create [Create]
 func (c *ProfileController) Create() {
+	logs.Info("Start new user")
 	c.TplName = "profile.html"
 	c.Data["profile"] = c.Userinfo
 	flash := web.NewFlash()
@@ -145,11 +149,13 @@ func (c *ProfileController) Create() {
 		NewIsAdmin:    c.GetString("NewIsAdmin") == "on",
 	}
 
+	logs.Info("Parse new user")
 	if err := c.ParseForm(&user); err != nil {
 		logs.Error(err)
 		return
 	}
 
+	logs.Info("Validate new user")
 	if vMap := validateNewUser(uParams); vMap != nil {
 		c.Data["validation"] = vMap
 		c.List()
@@ -206,6 +212,9 @@ func (c *ProfileController) Create() {
 
 	flash.Store(&c.Controller)
 	c.List()
+	url := state.GlobalCfg.AutoPrefix + "/profile#tab_2"
+	//logs.Info(url)
+	c.Redirect(url, 302)
 }
 
 // @router /profile [post]
@@ -251,6 +260,9 @@ func (c *ProfileController) DeleteUser() {
 	flash.Success("%s", "User  \""+user.Login+"\" deleted successfully.")
 	flash.Store(&c.Controller)
 	c.List()
+	url := state.GlobalCfg.AutoPrefix + "/profile#tab_3"
+	//logs.Info(url)
+	c.Redirect(url, 302)
 }
 
 // @router /profile/edit/:key [post]
@@ -295,4 +307,7 @@ func (c *ProfileController) EditUser() {
 	flash.Success("%s", "User \""+user.Name+"\" updated successfully")
 	flash.Store(&c.Controller)
 	c.List()
+	url := state.GlobalCfg.AutoPrefix + "/profile#tab_3"
+	//logs.Info(url)
+	c.Redirect(url, 302)
 }

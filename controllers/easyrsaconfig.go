@@ -33,7 +33,7 @@ func (c *EasyRSAConfigController) NestPrepare() {
 func (c *EasyRSAConfigController) Get() {
 	c.TplName = "easyrsavar.html"
 
-	destPathEasyRSAConfig := filepath.Join(state.GlobalCfg.EasyRSAPath, "pki/vars")
+	destPathEasyRSAConfig := filepath.Join(state.GlobalCfg.EasyRSAPath, "vars")
 	easyRSAConfig, err := os.ReadFile(destPathEasyRSAConfig)
 	if err != nil {
 		logs.Error(err)
@@ -63,7 +63,7 @@ func (c *EasyRSAConfigController) Post() {
 	lib.Dump(cfg)
 	c.Data["Settings"] = &cfg
 
-	destPath := filepath.Join(state.GlobalCfg.EasyRSAPath, "pki/vars")
+	destPath := filepath.Join(state.GlobalCfg.EasyRSAPath, "vars")
 	err := easyrsaconfig.SaveToFile(filepath.Join(c.ConfigDir, "easyrsa-vars.tpl"), cfg.Config, destPath)
 	if err != nil {
 		logs.Warning(err)
@@ -92,7 +92,7 @@ func (c *EasyRSAConfigController) Post() {
 		}
 	}
 
-	destPathEasyRSAConfig := filepath.Join(state.GlobalCfg.EasyRSAPath, "pki/vars")
+	destPathEasyRSAConfig := filepath.Join(state.GlobalCfg.EasyRSAPath, "vars")
 	easyRSAConfig, err := os.ReadFile(destPathEasyRSAConfig)
 	if err != nil {
 		logs.Error(err)

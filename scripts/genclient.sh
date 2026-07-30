@@ -73,21 +73,21 @@ TLS_AUTH="$(cat $EASY_RSA/pki/ta.key)"
 echo 'Fixing permissions for pki/issued...'
 chmod +r $EASY_RSA/pki/issued
 
-echo 'Generating .ovpn file...'
-echo "$(cat $OPENVPN_DIR/config/client.conf)
-<ca>
-$CA
-</ca>
-<cert>
-$CERT
-</cert>
-<key>
-$KEY
-</key>
-<tls-auth>
-$TLS_AUTH
-</tls-auth>
-" > "$OVPN_FILE_PATH"
+#echo 'Generating .ovpn file...'
+#echo "$(cat $OPENVPN_DIR/config/client.conf)
+#<ca>
+#$CA
+#</ca>
+#<cert>
+#$CERT
+#</cert>
+#<key>
+#$KEY
+#</key>
+#<tls-auth>
+#$TLS_AUTH
+#</tls-auth>
+#" > "$OVPN_FILE_PATH"
 
 echo -e "OpenVPN Client configuration successfully generated!\nCheckout openvpn-server/clients/$CERT_NAME.ovpn"
 

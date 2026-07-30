@@ -23,7 +23,17 @@ func Init(configDir string) {
 		web.NSRouter("/logout", &controllers.LoginController{}, "get:Logout"),
 		web.NSRouter("/auth/google", &controllers.LoginController{}, "get:GoogleLogin"),
 		web.NSRouter("/auth/google/callback", &controllers.LoginController{}, "get:GoogleCallback"),
+
+		//web.NSRouter("/profile", &controllers.ProfileController{}),
+		//web.NSRouter("/profile/:key", &controllers.ProfileController{}, "post:Create;get:List;put:EditUser;delete:DeleteUser"),
+
+		//web.NSInclude(&controllers.ProfileController{}),
+
 		web.NSRouter("/profile", &controllers.ProfileController{}),
+		web.NSRouter("/profile/create", &controllers.ProfileController{}, "post:Create"),
+		web.NSRouter("/profile/edit", &controllers.ProfileController{}, "post:EditUser"),
+		web.NSRouter("/profile/delete", &controllers.ProfileController{}, "get:DeleteUser"),
+
 		web.NSRouter("/settings", &controllers.SettingsController{}),
 		web.NSRouter("/ov/config", &controllers.OVConfigController{ConfigDir: configDir}),
 		web.NSRouter("/logs", &controllers.LogsController{}),

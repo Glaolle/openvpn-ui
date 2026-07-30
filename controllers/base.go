@@ -55,18 +55,18 @@ func (c *BaseController) Finish() {
 
 func (c *BaseController) GetLogin() *models.User {
 	u := &models.User{Id: c.GetSession("userinfo").(int64)}
-	u.Read("Id")
+	_ = u.Read("Id")
 	return u
 }
 
 func (c *BaseController) DelLogin() {
-	c.DelSession("userinfo")
+	_ = c.DelSession("userinfo")
 	c.IsLogin = false
 	c.Userinfo = nil
 }
 
 func (c *BaseController) SetLogin(user *models.User) {
-	c.SetSession("userinfo", user.Id)
+	_ = c.SetSession("userinfo", user.Id)
 	c.IsLogin = true
 	c.Userinfo = user
 }

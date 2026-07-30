@@ -38,11 +38,11 @@
             <tbody>
 
             {{range .certificates}}
-              {{ if ne .Details.Name "server"}}
+              {{ if and (ne .Details.CN "server") (ne .Details.CN "ca")}}
               <tr>
                   <td>
-                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.Name}}">
-                      {{ .Details.Name }}
+                    <a href="{{urlfor "CertificatesController.Download" ":key" .Details.CN}}">
+                      {{ .Details.CN }}
                     </a>
                   </td>
                   {{if and (eq .Revocation "") (not .IsExpiring)}}
@@ -103,14 +103,14 @@
                     </td>
                   {{end}}
                     <td class="align-middle">
-                  {{ if and (eq .Revocation "") (ne .Details.Name "") }}
-                      <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.Name ":localip" .Details.LocalIP ":serial" .Serial ":tfaname" .Details.TFAName}}" class="btn btn-primary btn-xs" title="Renew" style="font-size: 80%;">Renew</a>
+                  {{ if and (eq .Revocation "") (ne .Details.CN "") }}
+                      <a href="{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":localip" .Details.LocalIP ":serial" .Serial ":tfaname" .Details.TFAName}}" class="btn btn-primary btn-xs" title="Renew" style="font-size: 80%;">Renew</a>
                   {{else}}
                       <a class="btn btn-default btn-xs" disabled>Renew</a>
                   {{end}}
 
-                  {{ if and (eq .Revocation "") (ne .Details.Name "") }}
-                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.Name ":serial" .Serial ":tfaname" .Details.TFAName}}" class="btn btn-warning btn-xs" title="Revoke" style="font-size: 80%;">Revoke</a>
+                  {{ if and (eq .Revocation "") (ne .Details.CN "") }}
+                      <a href="{{urlfor "CertificatesController.Revoke" ":key" .Details.CN ":serial" .Serial ":tfaname" .Details.TFAName}}" class="btn btn-warning btn-xs" title="Revoke" style="font-size: 80%;">Revoke</a>
                   {{else}}
                       <a class="btn btn-default btn-xs" disabled>Revoke</a>
                   {{end}}
@@ -146,7 +146,7 @@
                         <dt class="copy-details">Status: </dt>
                         <dd class="copy-details">{{if eq .EntryType "V"}}<span class="badge bg-success" style="font-size: 110%;" >Valid</span>{{else if eq .EntryType "R"}}<span class="badge bg-danger" style="font-size: 110%;">Revoked</span>{{else}}Unknown{{end}}</dd>
                         <dt class="copy-details">Expiration Time: </dt>
-                        <dd class="copy-details exp-time">{{ if and .IsExpiring (eq .Revocation "") (ne .Details.Name "") }}<span class="badge bg-warning" style="font-size: 110%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}} <b> This Certificate will soon expire!</b></span>{{else}}<span class="badge bg-success">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>{{end}}</dd>
+                        <dd class="copy-details exp-time">{{ if and .IsExpiring (eq .Revocation "") (ne .Details.CN "") }}<span class="badge bg-warning" style="font-size: 110%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}} <b> This Certificate will soon expire!</b></span>{{else}}<span class="badge bg-success">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</span>{{end}}</dd>
                         <dt class="copy-details">Revoke Time: </dt>
                         <dd class="copy-details">{{if ne .Revocation ""}} <span class="badge bg-warning" style="font-size: 110%;">{{ dateformat .RevocationT "2006-01-02 15:04"}}</span> {{else}}<span id="helpBlock" class="text-muted">Not Revoked</span>{{end}}</dd>
                         <dt class="copy-details">IP Address: </dt>
@@ -170,9 +170,9 @@
                         <dd class="copy-details">{{ $.SettingsC.TFAIssuer }}</dd-->
                         <dt class="copy-details">Two Factor Authorisation (2FA) QR Code:</dt>
                         <dd class="copy-details">
-                          {{ if and (eq .EntryType "V") (ne .Details.Name "") }}
+                          {{ if and (eq .EntryType "V") (ne .Details.CN "") }}
                             <div class="text-left qr-code">
-                              <img src="/displayimage/{{ .Details.Name }}">
+                              <img src="/displayimage/{{ .Details.CN }}">
                             </div>
                           {{end}}
                         </dd>

@@ -23,7 +23,8 @@
       <div class="icon">
         <i class="fa fa-group"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="small-box-footer">More info <i
+          class="fa fa-arrow-circle-right"></i></a>
       <div class="card-group" id="accordion">
       </div>
       <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
@@ -41,27 +42,28 @@
         <div class="info-box-content">
           <span class="info-box-text">
             CPU count: <span class="info-box-number2">
-            {{ .sysinfo.CPUList.List | len }}
+              {{ .sysinfo.CPUList.List | len }}
             </span>
           </span><br>
           <span class="info-box-number">
             1m: <b>{{ .sysinfo.LoadAvg.One }}</b> &nbsp; &nbsp;
             5m: <b>{{ .sysinfo.LoadAvg.Five }}</b> &nbsp; &nbsp;
-            15m: <b>{{ .sysinfo.LoadAvg.Fifteen }}</b><br/>
+            15m: <b>{{ .sysinfo.LoadAvg.Fifteen }}</b><br />
           </span>
         </div>
       </div>
       <div class="icon">
         <i class="ion ion-stats-bars"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        <div class="card-group" id="accordion">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="small-box-footer">More info <i
+          class="fa fa-arrow-circle-right"></i></a>
+      <div class="card-group" id="accordion">
+      </div>
+      <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="card-body text-center">
+          <span>Last one, five and ten minutes</span>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-          <div class="card-body text-center">
-            <span>Last one, five and ten minutes</span>
-          </div>
-        </div>
+      </div>
     </div>
   </div>
 
@@ -69,19 +71,20 @@
     <div class="small-box shadow" style="background-color:#ffc107; color: white;">
       <div class="inner">
         <h3>OS uptime</h3>
-        <span class="info-box-number">{{ .sysinfo.UptimeS }}</span><br/><br/>
+        <span class="info-box-number">{{ .sysinfo.UptimeS }}</span><br /><br />
       </div>
       <div class="icon">
         <i class="ion ion-arrow-graph-up-right"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        <div class="card-group" id="accordion">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="small-box-footer">More info <i
+          class="fa fa-arrow-circle-right"></i></a>
+      <div class="card-group" id="accordion">
+      </div>
+      <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="card-body text-center">
+          <span>How long your server is running</span>
         </div>
-        <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-          <div class="card-body text-center">
-            <span>How long your server is running</span>
-          </div>
-        </div>
+      </div>
     </div>
   </div>
 
@@ -91,19 +94,20 @@
         <h3>Server Time</h3>
         <span class="info-box-number">
           {{ dateformat .sysinfo.CurrentTime "2006-01-02 15:04:05"}}
-        </span><br/><br/>
+        </span><br /><br />
       </div>
       <div class="icon">
         <i class="fa fa-clock-o"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        <div class="card-group" id="accordion">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="small-box-footer">More info <i
+          class="fa fa-arrow-circle-right"></i></a>
+      <div class="card-group" id="accordion">
+      </div>
+      <div id="collapseFour" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+        <div class="card-body text-center">
+          <span>Server time in it's local Time Zone</span>
         </div>
-        <div id="collapseFour" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
-          <div class="card-body text-center">
-            <span>Server time in it's local Time Zone</span>
-          </div>
-        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -158,66 +162,61 @@
         <h3 class="card-title">Connected clients</h3>
       </div>
       <!-- /.card-header -->
-
       <div class="card-body">
         {{if .ovstatus}}
         <div class="table-responsive">
           <table class="table no-margin">
             <thead>
-            <tr>
-              <th>Common Name</th>
-              <th>Real Address</th>
-              <th>Virtual Address</th>
-              <th>KB Received</th>
-              <th>KB Sent</th>
-              <th>Connected Since</th>
-              <th>Username</th>
-              <th></th>
-            </tr>
+              <tr>
+                <th>Common Name</th>
+                <th>Real Address</th>
+                <th>Virtual Address</th>
+                <th>KB Received</th>
+                <th>KB Sent</th>
+                <th>Connected Since</th>
+                <th>Username</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
-
-            {{range .ovstatus.ClientList}}
-            <tr>
+              {{range .ovstatus.ClientList}}
+              <tr>
                 <td>{{.CommonName}}</td>
                 <td>{{.RealAddress}}</td>
                 <td>
                   <span class="badge bg-success">{{.VirtualAddress}}</span>
                   <button class="button-transparent button-copy" data-clipboard-text="{{.VirtualAddress}}">
-                      <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
+                    <img class="clippy" src="static/img/clippy.svg" width="13" alt="Copy to clipboard">
                   </button>
                 </td>
                 <td align="right" style="padding-right:20px">
-                    {{printkb .BytesReceived}}
+                  {{printkb .BytesReceived}}
                 </td>
                 <td align="right" style="padding-right:20px">
-                    {{printkb .BytesSent}}
+                  {{printkb .BytesSent}}
                 </td>
                 <td>{{.ConnectedSince}}</td>
                 <td>
                   {{if eq .Username "UNDEF"}}
-                    -
+                  -
                   {{else}}
-                    {{.Username}}
+                  {{.Username}}
                   {{end}}
                 </td>
                 <td>
-                  <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')"
-                    class="btn btn-xs btn-danger btn-flat"
+                  <a href="javascript:$.MyAPP.Disconnect('{{.CommonName}}')" class="btn btn-xs btn-danger btn-flat"
                     title="Disconnect">X</a>
                 </td>
-            </tr>
-            {{end}}
-
+              </tr>
+              {{end}}
             </tbody>
           </table>
         </div>
         <!-- /.table-responsive -->
-      {{else}}
-          Fix your configuration
-      {{end}}
+        {{else}}
+        Fix your configuration
+        {{end}}
       </div>
-
       <!-- /.card-footer -->
     </div>
     <!-- /.card -->
@@ -226,42 +225,40 @@
 <!-- /.col -->
 <!-- /.card-body -->
 
-
 <!--h3 class="mt-4 mb-2">Info Section</h3-->
-
-  <div class="row">
-    <div class="col-md-6 col-sm-12 col-12">
-      <div class="info-box">
-        <span class="info-box-icon bg-warning elevation-1 border-width: 3px;" style="padding: 10px; width: 100px; height: 100px;">
-          <img src="/static/img/openvpn-win.svg" alt="OpenVPN" width="74" height="74" style="filter: invert(25%);">
-        </span>
-          <!--i class="fa fa-info fa-2x"></i></span-->
-        <div class="info-box-content">
-          <span class="info-box-text">OpenVPN version:</span>
-          <span class="info-box-number3">{{ .ovversion }}</span>
-        </div>
+<div class="row">
+  <div class="col-md-6 col-sm-12 col-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-warning elevation-1 border-width: 3px;"
+        style="padding: 10px; width: 100px; height: 100px;">
+        <img src="/static/img/openvpn-win.svg" alt="OpenVPN" width="74" height="74" style="filter: invert(25%);">
+      </span>
+      <!--i class="fa fa-info fa-2x"></i></span-->
+      <div class="info-box-content">
+        <span class="info-box-text">OpenVPN version:</span>
+        <span class="info-box-number3">{{ .ovversion }}</span>
       </div>
     </div>
+  </div>
 
-    <div class="col-md-6 col-sm-12 col-12">
-      <div class="info-box">
-        <span class="info-box-icon bg-danger elevation-1 border-width: 3px;" style="padding: 10px; width: 100px; height: 100px;"><i class="fa fa-gears fa-2x"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Operating system:</span>
-          <span class="info-box-number3">{{ .sysinfo.Os }}</span>
-          <span class="info-box-text">Architecture: </span>
-          <span class="info-box-number3">{{ .sysinfo.Arch }} </span>
-        </div>
+  <div class="col-md-6 col-sm-12 col-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-danger elevation-1 border-width: 3px;"
+        style="padding: 10px; width: 100px; height: 100px;"><i class="fa fa-gears fa-2x"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Operating system:</span>
+        <span class="info-box-number3">{{ .sysinfo.Os }}</span>
+        <span class="info-box-text">Architecture: </span>
+        <span class="info-box-number3">{{ .sysinfo.Arch }} </span>
       </div>
     </div>
-
+  </div>
 </div>
 
-  <!-- fix for small devices only -->
-  <div class="clearfix visible-sm-block"></div>
-  <!-- /.col -->
+<!-- fix for small devices only -->
+<div class="clearfix visible-sm-block"></div>
+<!-- /.col -->
 </div>
 <!-- /.row -->
 
 {{end}}
-

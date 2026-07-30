@@ -3,19 +3,18 @@ package mi
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"net"
 	"strings"
-
-	log "github.com/sirupsen/logrus"
 )
 
 // SendCommand passes command to a given connection (adds logging and EOL character)
 func SendCommand(conn net.Conn, cmd string) error {
-	log.Debug("Sending command: " + cmd)
+	log.Println("Sending command: " + cmd)
 	if _, err := fmt.Fprintf(conn, "%s", cmd+"\n"); err != nil {
 		return err
 	}
-	log.Debug("Command ", cmd, " successfuly send")
+	log.Println("Command ", cmd, " successfuly send")
 	return nil
 }
 
@@ -28,7 +27,7 @@ func ReadResponse(reader *bufio.Reader) (string, error) {
 	for !finished {
 		line, err := reader.ReadString('\n')
 		if err != nil {
-			log.Error(line, err)
+			log.Println(line, err)
 			return "", err
 		}
 

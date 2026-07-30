@@ -95,7 +95,7 @@ func (c *Client) Execute(cmd string) (string, error) {
 	defer conn.Close()
 
 	buf := bufio.NewReader(conn)
-	buf.ReadString('\n') //read welcome message
+	_, _ = buf.ReadString('\n') //read welcome message
 	err = SendCommand(conn, cmd)
 	if err != nil {
 		return "", err

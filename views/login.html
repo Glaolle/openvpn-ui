@@ -36,7 +36,7 @@
         </div>
       {{end}}
 
-      <form action="{{urlfor "LoginController.Login"}}" method="post">
+      <form action='{{urlfor "LoginController.Login"}}' method="post">
         <div class="input-group mb-3">
           <input type="text" class="form-control" name="login" placeholder="Login">
           <div class="input-group-append">
@@ -66,7 +66,7 @@
         <!-- /.col -->
       </form>
       <br>
-      <a href="{{urlfor "LoginController.GoogleLogin"}}" class="btn btn-block btn-danger">
+      <a href='{{urlfor "LoginController.GoogleLogin"}}' class="btn btn-block btn-danger">
         <i class="fab fa-google"></i> &nbsp;Sign in with Google
       </a>
       <p class="login-box-msg"><small><a href="https://github.com/d3vilh/openvpn-ui?tab=readme-ov-file#authentication-with-google-apis-oauth-20" target="_blank">How to Sign In</a> with Google</small></p>
@@ -91,6 +91,39 @@
       increaseArea: '20%' // optional
     });
     $("input:text:visible:first").focus();
+  });
+
+  // Get a reference to the checkbox element
+  const checkbox = document.getElementById('checkbox');
+
+  // Get a reference to the label element
+  const themeLabel = document.getElementById('theme-label');
+
+  // Get a reference to the body element
+  const body = document.body;
+
+  // Check localStorage for the user's theme preference
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    checkbox.checked = true;
+    themeLabel.textContent = 'Dark';
+  }
+
+  // Add an event listener to the checkbox for changes
+  checkbox.addEventListener('change', function () {
+    // Toggle the "dark-mode" class on the body element
+    body.classList.toggle('dark-mode', checkbox.checked);
+
+    // Update the label text based on the checkbox state
+    themeLabel.textContent = checkbox.checked ? 'Dark' : 'Light';
+
+    // Save the user's preference in localStorage
+    if (checkbox.checked) {
+      localStorage.setItem('theme', 'dark');
+    } else {
+      localStorage.removeItem('theme');
+    }
   });
 </script>
 </body>

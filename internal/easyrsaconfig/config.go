@@ -9,7 +9,7 @@ import (
 
 // Don't think these defaults are ever used -- see models/models.go
 var defaultConfig = Config{
-	EasyRSADN:          "org",
+	EasyRSADN:          "org", // cn_only | org
 	EasyRSAReqCountry:  "UA",
 	EasyRSAReqProvince: "KY",
 	EasyRSAReqCity:     "Kyiv",
@@ -22,8 +22,8 @@ var defaultConfig = Config{
 	EasyRSACertExpire:  825,
 	EasyRSACertRenew:   30,
 	EasyRSACrlDays:     180,
-	EasyRSAAlgo:        "ec",
-	EasyRSACurve:       "secp384r1",
+	EasyRSAAlgo:        "ecdsa", // rsa | ecdsa | ed25519
+	EasyRSACurve:       "P-384", // ECDSA curve: P-256, P-384, P-521 (default: P-256),
 }
 
 // Config model

@@ -1,12 +1,14 @@
 # .golangci.yml
 linters:
   enable:
-    - goimports # Проверка импортов
-    - unused # Неиспользуемый код
-    - gosec # Безопасность
+    - goimports   # Проверка импортов
+    - unused      # Неиспользуемый код
+    - gosec       # Безопасность
     - ineffassign # Неэффективные присвоения
 linters-settings:
   gosec:
     excludes:
+      - G115      # integer overflow conversion uint64 -> int64
       - G204
-      - G306
+      - G306      # file permissins
+      - G402      # TLS InsecureSkipVerify

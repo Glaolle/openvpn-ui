@@ -1,13 +1,13 @@
 module github.com/glaolle/openvpn-ui
 
-go 1.26.0
+go 1.25.8
 
 require (
 	github.com/beego/beego/v2 v2.3.10
 	github.com/cloudfoundry/gosigar v1.3.120
 	github.com/go-ldap/ldap/v3 v3.4.13
+	github.com/kemsta/go-easyrsa/v2 v2.1.0
 	github.com/mattn/go-sqlite3 v1.14.44
-	github.com/sirupsen/logrus v1.9.4
 	golang.org/x/oauth2 v0.36.0
 	google.golang.org/api v0.282.0
 	gopkg.in/hlandau/passlib.v1 v1.0.11
@@ -37,6 +37,7 @@ require (
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	go.mozilla.org/pkcs7 v0.9.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.67.0 // indirect
 	go.opentelemetry.io/otel v1.43.0 // indirect
@@ -52,4 +53,5 @@ require (
 	gopkg.in/hlandau/easymetric.v1 v1.0.0 // indirect
 	gopkg.in/hlandau/measurable.v1 v1.0.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	software.sslmate.com/src/go-pkcs12 v0.7.0 // indirect
 )

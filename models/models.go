@@ -36,6 +36,7 @@ func InitDB() {
 		new(OVConfig),
 		new(OVClientConfig),
 		new(EasyRSAConfig),
+		new(StaticIP),
 	)
 
 	err = orm.RunSyncdb("default", false, true)
@@ -229,7 +230,7 @@ func CreateDefaultEasyRSAConfig(configDir string, easyRSAPath string, address st
 	c := EasyRSAConfig{
 		Profile: "default",
 		Config: easyrsaconfig.Config{
-			EasyRSADN:          "org",
+			EasyRSADN:          "org", // cn_only | org
 			EasyRSAReqCountry:  "UA",
 			EasyRSAReqProvince: "KY",
 			EasyRSAReqCity:     "Kyiv",
@@ -242,8 +243,8 @@ func CreateDefaultEasyRSAConfig(configDir string, easyRSAPath string, address st
 			EasyRSACertExpire:  825,
 			EasyRSACertRenew:   30,
 			EasyRSACrlDays:     180,
-			EasyRSAAlgo:        "ec",
-			EasyRSACurve:       "secp384r1",
+			EasyRSAAlgo:        "ecdsa", // rsa | ecdsa | ed25519
+			EasyRSACurve:       "P-384", // ECDSA curve: P-256, P-384, P-521 (default: P-256)
 		},
 	}
 	o := orm.NewOrm()
@@ -253,7 +254,7 @@ func CreateDefaultEasyRSAConfig(configDir string, easyRSAPath string, address st
 		} else {
 			logs.Debug(c)
 		}
-		easyRSAConfig := filepath.Join(easyRSAPath, "pki/vars")
+		easyRSAConfig := filepath.Join(easyRSAPath, "vars")
 		if _, err = os.Stat(easyRSAConfig); os.IsNotExist(err) {
 			if err = easyrsaconfig.SaveToFile(filepath.Join(configDir, "easyrsa-vars.tpl"), c.Config, easyRSAConfig); err != nil {
 				logs.Error(err)

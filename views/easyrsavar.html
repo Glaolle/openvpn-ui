@@ -32,16 +32,27 @@
       <form role="form" action="{{urlfor "EasyRSAConfigController.Post"}}" method="post">
 
         <span>EasyRSA vars reference with description for every parameter can be found<a href="https://github.com/OpenVPN/easy-rsa/blob/master/doc/EasyRSA-Advanced.md#environmental-variables-reference" target="_blank"> here</a>.</span><br><br>
-          <!-- Disabled Profile - yet another feature to implement.
+
+        <!-- Disabled Profile - yet another feature to implement.
           <div class="form-group">
             <label for="name">Profile</label>
             <input type="text" class="form-control" name="Profile" id="Profile" value="{{ .Settings.Profile }}" style="visibility: hidden;" disabled>
           </div> -->
-      <div class="form-group">
+
+          <!-- <div class="form-group">
         <label for="name">EASYRSA_DN</label>
         <input type="text" class="form-control" id="EasyRSADN" name="EasyRSADN" placeholder="org"
           value="{{ .Settings.EasyRSADN }}">
           <span id="helpBlock" class="text-muted">&quot;org&quot; - full DN format: &quot;Country/Province/City/Org/Org.Unit/email/commonName&quot;. &quot;cn_only&quot; - Use just a commonName value.</span>
+      </div> -->
+
+      <div class="form-group">
+        <label for="name">EASYRSA_DN</label>
+        <select class="form-control select2" style="width: 100%;" id="EasyRSADN" name="EasyRSADN" value="{{ .Settings.EasyRSADN }}">
+          <option {{ if eq .Settings.EasyRSADN "org" }}selected="selected"{{ end }} value="org">org</option>
+          <option {{ if eq .Settings.EasyRSADN "cn_only" }}selected="selected"{{ end }} value="cn_only">cn_only</option>
+        </select>
+        <span id="helpBlock" class="text-muted">&quot;org&quot; - full DN format: &quot;Country/Province/City/Org/Org.Unit/email/commonName&quot;. &quot;cn_only&quot; - Use just a commonName value.</span>
       </div>
 
       <div class="form-group">
@@ -94,18 +105,38 @@
         <span id="helpBlock" class="text-muted">The Common Name of DN Organisation.</span>
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="name">EASYRSA_KEY_ALGO</label>
         <input type="text" class="form-control" id="EasyRSAAlgo" name="EasyRSAAlgo" placeholder="ec"
           value="{{ .Settings.EasyRSAAlgo }}">
         <span id="helpBlock" class="text-muted">Choices for crypto alg are: (each in lower-case) - rsa, ec, ed.</span>
-      </div>
+      </div> -->
 
       <div class="form-group">
+        <label for="name">EASYRSA_KEY_ALGO</label>
+        <select class="form-control select2" style="width: 100%;"  id="EasyRSAAlgo" name="EasyRSAAlgo" value="{{ .Settings.EasyRSAAlgo }}">
+          <option {{ if eq .Settings.EasyRSAAlgo "rsa" }}selected="selected"{{ end }} value="rsa">rsa</option>
+          <option {{ if eq .Settings.EasyRSAAlgo "ecdsa" }}selected="selected"{{ end }} value="ecdsa">ecdsa</option>
+          <option {{ if eq .Settings.EasyRSAAlgo "ed25519" }}selected="selected"{{ end }} value="ed25519">ed25519</option>
+        </select>
+        <span id="helpBlock" class="text-muted">Choices for crypto alg are: rsa, ecdsa, ed25519.</span>
+      </div>
+
+      <!-- <div class="form-group">
         <label for="name">EASYRSA_CURVE</label>
         <input type="text" class="form-control" id="EasyRSACurve" name="EasyRSACurve" placeholder="secp384r1"
           value="{{ .Settings.EasyRSACurve }}">
         <span id="helpBlock" class="text-muted">Define the named curve, used in ec & ed modes.</span>
+      </div> -->
+
+      <div class="form-group">
+        <label for="name">EASYRSA_CURVE</label>
+        <select class="form-control select2" style="width: 100%;"  id="EasyRSACurve" name="EasyRSACurve" value="{{ .Settings.EasyRSACurve }}">
+          <option {{ if eq .Settings.EasyRSACurve "P-256" }}selected="selected"{{ end }} value="P-256">P-256</option>
+          <option {{ if eq .Settings.EasyRSACurve "P-384" }}selected="selected"{{ end }} value="P-384">P-384</option>
+          <option {{ if eq .Settings.EasyRSACurve "P-521" }}selected="selected"{{ end }} value="P-521">P-521</option>
+        </select>
+        <span id="helpBlock" class="text-muted">Define the named curve, used in ec & ed modes. P-256, P-384 or P-521</span>
       </div>
 
       <div class="form-group">
