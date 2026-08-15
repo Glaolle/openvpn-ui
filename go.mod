@@ -1,6 +1,6 @@
 module github.com/glaolle/openvpn-ui
 
-go 1.25.8
+go 1.21.0
 
 require (
 	github.com/beego/beego/v2 v2.3.10

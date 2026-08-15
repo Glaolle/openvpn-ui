@@ -13,13 +13,11 @@
     </div>
   </div>
   <div class="card-body">
-    <form role="form">
+    <form id="FormLogs"role="form">
       <div class="form-group">
         <textarea type="text" class="form-control my-textarea" name="Logs" id="Logs" spellcheck="false" rows="15">
-
-        {{ range $i, $line := .logs }}{{$line}}
-        {{ end }}
-
+{{ range $i, $line := .logs }}{{$line}}
+{{ end }}
         </textarea>
       </div>
     </form>
@@ -27,18 +25,14 @@
   </div>
   <!-- /.card-body -->
 </div>
-<!--script>
-  createEditor("Logs", "700px", "clouds", "ovpn", true);
-</script-->
 
 <script>
-  // Check if "themeEditor" is set in localStorage
-  if (localStorage.getItem("theme") === "dark") {
+  // Check if "theme" is set in localStorage
+  if (localStorage.getItem('theme') === 'dark') {
     createEditor("Logs", "640px", "clouds_midnight", "ovpn", true);
   } else {
     createEditor("Logs", "640px", "clouds", "ovpn", true);
   }
 </script>
-
 <!-- /.box -->
 {{end}}

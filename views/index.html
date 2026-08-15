@@ -23,10 +23,9 @@
       <div class="icon">
         <i class="fa fa-group"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="small-box-footer">More info <i
+      <a data-toggle="collapse" data-parent="#accordion1" href="#collapseOne" class="small-box-footer">More info <i
           class="fa fa-arrow-circle-right"></i></a>
-      <div class="card-group" id="accordion">
-      </div>
+      <div class="card-group" id="accordion1"></div>
       <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
         <div class="card-body text-center">
           <span>Connected Clients and All traffic</span>
@@ -55,10 +54,9 @@
       <div class="icon">
         <i class="ion ion-stats-bars"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="small-box-footer">More info <i
+      <a data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" class="small-box-footer">More info <i
           class="fa fa-arrow-circle-right"></i></a>
-      <div class="card-group" id="accordion">
-      </div>
+      <div class="card-group" id="accordion2"></div>
       <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
         <div class="card-body text-center">
           <span>Last one, five and ten minutes</span>
@@ -76,10 +74,9 @@
       <div class="icon">
         <i class="ion ion-arrow-graph-up-right"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="small-box-footer">More info <i
+      <a data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" class="small-box-footer">More info <i
           class="fa fa-arrow-circle-right"></i></a>
-      <div class="card-group" id="accordion">
-      </div>
+      <div class="card-group" id="accordion3"></div>
       <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
         <div class="card-body text-center">
           <span>How long your server is running</span>
@@ -99,10 +96,9 @@
       <div class="icon">
         <i class="fa fa-clock-o"></i>
       </div>
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="small-box-footer">More info <i
+      <a data-toggle="collapse" data-parent="#accordion4" href="#collapseFour" class="small-box-footer">More info <i
           class="fa fa-arrow-circle-right"></i></a>
-      <div class="card-group" id="accordion">
-      </div>
+      <div class="card-group" id="accordion4"></div>
       <div id="collapseFour" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
         <div class="card-body text-center">
           <span>Server time in it's local Time Zone</span>
@@ -229,8 +225,8 @@
 <div class="row">
   <div class="col-md-6 col-sm-12 col-12">
     <div class="info-box">
-      <span class="info-box-icon bg-warning elevation-1 border-width: 3px;"
-        style="padding: 10px; width: 100px; height: 100px;">
+      <span class="info-box-icon bg-warning elevation-1"
+        style="padding: 10px; width: 100px; height: 100px; border-width: 3px;">
         <img src="/static/img/openvpn-win.svg" alt="OpenVPN" width="74" height="74" style="filter: invert(25%);">
       </span>
       <!--i class="fa fa-info fa-2x"></i></span-->
@@ -243,8 +239,8 @@
 
   <div class="col-md-6 col-sm-12 col-12">
     <div class="info-box">
-      <span class="info-box-icon bg-danger elevation-1 border-width: 3px;"
-        style="padding: 10px; width: 100px; height: 100px;"><i class="fa fa-gears fa-2x"></i></span>
+      <span class="info-box-icon bg-danger elevation-1"
+        style="padding: 10px; width: 100px; height: 100px; border-width: 3px;"><i class="fa fa-gears fa-2x"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Operating system:</span>
         <span class="info-box-number3">{{ .sysinfo.Os }}</span>

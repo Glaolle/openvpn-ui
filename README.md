@@ -26,7 +26,7 @@ Quick to deploy and easy to use, makes work with small OpenVPN environments a br
 * OpenVPN-UI Admin user and password can be passed via environment variables to container
 * Updated infrustracture:
   * Alpine Linux as fastest and secure base image
-  * GoLang 1.21
+  * GoLang 1.26
   * Beego 2.1 with all vulnerabilities fixed
   * Easy-rsa 3.X
   * Openssl 3.X
@@ -34,10 +34,6 @@ Quick to deploy and easy to use, makes work with small OpenVPN environments a br
     * Compatible OpenVPN Server images can be found on Docker Hub - [d3vilh/openvpn-server:latest](https://hub.docker.com/r/d3vilh/openvpn-server)
     * As well as Openvpn-UI itself - [d3vilh/openvpn-ui:latest](https://hub.docker.com/r/d3vilh/openvpn-ui)
 * Support any architecture, ready images for AMD64 and ARM [available on Docker Hub](https://hub.docker.com/r/d3vilh/openvpn-ui).
-
-Part of following projects:
-* [Openvpn-aws](https://github.com/d3vilh/openvpn-aws) OpenVPN and OpenVPN-UI for any Cloud, VM or x86 bare metal server.
-* [Raspberry-gateway](https://github.com/d3vilh/raspberry-gateway) simple yet powerful home gateway environment with Pi-Hole +Unbound, VPN, Torrent client and Internet monitoring, all managed by Portainer.
 
 ## Installation
 For the best experience, it is recommended to deploy it within a Docker environment consisting of two distinct containers:

@@ -92,6 +92,12 @@ func parseDetails(d string) *Details {
 				details.Name = fields[1]
 			case "CN":
 				details.CN = fields[1]
+				StaticIP, err := models.GetCertByCN(fields[1])
+				if err != nil {
+					details.LocalIP = ""
+				} else {
+					details.LocalIP = StaticIP.StaticIP
+				}
 			case "C":
 				details.Country = fields[1]
 			case "ST":
@@ -105,7 +111,7 @@ func parseDetails(d string) *Details {
 			case "emailAddress":
 				details.Email = fields[1]
 			case "LocalIP":
-				details.LocalIP = fields[1]
+				//details.LocalIP = fields[1]
 			case "2FAName":
 				details.TFAName = fields[1]
 			default:
@@ -232,7 +238,7 @@ func CreateCertificate(name string, staticip string, passphrase string, expireda
 	}
 
 	o := orm.NewOrm()
-	if created, _, err := o.ReadOrCreate(&cert, "Name"); err == nil {
+	if created, _, err := o.ReadOrCreate(&cert, "CertName"); err == nil {
 		if created {
 			logs.Info("New cert \"" + cert.CertName + "\" created successfully.")
 		} else {

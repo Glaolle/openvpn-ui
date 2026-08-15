@@ -12,9 +12,7 @@
   <link rel="stylesheet" href="/static/css/ionicons.min.css">
   <!-- Theme style 3.2.0-->
   <link rel="stylesheet" href="/static/css/AdminLTE.min.3.2.0.css">
-  <!-- iCheck 1.0.2 -->
-  <link rel="stylesheet" href="/static/css/iCheck.1.0.2.css">
-
+  
   <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/static/img/favicon/favicon-96x96.png">
@@ -59,10 +57,8 @@
         </div>
         <!-- /.col -->
         {{ .xsrfdata }}
-        <div class="com-md-12">
-            <button type="submit" class="btn btn-primary btn-block">
-            <img src="/static/img/openvpn-win.svg" alt="Sign In Icon" style="height: 23px; vertical-align: middle; filter: invert(1);"> &nbsp;Sign In</button>
-          </div>
+        <button type="submit" class="btn btn-primary btn-block">
+        <img src="/static/img/openvpn-win.svg" alt="Sign In Icon" style="height: 23px; vertical-align: middle; filter: invert(1);"> &nbsp;Sign In</button>
         <!-- /.col -->
       </form>
       <br>
@@ -76,29 +72,7 @@
 </div>
 <!-- /.login-box -->
 
-<!-- jQuery 3.6.1 -->
-<script src="/static/js/jquery-3.6.1.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="/static/js/bootstrap.min.4.6.1.js"></script>
-<!-- iCheck 1.0.3 -->
-<script src="/static/js/icheck.1.0.3.js"></script>
-
 <script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' // optional
-    });
-    $("input:text:visible:first").focus();
-  });
-
-  // Get a reference to the checkbox element
-  const checkbox = document.getElementById('checkbox');
-
-  // Get a reference to the label element
-  const themeLabel = document.getElementById('theme-label');
-
   // Get a reference to the body element
   const body = document.body;
 
@@ -106,25 +80,7 @@
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
     body.classList.add('dark-mode');
-    checkbox.checked = true;
-    themeLabel.textContent = 'Dark';
   }
-
-  // Add an event listener to the checkbox for changes
-  checkbox.addEventListener('change', function () {
-    // Toggle the "dark-mode" class on the body element
-    body.classList.toggle('dark-mode', checkbox.checked);
-
-    // Update the label text based on the checkbox state
-    themeLabel.textContent = checkbox.checked ? 'Dark' : 'Light';
-
-    // Save the user's preference in localStorage
-    if (checkbox.checked) {
-      localStorage.setItem('theme', 'dark');
-    } else {
-      localStorage.removeItem('theme');
-    }
-  });
 </script>
 </body>
 </html>

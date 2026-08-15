@@ -5,17 +5,22 @@ ace.define("ace/mode/ovpn_highlight_rules", ["require", "exports", "module", "ac
         s = function() {
             this.$rules = {
                 start: [
+                //token: "constant.numeric", //GREEN
+                //regex: /[\d\.]+/
+                //token: "storage.modifier", //RED
+                //token: "support.function", //RED
+                //token: "comment.line.double-dash", //DARK GRAY
+                //token: "string.quoted.double", //NICE BLUE
+                //token: "constant.language.escape", //NICE GREEN
+                //token: "keyword",//NICE BROWN .bold .italic
+                //token: "invalid", //RED HIGHLIHT
                 {
-                    //token: "constant.numeric", //GREEN
-                    //regex: /[\d\.]+/
-                    //token: "storage.modifier", //RED
-                    //token: "support.function", //RED
-                    //token: "comment.line.double-dash", //DARK GRAY
-                    //token: "string.quoted.double", //NICE BLUE
-                    //token: "constant.language.escape", //NICE GREEN
-                    //token: "keyword",//NICE BROWN .bold .italic
-                    // token: "invalid", //RED HIGHLIHT
-
+                    //WARNING
+                    token: "invalid",
+                    regex: /^.*(?:WARNING|ERROR|error|TLS\sError|Error|Fatal)/,
+                    next: "string"
+                },
+                {
                     //DATE
                     token: "meta",
                     regex: /\s*?\t*?[\d]{4}-[\d]{2}-[\d]{2}\s[\d]{2}:[\d]{2}:[\d]{2}/,
@@ -40,15 +45,11 @@ ace.define("ace/mode/ovpn_highlight_rules", ["require", "exports", "module", "ac
                     //next: "start"
                 },
                 {
-                    //WARNING
-                    token: "invalid",
-                    regex: /WARNING|ERROR|error|TLS\sError|Error|Fatal/,
-                    next: "string"
-                },
-                {
                     //VAR_:
                     token: "keyword.bold",
-                    regex: /(\s|\t)?[A-Za-z0-9_\-\s\[\]^:]{2,}:\s?/,
+                    //regex: /(\s|\t)?[A-Za-z0-9_\-\s\[\]^:]{2,}:\s?/,
+                    regex: /(\s|\t)?[A-Za-z0-9_\-\s]{2,}:\s/,
+                    //next: "start"
                 },
                 {
                     //VAR_=
@@ -74,12 +75,12 @@ ace.define("ace/mode/ovpn_highlight_rules", ["require", "exports", "module", "ac
                     regex: /\([^\)]*\)/,
                     //next: "port"
                 },
-                {
+                //{
                     //VAL_'
-                    token: "string.unquoted.italic",
-                    regex: /'[^']*'/,
-                    //next: "port"
-                },
+                //    token: "string.unquoted.italic",
+                //    regex: /\'[^\']*\'/,
+                //    //next: "port"
+                //},
                 ],
 
                 port: [{
