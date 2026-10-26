@@ -73,7 +73,16 @@ func init() {
     beego.GlobalControllerRouter["github.com/glaolle/openvpn-ui/controllers:CertificatesController"] = append(beego.GlobalControllerRouter["github.com/glaolle/openvpn-ui/controllers:CertificatesController"],
         beego.ControllerComments{
             Method: "Burn",
-            Router: `/certificates/burn/:key/:serial/:tfaname`,
+            Router: `/certificates/burn/:key`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["github.com/glaolle/openvpn-ui/controllers:CertificatesController"] = append(beego.GlobalControllerRouter["github.com/glaolle/openvpn-ui/controllers:CertificatesController"],
+        beego.ControllerComments{
+            Method: "Renew",
+            Router: `/certificates/renew/:key`,
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -99,8 +108,8 @@ func init() {
 
     beego.GlobalControllerRouter["github.com/glaolle/openvpn-ui/controllers:CertificatesController"] = append(beego.GlobalControllerRouter["github.com/glaolle/openvpn-ui/controllers:CertificatesController"],
         beego.ControllerComments{
-            Method: "Renew",
-            Router: `/certificates/revoke/:key`,
+            Method: "DisplayImage",
+            Router: `/displayimage/:imageName`,
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,

@@ -85,6 +85,7 @@ func (c *CertificatesController) Get() {
 	c.Data["SettingsC"] = &cfg1
 }
 
+// @router /displayimage/:imageName [get]
 func (c *CertificatesController) DisplayImage() {
 	imageName := c.Ctx.Input.Param(":imageName")
 	logs.Info("Image name: %s", imageName)
@@ -182,7 +183,9 @@ func (c *CertificatesController) Restart() {
 	// return
 }
 
-// @router /certificates/burn/:key/:serial/:tfaname [get]
+//:serial/:tfaname
+
+// @router /certificates/burn/:key [get]
 func (c *CertificatesController) Burn() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()
@@ -201,7 +204,9 @@ func (c *CertificatesController) Burn() {
 	c.showCerts()
 }
 
-// @router /certificates/revoke/:key [get]
+//:localip/:serial/:tfaname
+
+// @router /certificates/renew/:key [get]
 func (c *CertificatesController) Renew() {
 	c.TplName = "certificates.html"
 	flash := web.NewFlash()

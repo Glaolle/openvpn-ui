@@ -270,13 +270,13 @@ func RevokeCertificate(name string, serial string, tfaname string) error {
 
 func Restart() error {
 	// TODO
-	logs.Info("Restart OpenVPN server")
+	logs.Info("TODO: Restart OpenVPN server")
 	return nil
 }
 
 func BurnCertificate(CN string, serial string, tfaname string) error {
 	// TODO
-	logs.Info("Delete cert")
+	logs.Info("TODO: Delete certificate with parameters: CN=%s, serial=%s, tfaname=%s", CN, serial, tfaname)
 	return nil
 }
 
