@@ -37,18 +37,22 @@ $.MyAPP.Restart = function (sname){
 }
 
 // Copy modal content to clipboard
-$('.copy-modal-data-btn').on('click', function () {
-var $modal = $(this).closest('.modal');
-var content = '';
-$modal.find('.copy-details').each(function () {
-content += $(this).text().replace(/:\s/g, ': ') + '\n';
-});
-content = content.replace(/:\s\n/g, ': ');
-var $tempTextArea = $('<textarea>').val(content).css('position', 'absolute').css('left', '-9999px');
-$('body').append($tempTextArea);
-$tempTextArea.select();
-document.execCommand('copy');
-$tempTextArea.remove();
+// custom.js loads in <head>, so the modal buttons do not exist yet —
+// wait for the DOM before binding the handler.
+$(function () {
+  $('.copy-modal-data-btn').on('click', function () {
+  var $modal = $(this).closest('.modal');
+  var content = '';
+  $modal.find('.copy-details').each(function () {
+    content += $(this).text().replace(/:\s/g, ': ') + '\n';
+  });
+  content = content.replace(/:\s\n/g, ': ');
+  var $tempTextArea = $('<textarea>').val(content).css('position', 'absolute').css('left', '-9999px');
+  $('body').append($tempTextArea);
+  $tempTextArea.select();
+  document.execCommand('copy');
+  $tempTextArea.remove();
+  });
 });
 
 

@@ -23,7 +23,7 @@
         <h3>Editing {{ .Userinfo.Name }}'s profile</h3>{{ if .Userinfo.IsAdmin }}<span class="text-muted"> You are
           administrator. Wow!</span> {{ else }}{{ end }}
         {{template "common/alert.html" .}}
-        <form id="ProfileEdit" role="form" action='{{urlfor "ProfileController.Post"}}' method="post">
+        <form id="ProfileEditForm" role="form" action='{{urlfor "ProfileController.Post"}}' method="post">
           <div class="card-body">
 
             <div class="form-group">
@@ -195,7 +195,7 @@
             </thead>
             <tbody>
               {{range .users}}
-              <form id="ProfileEdit" role="form" action='{{urlfor "ProfileController.EditUser" ":key" .Id}}'
+              <form id="ProfileEditRow{{.Id}}" role="form" action='{{urlfor "ProfileController.EditUser" ":key" .Id}}'
                 method="post">
                 <tr>
                   <td>

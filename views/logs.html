@@ -21,18 +21,21 @@
         </textarea>
       </div>
     </form>
-    <span id="helpBlock" class="text-muted">Last 300 lines of openvpn.log</span>
+    <span class="text-muted">Last 300 lines of openvpn.log</span>
   </div>
   <!-- /.card-body -->
 </div>
 
 <script>
-  // Check if "theme" is set in localStorage
-  if (localStorage.getItem('theme') === 'dark') {
-    createEditor("Logs", "640px", "clouds_midnight", "ovpn", true);
-  } else {
-    createEditor("Logs", "640px", "clouds", "ovpn", true);
-  }
+  // Editor needs custom.js, which is loaded in common/footer.html after the page body
+  window.addEventListener('load', function () {
+    // Check if "theme" is set in localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+      createEditor("Logs", "640px", "clouds_midnight", "ovpn", true);
+    } else {
+      createEditor("Logs", "640px", "clouds", "ovpn", true);
+    }
+  });
 </script>
 <!-- /.box -->
 {{end}}

@@ -43,7 +43,7 @@
         <label for="name">EASYRSA_DN</label>
         <input type="text" class="form-control" id="EasyRSADN" name="EasyRSADN" placeholder="org"
           value="{{ .Settings.EasyRSADN }}">
-          <span id="helpBlock" class="text-muted">&quot;org&quot; - full DN format: &quot;Country/Province/City/Org/Org.Unit/email/commonName&quot;. &quot;cn_only&quot; - Use just a commonName value.</span>
+          <span class="text-muted">&quot;org&quot; - full DN format: &quot;Country/Province/City/Org/Org.Unit/email/commonName&quot;. &quot;cn_only&quot; - Use just a commonName value.</span>
       </div> -->
 
       <div class="form-group">
@@ -52,28 +52,28 @@
           <option {{ if eq .Settings.EasyRSADN "org" }}selected="selected"{{ end }} value="org">org</option>
           <option {{ if eq .Settings.EasyRSADN "cn_only" }}selected="selected"{{ end }} value="cn_only">cn_only</option>
         </select>
-        <span id="helpBlock" class="text-muted">&quot;org&quot; - full DN format: &quot;Country/Province/City/Org/Org.Unit/email/commonName&quot;. &quot;cn_only&quot; - Use just a commonName value.</span>
+        <span class="text-muted">&quot;org&quot; - full DN format: &quot;Country/Province/City/Org/Org.Unit/email/commonName&quot;. &quot;cn_only&quot; - Use just a commonName value.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_REQ_COUNTRY</label>
         <input type="text" class="form-control" id="EasyRSAReqCountry" name="EasyRSAReqCountry" placeholder="UA"
           value="{{ .Settings.EasyRSAReqCountry }}">
-          <span id="helpBlock" class="text-muted">The two-letter DN Organisational field for country code (e.g. UA).</span>
+          <span class="text-muted">The two-letter DN Organisational field for country code (e.g. UA).</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_REQ_PROVINCE</label>
         <input type="text" class="form-control" id="EasyRSAReqProvince" name="EasyRSAReqProvince" placeholder="KY"
           value="{{ .Settings.EasyRSAReqProvince }}">
-        <span id="helpBlock" class="text-muted">The two-letter DN Organisational field for province code (e.g. KY for &quot;Kyiv region&quot;).</span>
+        <span class="text-muted">The two-letter DN Organisational field for province code (e.g. KY for &quot;Kyiv region&quot;).</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_REQ_CITY</label>
         <input type="text" class="form-control" id="EasyRSAReqCity" name="EasyRSAReqCity" placeholder="Kyiv"
           value="{{ .Settings.EasyRSAReqCity }}">
-        <span id="helpBlock" class="text-muted">The city of DN Organisation.</span>
+        <span class="text-muted">The city of DN Organisation.</span>
 
       </div>
 
@@ -81,35 +81,35 @@
         <label for="name">EASYRSA_REQ_ORG</label>
         <input type="text" class="form-control" id="EasyRSAReqOrg" name="EasyRSAReqOrg" placeholder="SweetHome"
           value="{{ .Settings.EasyRSAReqOrg }}">
-        <span id="helpBlock" class="text-muted">The name of DN Organisation.</span>
+        <span class="text-muted">The name of DN Organisation.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_REQ_EMAIL</label>
         <input type="text" class="form-control" id="EasyRSAReqEmail" name="EasyRSAReqEmail" placeholder="sweet@home.ua"
           value="{{ .Settings.EasyRSAReqEmail }}">
-        <span id="helpBlock" class="text-muted">The e-mail address of DN Organisation.</span>
+        <span class="text-muted">The e-mail address of DN Organisation.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_REQ_OU</label>
         <input type="text" class="form-control" id="EasyRSAReqOu" name="EasyRSAReqOu" placeholder="GarageVPN"
           value="{{ .Settings.EasyRSAReqOu }}">
-        <span id="helpBlock" class="text-muted">The Organisational Unit of DN Organisation.</span>
+        <span class="text-muted">The Organisational Unit of DN Organisation.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_REQ_CN</label>
         <input type="text" class="form-control" id="EasyRSAReqCn" name="EasyRSAReqCn" placeholder="OVPNserver"
           value="{{ .Settings.EasyRSAReqCn }}">
-        <span id="helpBlock" class="text-muted">The Common Name of DN Organisation.</span>
+        <span class="text-muted">The Common Name of DN Organisation.</span>
       </div>
 
       <!-- <div class="form-group">
         <label for="name">EASYRSA_KEY_ALGO</label>
         <input type="text" class="form-control" id="EasyRSAAlgo" name="EasyRSAAlgo" placeholder="ec"
           value="{{ .Settings.EasyRSAAlgo }}">
-        <span id="helpBlock" class="text-muted">Choices for crypto alg are: (each in lower-case) - rsa, ec, ed.</span>
+        <span class="text-muted">Choices for crypto alg are: (each in lower-case) - rsa, ec, ed.</span>
       </div> -->
 
       <div class="form-group">
@@ -119,14 +119,14 @@
           <option {{ if eq .Settings.EasyRSAAlgo "ecdsa" }}selected="selected"{{ end }} value="ecdsa">ecdsa</option>
           <option {{ if eq .Settings.EasyRSAAlgo "ed25519" }}selected="selected"{{ end }} value="ed25519">ed25519</option>
         </select>
-        <span id="helpBlock" class="text-muted">Choices for crypto alg are: rsa, ecdsa, ed25519.</span>
+        <span class="text-muted">Choices for crypto alg are: rsa, ecdsa, ed25519.</span>
       </div>
 
       <!-- <div class="form-group">
         <label for="name">EASYRSA_CURVE</label>
         <input type="text" class="form-control" id="EasyRSACurve" name="EasyRSACurve" placeholder="secp384r1"
           value="{{ .Settings.EasyRSACurve }}">
-        <span id="helpBlock" class="text-muted">Define the named curve, used in ec & ed modes.</span>
+        <span class="text-muted">Define the named curve, used in ec & ed modes.</span>
       </div> -->
 
       <div class="form-group">
@@ -136,42 +136,42 @@
           <option {{ if eq .Settings.EasyRSACurve "P-384" }}selected="selected"{{ end }} value="P-384">P-384</option>
           <option {{ if eq .Settings.EasyRSACurve "P-521" }}selected="selected"{{ end }} value="P-521">P-521</option>
         </select>
-        <span id="helpBlock" class="text-muted">Define the named curve, used in ec & ed modes. P-256, P-384 or P-521</span>
+        <span class="text-muted">Define the named curve, used in ec & ed modes. P-256, P-384 or P-521</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_KEY_SIZE</label>
         <input type="text" class="form-control" id="EasyRSAKeySize" name="EasyRSAKeySize" placeholder="2048"
           value="{{ .Settings.EasyRSAKeySize }}">
-        <span id="helpBlock" class="text-muted">Size in bits for your keypairs. The recommended value is 2048, leave it as-is. However can be set up to 4096.</span>
+        <span class="text-muted">Size in bits for your keypairs. The recommended value is 2048, leave it as-is. However can be set up to 4096.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_CA_EXPIRE</label>
         <input type="text" class="form-control" id="EasyRSACaExpire" name="EasyRSACaExpire" placeholder="3650"
           value="{{ .Settings.EasyRSACaExpire }}">
-        <span id="helpBlock" class="text-muted">Number of days until the root CA key expires. The recommended value is 3650.</span>
+        <span class="text-muted">Number of days until the root CA key expires. The recommended value is 3650.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_CERT_EXPIRE</label>
         <input type="text" class="form-control" id="EasyRSACertExpire" name="EasyRSACertExpire" placeholder="825"
           value="{{ .Settings.EasyRSACertExpire }}">
-        <span id="helpBlock" class="text-muted">Number of days until Client certificate expire. The recommended value is 825.</span>
+        <span class="text-muted">Number of days until Client certificate expire. The recommended value is 825.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_CRL_DAYS</label>
         <input type="text" class="form-control" id="EasyRSACrlDays" name="EasyRSACrlDays" placeholder="180"
           value="{{ .Settings.EasyRSACrlDays }}">
-        <span id="helpBlock" class="text-muted">Number of days until the CRL expires. The recommended value is 180. To apply new value - press &quot;Generate CRL&quot; under the &quot;Maintenance&quot;.</span>
+        <span class="text-muted">Number of days until the CRL expires. The recommended value is 180. To apply new value - press &quot;Generate CRL&quot; under the &quot;Maintenance&quot;.</span>
       </div>
 
       <div class="form-group">
         <label for="name">EASYRSA_CERT_RENEW</label>
         <input type="text" class="form-control" id="EasyRSACertRenew" name="EasyRSACertRenew" placeholder="30"
           value="{{ .Settings.EasyRSACertRenew }}">
-        <span id="helpBlock" class="text-muted">This should be implemented on OpenVPN Server side. Number of days before expiration to automatically renew certificates.</span>
+        <span class="text-muted">This should be implemented on OpenVPN Server side. Number of days before expiration to automatically renew certificates.</span>
       </div>
 
       {{ .xsrfdata }}
@@ -203,7 +203,7 @@
                   <label for="name">.easy-rsa/pki/vars</label>
                   <textarea type="text" class="form-control my-textarea" name="ServerConfig" 
                    id="ServerConfig"  spellcheck="false" rows="15">{{ .EasyRSAConf }}</textarea>
-                  <span id="helpBlock" class="text-muted">This is EasyRSA VARS file.
+                  <span class="text-muted">This is EasyRSA VARS file.
                   </span>
                 </div>
                 
@@ -220,13 +220,16 @@
 </div>
 
 <!-- /.card -->
-{{end}}
 
 <script>
-  // Check if "themeEditor" is set in localStorage
-  if (localStorage.getItem("theme") === "dark") {
-    createEditor("EasyRSAConfig", "600px", "clouds_midnight", "ovpn", true);
-  } else {
-    createEditor("EasyRSAConfig", "600px", "clouds", "ovpn", true);
-  }
+  // Editor needs custom.js, which is loaded in common/footer.html after the page body
+  window.addEventListener('load', function () {
+    // Check if "theme" is set in localStorage
+    if (localStorage.getItem("theme") === "dark") {
+      createEditor("ServerConfig", "600px", "clouds_midnight", "ovpn", true);
+    } else {
+      createEditor("ServerConfig", "600px", "clouds", "ovpn", true);
+    }
+  });
 </script>
+{{end}}

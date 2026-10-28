@@ -62,42 +62,41 @@
 
   {{template "common/footer.html" .}}
 
+  <script>
+    // Get a reference to the checkbox element
+    const checkbox = document.getElementById('checkbox');
+
+    // Get a reference to the label element
+    const themeLabel = document.getElementById('theme-label');
+
+    // Get a reference to the body element
+    const body = document.body;
+
+    // Check localStorage for the user's theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      checkbox.checked = true;
+      themeLabel.textContent = 'Dark';
+    }
+
+    // Add an event listener to the checkbox for changes
+    checkbox.addEventListener('change', function () {
+      // Toggle the "dark-mode" class on the body element
+      body.classList.toggle('dark-mode', checkbox.checked);
+
+      // Update the label text based on the checkbox state
+      themeLabel.textContent = checkbox.checked ? 'Dark' : 'Light';
+
+      // Save the user's preference in localStorage
+      if (checkbox.checked) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.removeItem('theme');
+      }
+    });
+  </script>
+
 </body>
 
 </html>
-
-<script>
-  // Get a reference to the checkbox element
-  const checkbox = document.getElementById('checkbox');
-
-  // Get a reference to the label element
-  const themeLabel = document.getElementById('theme-label');
-
-
-  // Get a reference to the body element
-  const body = document.body;
-
-  // Check localStorage for the user's theme preference
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    body.classList.add('dark-mode');
-    checkbox.checked = true;
-    themeLabel.textContent = 'Dark';
-  }
-
-  // Add an event listener to the checkbox for changes
-  checkbox.addEventListener('change', function () {
-    // Toggle the "dark-mode" class on the body element
-    body.classList.toggle('dark-mode', checkbox.checked);
-
-    // Update the label text based on the checkbox state
-    themeLabel.textContent = checkbox.checked ? 'Dark' : 'Light';
-
-    // Save the user's preference in localStorage
-    if (checkbox.checked) {
-      localStorage.setItem('theme', 'dark');
-    } else {
-      localStorage.removeItem('theme');
-    }
-  });
-</script>

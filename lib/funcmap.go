@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -22,6 +23,26 @@ func AddFuncMaps() {
 			return true
 		}
 		return false
+	})
+	// cssid turns an arbitrary string into a value that is safe to use both as
+	// an HTML id attribute and inside a CSS/jQuery selector. Bootstrap reads
+	// data-target as a selector, so names like "alice@wonderland.ua" would break
+	// the lookup ('.' starts a class, '@' is invalid). Unsafe bytes are encoded
+	// as "-<hex>-" so the result stays unique.
+	_ = web.AddFuncMap("cssid", func(s string) string {
+		var b strings.Builder
+		for i := 0; i < len(s); i++ {
+			c := s[i]
+			switch {
+			case c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z', c >= '0' && c <= '9', c == '_':
+				b.WriteByte(c)
+			case c == '-':
+				b.WriteByte(c)
+			default:
+				fmt.Fprintf(&b, "-%x-", c)
+			}
+		}
+		return b.String()
 	})
 	_ = web.AddFuncMap("printkb", func(i interface{}) string {
 		switch v := i.(type) {

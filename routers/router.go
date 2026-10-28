@@ -40,6 +40,12 @@ func Init(configDir string) {
 		web.NSRouter("/ov/clientconfig", &controllers.OVClientConfigController{ConfigDir: configDir}),
 		web.NSRouter("/easyrsa/config", &controllers.EasyRSAConfigController{ConfigDir: configDir}),
 		web.NSRouter("/dangerzone", &controllers.DangerController{}),
+		web.NSRouter("/dangerzone/pki/delete/:key", &controllers.DangerController{}, "post:DeletePKI"),
+		web.NSRouter("/dangerzone/pki/init/:key", &controllers.DangerController{}, "post:InitPKI"),
+		web.NSRouter("/dangerzone/container/restart/:key", &controllers.DangerController{}, "post:RestartContainer"),
+
+		web.NSRouter("/ov/config/edit", &controllers.OVConfigController{ConfigDir: configDir}, "post:Edit"),
+		web.NSRouter("/ov/clientconfig/edit", &controllers.OVClientConfigController{ConfigDir: configDir}, "post:Edit"),
 
 		web.NSInclude(&controllers.CertificatesController{ConfigDir: configDir}),
 
