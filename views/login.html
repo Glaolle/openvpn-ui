@@ -53,13 +53,9 @@
           </div>
         </div>
 
-        <div class="col-xs-8">
-        </div>
-        <!-- /.col -->
         {{ .xsrfdata }}
         <button type="submit" class="btn btn-primary btn-block">
         <img src="/static/img/openvpn-win.svg" alt="Sign In Icon" style="height: 23px; vertical-align: middle; filter: invert(1);"> &nbsp;Sign In</button>
-        <!-- /.col -->
       </form>
       <br>
       <a href='{{urlfor "LoginController.GoogleLogin"}}' class="btn btn-block btn-danger">

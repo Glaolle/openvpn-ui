@@ -247,32 +247,32 @@
        {{template "common/alert.html" .}}
         <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
           <div class="box-body">
-            <div class="form-group has-success {{if field_error_exist .validation "Name" }}has-error{{end}}">
-              <label class="control-label" for="Name" title="Name should not have spaces."><i class="fa fa-bell-o"></i>Name</label>
-              <input type="text" class="form-control is-warning" pattern="^[^\s]+$" placeholder="Certificate Name" id="Name" name="Name">
+            <div class="form-group">
+              <label class="col-form-label" for="Name" title="Name should not have spaces."><i class="far fa-bell"></i>Name</label>
+              <input type="text" class="form-control {{if field_error_exist .validation "Name"}}is-invalid{{end}}" pattern="^[^\s]+$" placeholder="Certificate Name" id="Name" name="Name">
               <span class="text-muted" title="Name should not have spaces.">Common name of the certificate.</span>
             </div>
-
+    
             {{ if eq (printf "%d" $.SettingsC.FuncMode) "1" }}
-            <div class="form-group has-success {{if field_error_exist .validation "TFAName" }}has-error{{end}}">
-              <label class="control-label" for="TFAName" title="2FAName should not have spaces."><i class="fa fa-bell-o"></i>2FA Name</label>
-              <input type="text" class="form-control is-warning" pattern="^[^\s]+$" placeholder="alice@wonderland.ua" id="TFAName" name="TFAName">
+            <div class="form-group">
+              <label class="col-form-label" for="TFAName" title="2FAName should not have spaces."><i class="far fa-bell"></i>2FA Name</label>
+              <input type="text" class="form-control {{if field_error_exist .validation "TFAName"}}is-invalid{{end}}" pattern="^[^\s]+$" placeholder="alice@wonderland.ua" id="TFAName" name="TFAName">
               <span class="text-muted" title="2FA Name should not have spaces.">Unique 2FA name of the certificate.</span>
             </div>
 
             <div class="form-group" id="tfa-issuer">
-              <label class="control-label" for="tfaissuer" title="TFAIssuer should have URL format.">2FA Issuer String</label>
+              <label class="col-form-label" for="tfaissuer" title="TFAIssuer should have URL format.">2FA Issuer String</label>
               <input type="text" class="form-control" placeholder="MFA%20OpenVPN-UI" id="tfaissuer" name="TFAIssuer" value="{{ $.SettingsC.TFAIssuer }}">
               <span class="text-muted" title="TFAIssuer should have URL format.">2FA Issuer for the QR Code string.</span>
             </div>
             {{end}}
-    
+
             <div class="form-group">
               <label for="passphrase">Passphrase (Optional)</label>
               <input type="password" class="form-control" placeholder="Enter Password" id="passphrase" name="passphrase">
               <span class="text-muted">Passphrase is used for private key protection.</span>
             </div>
-    
+
             <div class="form-group">
               <label for="staticip" title="IPv4 without subnet">Client Static IP (Optional)</label>
               <input type="text" class="form-control" placeholder="Enter Static IP" pattern="^(\d{1,3}\.){3}\d{1,3}$" id="staticip" name="staticip">

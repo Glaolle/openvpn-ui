@@ -37,51 +37,55 @@
               </div>
             </div>
 
-            <div class="form-group {{if field_error_exist .validation " Name" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="name">Name</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-user-plus"></i></span>
                 </div>
-                <input type="text" class="form-control" id="name" name="Name" placeholder="Enter name"
+                <input type="text" class="form-control {{if field_error_exist .validation "Name"}}is-invalid{{end}}"
+                  id="name" name="Name" placeholder="Enter name"
                   value="{{ .profile.Name }}">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "Name"
                   }}</span>
               </div>
             </div>
 
-            <div class="form-group {{if field_error_exist .validation " Email" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="email">Email address</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                 </div>
-                <input type="email" class="form-control" id="email" name="Email" placeholder="Enter email"
+                <input type="email" class="form-control {{if field_error_exist .validation "Email"}}is-invalid{{end}}"
+                  id="email" name="Email" placeholder="Enter email"
                   value="{{ .profile.Email }}">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "Email"
                   }}</span>
               </div>
             </div>
 
-            <div class="form-group {{if field_error_exist .validation " Password" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="password">New Password</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
-                <input type="password" class="form-control" id="password" name="Password" placeholder="Enter password">
+                <input type="password" class="form-control {{if field_error_exist .validation "Password"}}is-invalid{{end}}"
+                  id="password" name="Password" placeholder="Enter password">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "Password"
                   }}</span>
               </div>
             </div>
 
-            <div class="form-group {{if field_error_exist .validation " Repassword" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="Repassword">Repeat password</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
-                <input type="password" class="form-control" id="Repassword" name="Repassword" placeholder="Repeat password">
+                <input type="password" class="form-control {{if field_error_exist .validation "Repassword"}}is-invalid{{end}}"
+                  id="Repassword" name="Repassword" placeholder="Repeat password">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "Repassword"
                   }}</span>
               </div>
@@ -112,56 +116,59 @@
                 <input type="text" class="form-control" id="newlogin" name="NewLogin" placeholder="Enter login">
               </div>
             </div>
-            <div class="custom-control custom-checkbox form-group {{if field_error_exist .validation " IsAdmin"
-              }}has-error{{end}}">
-              <input class="custom-control-input custom-control-input-danger" type="checkbox" id="isadmin"
-                name="IsAdmin">
+            <div class="custom-control custom-checkbox form-group">
+              <input class="custom-control-input custom-control-input-danger {{if field_error_exist .validation "IsAdmin"}}is-invalid{{end}}"
+                type="checkbox" id="isadmin" name="IsAdmin">
               <label for="isadmin" class="custom-control-label" style="color: #dd4b39;">This user is Admin.</label>
               <span class="text-muted">
                 &nbsp; Not Admins can maintain Certificates, view Logs and Connections. Server configuration and User
                 management is not accessible.</span>
             </div>
-            <div class="form-group {{if field_error_exist .validation " NewName" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="newname">Name</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-user-plus"></i></span>
                 </div>
-                <input type="text" class="form-control" id="newname" name="NewName" placeholder="Enter name">
+                <input type="text" class="form-control {{if field_error_exist .validation "NewName"}}is-invalid{{end}}"
+                  id="newname" name="NewName" placeholder="Enter name">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "NewName"
                   }}</span>
               </div>
             </div>
-            <div class="form-group {{if field_error_exist .validation " NewEmail" }}has-error{{end}}">
-              <label class="col-form-label" for="email">Email address</label>
+            <div class="form-group">
+              <label class="col-form-label" for="newemail">Email address</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                 </div>
-                <input type="email" class="form-control" id="newemail" name="NewEmail" placeholder="Enter email">
+                <input type="email" class="form-control {{if field_error_exist .validation "NewEmail"}}is-invalid{{end}}"
+                  id="newemail" name="NewEmail" placeholder="Enter email">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "NewEmail"
                   }}</span>
               </div>
             </div>
-            <div class="form-group {{if field_error_exist .validation " NewPassword" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="newpassword">Enter user password</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
-                <input type="password" class="form-control" id="newpassword" name="NewPassword"
+                <input type="password" class="form-control {{if field_error_exist .validation "NewPassword"}}is-invalid{{end}}"
+                  id="newpassword" name="NewPassword"
                   placeholder="Enter new user password">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "NewPassword"
                   }}</span>
               </div>
             </div>
-            <div class="form-group {{if field_error_exist .validation " NewRepassword" }}has-error{{end}}">
+            <div class="form-group">
               <label class="col-form-label" for="newrepassword">Repeat user password</label>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
-                <input type="password" class="form-control" id="newrepassword" name="NewRepassword"
+                <input type="password" class="form-control {{if field_error_exist .validation "NewRepassword"}}is-invalid{{end}}"
+                  id="newrepassword" name="NewRepassword"
                   placeholder="Repeat new user password">
                 <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation
                   "NewRepassword" }}</span>
