@@ -1,16 +1,16 @@
 <!-- User Account Menu -->
 <li class='dropdown user user-menu {{if compare .RouterPattern "/profile"}} nav-item{{end}}'>
   <!-- Menu Toggle Button -->
-  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
     <!-- The user image in the navbar-->
     <img src="/static/img/person.png" class="user-image" alt="User Image">
-    <!-- hidden-xs hides the username on small devices so only the image appears. -->
-    <span class="hidden-xs">{{ .Userinfo.Name}}</span>
+    <!-- The username next to the avatar. -->
+    <span>{{ .Userinfo.Name}}</span>
   </a>
   <ul class="dropdown-menu">
     <!-- The user image in the menu -->
     <li class="user-header">
-      <img src="/static/img/person.png" class="img-circle" alt="User Image">
+      <img src="/static/img/person.png" class="rounded-circle" alt="User Image">
       <p>
         {{ .Userinfo.Name}}
         <small>Created on {{ .Userinfo.Created.Format "Jan 02, 2006" }}</small>
@@ -19,11 +19,11 @@
 
     <!-- Menu Footer-->
     <li class="user-footer">
-      <div class="pull-left">
-        <a href='{{urlfor "ProfileController.Get"}}' class="btn btn-default btn-flat">Profile Configuration</a>
+      <div class="float-start">
+        <a href='{{urlfor "ProfileController.Get"}}' class="btn btn-secondary">Profile Configuration</a>
       </div>
-      <div class="pull-right">
-        <a href='{{urlfor "LoginController.Logout"}}' class="btn btn-default btn-flat">Sign out</a>
+      <div class="float-end">
+        <a href='{{urlfor "LoginController.Logout"}}' class="btn btn-secondary">Sign out</a>
       </div>
     </li>
   </ul>

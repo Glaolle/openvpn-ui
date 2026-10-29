@@ -8,13 +8,13 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="card card-default">
+    <div class="card">
       <div class="card-header">
         <h3 class="card-title">
           {{ if eq (printf "%d" $.SettingsC.FuncMode) "1" }}2FA Authorisation is <b style="color: #00a65a;">Enabled</b>{{ else }}Client Certificates{{ end }}
         </h3>
         <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fa fa-minus"></i></button>
+          <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"><i class="fa fa-minus"></i></button>
         </div>
       </div> 
       {{template "common/alert.html" .}}
@@ -23,7 +23,7 @@
       <div class="card-body">
         <!--if .ovstatus -->
         <div class="table-responsive">
-          <table class="table no-margin">
+          <table class="table">
             <thead>
             <tr>
               <th>Name</th>
@@ -50,15 +50,15 @@
                   </td>
                   {{if and (eq .Revocation "") (not .IsExpiring) (eq .EntryType "V")}}
                     <td>
-                      <i class="fa fa-fw fa-check-circle" style="color: #00a65a; font-size: 17px;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"></i>
+                      <i class="fa fa-fw fa-check-circle" style="color: #00a65a; font-size: 17px;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"></i>
                     </td>
                   {{else if and (eq .Revocation "") .IsExpiring (eq .EntryType "E")}}
                     <td>
-                      <i class="fa fa-fw fa-exclamation-circle" style="color: #f39c12; font-size: 17px;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"></i>
+                      <i class="fa fa-fw fa-exclamation-circle" style="color: #f39c12; font-size: 17px;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"></i>
                     </td>
                   {{else}}
                     <td>
-                      <i class="fa fa-fw fa-times-circle" style="color: #dd4b39; font-size: 17px;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"></i>
+                      <i class="fa fa-fw fa-times-circle" style="color: #dd4b39; font-size: 17px;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"></i>
                     </td>
                   {{end}}
                     <td>
@@ -67,15 +67,15 @@
 
                   {{if and (eq .Revocation "") (not .IsExpiring) (eq .EntryType "V")}}
                     <td>
-                      <a class="btn btn-success btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</b></a>
+                      <a class="btn btn-success btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</b></a>
                     </td>
                   {{else if and (eq .Revocation "") .IsExpiring (eq .EntryType "E")}}
                     <td>
-                      <a class="btn btn-warning btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</b></a>
+                      <a class="btn btn-warning btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</b></a>
                     </td>
                   {{else}}
                     <td>
-                      <a class="btn btn-danger btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</b></a>
+                      <a class="btn btn-danger btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .ExpirationT "2006-01-02 15:04"}}</b></a>
                     </td>
                   {{end}}
 
@@ -83,7 +83,7 @@
                     <td></td>
                   {{else}}
                     <td>
-                      <a class="btn btn-danger btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .RevocationT "2006-01-02 15:04"}}</b></a>
+                      <a class="btn btn-danger btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ dateformat .RevocationT "2006-01-02 15:04"}}</b></a>
                     </td>
                   {{end}}
                     <!--td>
@@ -91,36 +91,36 @@
                     </td-->
                   {{if and (eq .Revocation "") (not .IsExpiring) (eq .EntryType "V")}}
                     <td>
-                      <a class="btn btn-success btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.CN }}</b></a>
-                      <a class="btn btn-success btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.Email }}</b></a>
+                      <a class="btn btn-success btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.CN }}</b></a>
+                      <a class="btn btn-success btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.Email }}</b></a>
                     </td>
                   {{else if and (eq .Revocation "") .IsExpiring (eq .EntryType "E")}}
                     <td>
-                      <a class="btn btn-warning btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.CN }}</b></a>
-                      <a class="btn btn-warning btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.Email }}</b></a>
+                      <a class="btn btn-warning btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.CN }}</b></a>
+                      <a class="btn btn-warning btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.Email }}</b></a>
                     </td>
                   {{else}}
                     <td>
-                      <a class="btn btn-danger btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.CN }}</b></a>
-                      <a class="btn btn-danger btn-xs" style="font-size: 80%;" data-toggle="modal" data-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.Email }}</b></a>
+                      <a class="btn btn-danger btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.CN }}</b></a>
+                      <a class="btn btn-danger btn-sm" style="font-size: 80%;" data-bs-toggle="modal" data-bs-target="#{{ cssid .Details.CN }}-modal"><b style="font-size: 80%;">{{ .Details.Email }}</b></a>
                     </td>
                   {{end}}
                     <td class="align-middle">
                   {{ if and (eq .Revocation "") (ne .Details.CN "") (eq .EntryType "V") }}
-                      <a href='{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":localip" .Details.LocalIP ":serial" .Serial ":tfaname" .Details.TFAName}}' class="btn btn-primary btn-xs" title="Renew" style="font-size: 80%;">Renew</a>
+                      <a href='{{urlfor "CertificatesController.Renew" ":key" .Details.CN ":localip" .Details.LocalIP ":serial" .Serial ":tfaname" .Details.TFAName}}' class="btn btn-primary btn-sm" title="Renew" style="font-size: 80%;">Renew</a>
                   {{else}}
-                      <a class="btn btn-default btn-xs" disabled>Renew</a>
+                      <a class="btn btn-secondary btn-sm" disabled>Renew</a>
                   {{end}}
 
                   {{ if and (eq .Revocation "") (ne .Details.CN "") (eq .EntryType "V") }}
-                      <a href='{{urlfor "CertificatesController.Revoke" ":key" .Details.CN ":serial" .Serial ":tfaname" .Details.TFAName}}' class="btn btn-warning btn-xs" title="Revoke" style="font-size: 80%;">Revoke</a>
+                      <a href='{{urlfor "CertificatesController.Revoke" ":key" .Details.CN ":serial" .Serial ":tfaname" .Details.TFAName}}' class="btn btn-warning btn-sm" title="Revoke" style="font-size: 80%;">Revoke</a>
                   {{else}}
-                      <a class="btn btn-default btn-xs" disabled>Revoke</a>
+                      <a class="btn btn-secondary btn-sm" disabled>Revoke</a>
                   {{end}}
                   {{ if and (eq .Revocation "") (eq .EntryType "V")}}
-                      <a class="btn btn-default btn-xs" disabled>Delete</a>
+                      <a class="btn btn-secondary btn-sm" disabled>Delete</a>
                   {{else}}
-                      <a href='{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial ":tfaname" .Details.TFAName}}' class="btn btn-danger btn-xs" title="Burn" style="font-size: 80%;">Delete</a>
+                      <a href='{{urlfor "CertificatesController.Burn" ":key" .Details.CN ":serial" .Serial ":tfaname" .Details.TFAName}}' class="btn btn-danger btn-sm" title="Burn" style="font-size: 80%;">Delete</a>
                   {{end}}
                     </td>
               </tr>
@@ -137,8 +137,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title">{{ .Details.CN }} Details</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span></button>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                       <!-- /.dl-header -->
@@ -147,7 +146,7 @@
                         <!--dt class="copy-details">2FA Issuer String: </dt>
                         <dd class="copy-details">{{ $.SettingsC.TFAIssuer }}</dd-->
                         <dt class="copy-details"><b><h4>2FA Name: </h4></b></dt>
-                        <dd class="copy-details 2fa-name"><h4 style="color: #3c8dbc">{{ .Details.TFAName }}</h4></dd>
+                        <dd class="copy-details tfa-name"><h4 style="color: #3c8dbc">{{ .Details.TFAName }}</h4></dd>
                         <dt class="copy-details"><b><h5>Certificate Name:</h5></b></dt>
                         <dd class="copy-details cert-name"><h5 style="color: #3c8dbc">{{ .Details.CN }}</h5></dd>
                         {{else}}
@@ -182,7 +181,7 @@
                         <dt class="copy-details">Two Factor Authorisation (2FA) QR Code:</dt>
                         <dd class="copy-details">
                           {{ if and (eq .EntryType "V") (ne .Details.CN "") }}
-                            <div class="text-left qr-code">
+                            <div class="text-start qr-code">
                               <img src='{{urlfor "CertificatesController.DisplayImage" ":imageName" .Details.CN}}' alt="2FA QR code for {{ .Details.CN }}">
                             </div>
                           {{end}}
@@ -190,7 +189,7 @@
                         {{end}}
                       </dl>
                       <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary copy-btn copy-modal-data-btn" style="width: 135px;">Copy</button>
                         <button type="button" class="btn btn-success send-email-with-qr-btn" style="width: 135px;">Send Email</button>
                       </div>
@@ -215,16 +214,16 @@
 <div class="row">
   <div class="col-md-12">
     <div class="card card-primary">
-      <div class="card-header with-border">
+      <div class="card-header">
         <h3 class="card-title">Create New Client Certificate</h3>
-        <div class="pull-left card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
           <i class="fa fa-minus"></i></button>
         </div>
       </div>
         <!-- /.box-header -->
       <div class="card-body">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-default">
           Create Certificate
         </button>
         <span class="text-muted"> {{template "common/fvalid.html" field_error_message .validation "Name" }}</span>
@@ -238,8 +237,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Create Certificate</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="FuncMode" value="{{ $.SettingsC.FuncMode }}">
         <!-- /.box-header -->
@@ -247,75 +245,75 @@
        {{template "common/alert.html" .}}
         <form role="form" action="{{urlfor "CertificatesController.Post"}}" method="post">
           <div class="box-body">
-            <div class="form-group">
+            <div class="mb-3">
               <label class="col-form-label" for="Name" title="Name should not have spaces."><i class="far fa-bell"></i>Name</label>
               <input type="text" class="form-control {{if field_error_exist .validation "Name"}}is-invalid{{end}}" pattern="^[^\s]+$" placeholder="Certificate Name" id="Name" name="Name">
               <span class="text-muted" title="Name should not have spaces.">Common name of the certificate.</span>
             </div>
     
             {{ if eq (printf "%d" $.SettingsC.FuncMode) "1" }}
-            <div class="form-group">
+            <div class="mb-3">
               <label class="col-form-label" for="TFAName" title="2FAName should not have spaces."><i class="far fa-bell"></i>2FA Name</label>
               <input type="text" class="form-control {{if field_error_exist .validation "TFAName"}}is-invalid{{end}}" pattern="^[^\s]+$" placeholder="alice@wonderland.ua" id="TFAName" name="TFAName">
               <span class="text-muted" title="2FA Name should not have spaces.">Unique 2FA name of the certificate.</span>
             </div>
 
-            <div class="form-group" id="tfa-issuer">
+            <div class="mb-3" id="tfa-issuer">
               <label class="col-form-label" for="tfaissuer" title="TFAIssuer should have URL format.">2FA Issuer String</label>
               <input type="text" class="form-control" placeholder="MFA%20OpenVPN-UI" id="tfaissuer" name="TFAIssuer" value="{{ $.SettingsC.TFAIssuer }}">
               <span class="text-muted" title="TFAIssuer should have URL format.">2FA Issuer for the QR Code string.</span>
             </div>
             {{end}}
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="passphrase">Passphrase (Optional)</label>
               <input type="password" class="form-control" placeholder="Enter Password" id="passphrase" name="passphrase">
               <span class="text-muted">Passphrase is used for private key protection.</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="staticip" title="IPv4 without subnet">Client Static IP (Optional)</label>
               <input type="text" class="form-control" placeholder="Enter Static IP" pattern="^(\d{1,3}\.){3}\d{1,3}$" id="staticip" name="staticip">
               <span class="text-muted">Client Static IP used as a local Client IP for subnet split.</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSAReqEmail" title="EASYRSA_REQ_EMAIL">Client Email</label>
               <input type="email" class="form-control" placeholder="Client Email" id="EasyRSAReqEmail" name="EasyRSAReqEmail" value="{{ .EasyRSA.EasyRSAReqEmail }}">
               <span class="text-muted">The New Client e-mail address.</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSACertExpire" title="Cert days to expire">Expired Days</label>
               <input type="number" min="1" class="form-control" placeholder="825" pattern="^\d{1,6}$" id="EasyRSACertExpire" name="EasyRSACertExpire" value="{{ .EasyRSA.EasyRSACertExpire }}">
               <span class="text-muted">Number of days until Client certificate expire. The recommended value is 825.</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSAReqCountry" title="EASYRSA_REQ_COUNTRY">Client Country Name</label>
               <input type="text" class="form-control" placeholder="UA" pattern="^[A-Za-z]{2}$" id="EasyRSAReqCountry" name="EasyRSAReqCountry" value="{{ .EasyRSA.EasyRSAReqCountry }}">
               <span class="text-muted">The two-letter DN Organisational field for Country Code (e.g. UA).</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSAReqProvince" title="EASYRSA_REQ_PROVINCE">Client State or Region Name</label>
               <input type="text" class="form-control" placeholder="KY" pattern="^[A-Za-z]{2}$" id="EasyRSAReqProvince" name="EasyRSAReqProvince" value="{{ .EasyRSA.EasyRSAReqProvince }}">
               <span class="text-muted">The two-letter DN Organisational field for province code (e.g. KY for "Kyiv region").</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSAReqCity" title="EASYRSA_REQ_CITY">Client City Name</label>
               <input type="text" class="form-control" placeholder="Kyiv" id="EasyRSAReqCity" name="EasyRSAReqCity" value="{{ .EasyRSA.EasyRSAReqCity }}">
               <span class="text-muted">The city of DN Organisation.</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSAReqOrg" title="EASYRSA_REQ_ORG">Client Organisation</label>
               <input type="text" class="form-control" placeholder="SweetHome" id="EasyRSAReqOrg" name="EasyRSAReqOrg" value="{{ .EasyRSA.EasyRSAReqOrg }}">
               <span class="text-muted">The Client name of DN Organisation.</span>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
               <label for="EasyRSAReqOu" title="EASYRSA_REQ_OU">Client Organisation Unit Name</label>
               <input type="text" class="form-control" placeholder="GarageVPN" id="EasyRSAReqOu" name="EasyRSAReqOu" value="{{ .EasyRSA.EasyRSAReqOu }}">
               <span class="text-muted">The Client Organisational Unit of DN Organisation.</span>
@@ -327,7 +325,7 @@
           <!-- /.box-body -->
 
           <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Create</button>
           </div>
 
@@ -337,18 +335,18 @@
   </div>
 </div>
 
-<div class="card card-default">
-  <div class="card-header with-border">
+<div class="card">
+  <div class="card-header">
     <h3 class="card-title">OpenVPN Server Control</h3>
-    <div class="pull-left card-tools">
-      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
       <i class="fa fa-minus"></i></button>
     </div>
   </div>
   <!-- /.box-header -->
   <div class="card-body">
     <span class="text-muted">If you are revoking Certificate, don't forget to restart OpenVPN Server to disconnect all active client sessions and make revocation to take the effect.<br/></span><br>
-    <a href="javascript:$.MyAPP.Restart('SIGUSR1')"  class="btn btn-warning btn-primary" style="width: 145px;" title="Conditional Restart (SIGUSR1)">Restart Server</a>
+    <a href="javascript:void(MyAPP.Restart('SIGUSR1'))"  class="btn btn-warning btn-primary" style="width: 145px;" title="Conditional Restart (SIGUSR1)">Restart Server</a>
     &nbsp; OpenVPN Server Conditional Restart to reinitiate all active client sessions. <br><br>
     <a href="{{urlfor "CertificatesController.Restart"}}" class="btn btn-danger btn-primary" style="width: 145px;" title="Restart OpenVPN container">Restart Container</a> 
     &nbsp; OpenVPN Container Restart to re-apply Firewall rules and restart OpenVPN Server. Will take more time than regular Restart. 
@@ -357,48 +355,56 @@
 </div>
 
 <script>
-// jQuery is loaded in views/common/footer.html, so wait for the whole page to load
-window.addEventListener('load', function () {
+// AdminLTE 4 / Bootstrap 5 ship no jQuery — this handler uses plain DOM API.
+document.addEventListener('DOMContentLoaded', function () {
   // Attach a click event handler to the "Send Email" button
-  $('.send-email-with-qr-btn').on('click', function () {
-    var $modal = $(this).closest('.modal');
+  document.querySelectorAll('.send-email-with-qr-btn').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var modal = button.closest('.modal');
+      if (!modal) return;
 
-    // Extract the email address from the modal content
-    var emailAddress = $modal.find('.copy-details a[href^="mailto:"]').attr('href');
-    emailAddress = emailAddress.replace('mailto:', '');
+      // Extract the email address from the modal content
+      var mailTo = modal.querySelector('.copy-details a[href^="mailto:"]');
+      if (!mailTo) return;
+      var emailAddress = mailTo.getAttribute('href').replace('mailto:', '');
 
-    // Extract all modal content
-    var content = '';
-    $modal.find('.copy-details').each(function () {
-      content += $(this).text().replace(/:\s/g, ': ') + '\n';
+      // Extract all modal content
+      var content = '';
+      modal.querySelectorAll('.copy-details').forEach(function (el) {
+        content += el.textContent.replace(/:\s/g, ': ') + '\n';
+      });
+      content = content.replace(/:\s\n/g, ': ');
+
+      // Extract additional details for the email body
+      var textOf = function (selector) {
+        var el = modal.querySelector(selector);
+        return el ? el.textContent.trim() : '';
+      };
+      var certName = textOf('.cert-name');
+      var expirationDate = textOf('.exp-time');
+      var tfaName = textOf('.tfa-name');
+      var organisation = textOf('.reg-org');
+
+      // Prepare the email subject
+      var emailSubject = 'Certificate Information for ' + certName;
+
+      // Prepare the email body using the template
+      var emailBody = 'Dear ' + certName + ',\n\n'
+        + 'Below is your new VPN certificate details.\n\n'
+        + 'Name: ' + certName + '\n'
+        + 'Two Factor Authentication (2FA) name(if applicable): ' + tfaName + '\n'
+        + 'The Certificate is registered on e-mail ' + emailAddress + ' and will be valid until ' + expirationDate + '.\n\n'
+        + 'Please take care.\n\n'
+        + 'Sincerely yours, ' + organisation + ' engineering team.';
+
+      // Prepare the mailto link with the encoded email address, subject, and body
+      var mailtoLink = 'mailto:' + encodeURIComponent(emailAddress) +
+        '?subject=' + encodeURIComponent(emailSubject) +
+        '&body=' + encodeURIComponent(emailBody);
+
+      // Open the default email client with the mailto link
+      window.location.href = mailtoLink;
     });
-    content = content.replace(/:\s\n/g, ': ');
-
-    // Extract additional details for the email body
-    var certName = $modal.find('.cert-name').text().trim();
-    var expirationDate = $modal.find('.exp-time').text();
-    var tfaName = $modal.find('.2fa-name').text();
-    var organisation = $modal.find('.reg-org').text().trim();
-
-    // Prepare the email subject
-    var emailSubject = 'Certificate Information for ' + certName;
-
-    // Prepare the email body using the template
-    var emailBody = 'Dear ' + certName + ',\n\n'
-      + 'Below is your new VPN certificate details.\n\n'
-      + 'Name: ' + certName + '\n'
-      + 'Two Factor Authentication (2FA) name(if applicable): ' + tfaName + '\n'
-      + 'The Certificate is registered on e-mail ' + emailAddress + ' and will be valid until ' + expirationDate + '.\n\n'
-      + 'Please take care.\n\n'
-      + 'Sincerely yours, ' + organisation + ' engineering team.';
-
-    // Prepare the mailto link with the encoded email address, subject, and body
-    var mailtoLink = 'mailto:' + encodeURIComponent(emailAddress) +
-      '?subject=' + encodeURIComponent(emailSubject) +
-      '&body=' + encodeURIComponent(emailBody);
-
-    // Open the default email client with the mailto link
-    window.location.href = mailtoLink;
   });
 });
 </script>

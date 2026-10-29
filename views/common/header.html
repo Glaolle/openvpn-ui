@@ -8,24 +8,23 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/static/img/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/static/img/favicon/favicon-192x192.png">
 
-    <!-- Отдельный CSS Bootstrap не подключается: стили Bootstrap 4.6.1 входят в сборку
-         AdminLTE.min.3.2.0.css (см. ниже). Подключать bootstrap.min.css дополнительно
+    <!-- Отдельный CSS Bootstrap не подключается: стили Bootstrap 5.3.8 входят в сборку
+         adminlte.min.4.10.0.css (см. ниже). Подключать bootstrap.min.css дополнительно
          не нужно — это привело бы к конфликту определений. -->
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
       <!-- Font Awesome 5.15.3 -->
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/ionicons.min.css">
-    <!-- AdminLTE3.2-->
-    <link rel="stylesheet" href="/static/css/AdminLTE.min.3.2.0.css">
+    <!-- AdminLTE 4.10.0 -->
+    <link rel="stylesheet" href="/static/css/adminlte.min.4.10.0.css">
 
-    <link rel="stylesheet" href="/static/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/css/custom.css">
-    <!-- jQuery 3.6.1 — до ACE и custom.js, чтобы $ был доступен в inline-скриптах body -->
-    <script src="/static/js/jquery-3.6.1.min.js"></script>
-    <!-- Bootstrap 4.6.1 — AdminLTE требует jQuery для плагин-методов -->
-    <script src="/static/js/bootstrap.min.4.6.1.js"></script>
-    <!-- AdminLTE 3.2.0 — инициализирует Layout/Sidebar/etc. в $(function(){}) -->
-    <script src="/static/js/app.min.3.2.0.js"></script>
-    <script src="/static/js/custom.js"></script>
+
+    <!-- Bootstrap 5.3.8 bundle (Popper включён) — Dropdown/Collapse/Modal/Tab.
+         jQuery не нужен: AdminLTE 4 написан на vanilla TypeScript. -->
+    <script src="/static/js/bootstrap.bundle.min.5.3.8.js"></script>
+    <!-- AdminLTE 4.10.0 — сам инициализирует Layout/CardWidget/ColorMode на DOMContentLoaded -->
+    <script src="/static/js/adminlte.min.4.10.0.js"></script>
+    <script src="/static/js/custom.js" defer></script>
     <script src="/static/js/ace/ace.js"></script>

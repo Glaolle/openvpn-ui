@@ -6,10 +6,10 @@
 
 {{define "body"}}
 <div class="card card-primary">
-  <div class="card-header with-border">
+  <div class="card-header">
     <h3 class="card-title">Client configuration template for .opvn file</h3>
-    <div class="pull-right card-tools">
-      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
         <i class="fa fa-minus"></i></button>
     </div>
   </div>
@@ -23,12 +23,12 @@
     <form role="form" action='{{urlfor "OVClientConfigController.Post"}}' method="post">
       <div class="card-body">
         <!-- Disabled Profile - yet another feature to implement.
-      <div class="form-group">
+      <div class="mb-3">
          <label for="name">Profile</label>
          <input type="text" class="form-control" name="Profile" id="Profile" value="{{ .Settings.Profile }}" style="visibility: hidden;" disabled>
      </div> -->
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Connection Address</label>
           <input type="text" class="form-control" id="ServerAddress" name="ServerAddress"
             placeholder="Enter server address" value="{{ .Settings.ServerAddress }}">
@@ -36,7 +36,7 @@
             connect. If you use IP NAT you can set external Internet IP of your server here</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Connection Port</label>
           <input type="text" class="form-control" id="OpenVpnServerPort" name="OpenVpnServerPort"
             placeholder="Enter external server port" value="{{ .Settings.OpenVpnServerPort }}">
@@ -44,14 +44,14 @@
             NAT you can set external Internet Port of your server here</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Proto</label> <span class="text-muted">Don't forget to change server
             configuration side.</span>
           <input type="text" class="form-control" id="Proto" name="Proto" placeholder="Enter external server protocol"
             value="{{ .Settings.Proto }}">
         </div>
 
-        <div class="form-group" id="auth-mode">
+        <div class="mb-3" id="auth-mode">
           <label>Authentication Mode</label>
           <select name="FuncMode" id="FuncMode" class="form-control">
             <option value="0" {{if eq .Settings.FuncMode 0}}selected{{end}}>Classic Authentication (Certificate and
@@ -60,14 +60,14 @@
           </select>
         </div>
 
-        <div class="form-group" id="tfa-issuer">
+        <div class="mb-3" id="tfa-issuer">
           <label for="name">2FA Issuer String</label>
           <input type="text" class="form-control" id="tfaissuer" name="TFAIssuer" placeholder="MFA%20OpenVPN-UI"
             value="{{if eq .Settings.FuncMode 0}}{{else}}{{ .Settings.TFAIssuer }}{{ end }}">
           <span class="text-muted">2FA Issuer string for Clients QR Code</span>
         </div>
 
-        <div class="form-group" id="a-user-pass">
+        <div class="mb-3" id="a-user-pass">
           <label for="name">AuthUserPass</label>
           <input type="text" class="form-control" id="authuserpass" name="AuthUserPass" placeholder="AuthUserPass"
             value="{{if eq .Settings.FuncMode 0}} {{else}}auth-user-pass{{ end }}">
@@ -75,7 +75,7 @@
             etc)</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Redirect Gateway</label>
           <!-- strong><span style="color:#337ab7" title="&quot;redirect-gateway def1&quot;">!</span></strong --><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it:
@@ -85,7 +85,7 @@
           <span class="text-muted">Used to redirect all Client traffic via OpenVPN Server.</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Resolv-retry</label>
           <!--strong><span style="color:#337ab7" title="&quot;resolv-retry infinite&quot;">!</span></strong--><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it:
@@ -94,21 +94,21 @@
             placeholder="resolv-retry infinite" value="{{ .Settings.ResolveRetry }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">User</label> <span class="text-muted">(Non Windows Only)</span>
           <!--span style="color:#337ab7" title="&quot;nobody&quot;"><strong>!</strong></span -->
           <input type="text" class="form-control" id="OVClientUser" name="OVClientUser" placeholder="nobody"
             value="{{ .Settings.OVClientUser }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Group</label> <span class="text-muted">(Non Windows Only)</span>
           <!--span style="color:#337ab7" title="&quot;nobody&quot;"><strong>!</strong></span -->
           <input type="text" class="form-control" id="OVClientGroup" name="OVClientGroup" placeholder="nogroup"
             value="{{ .Settings.OVClientGroup }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Persist-tun</label>
           <!--strong><span style="color:#337ab7" title="&quot;persist-tun&quot;">!</span></strong--><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it:
@@ -117,7 +117,7 @@
             value="{{ .Settings.PersistTun }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Persist-key</label>
           <!--strong><span style="color:#337ab7" title="&quot;persist-key&quot;">!</span></strong --><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it:
@@ -126,7 +126,7 @@
             value="{{ .Settings.PersistKey }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Remote-cert-tls</label>
           <!--strong><span style="color:#337ab7" title="&quot;remote-cert-tls server&quot;">!</span></strong --><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it:
@@ -135,21 +135,21 @@
             placeholder="remote-cert-tls server" value="{{ .Settings.RemoteCertTLS }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Cipher</label> <span class="text-muted">Don't forget to change server
             configuration side.</span>
           <input type="text" class="form-control" id="Cipher" name="Cipher" placeholder="AES-256-CBC"
             value="{{ .Settings.Cipher }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Auth</label> <span class="text-muted">Don't forget to change server
             configuration side.</span>
           <input type="text" class="form-control" id="Auth" name="Auth" placeholder="SHA512"
             value="{{ .Settings.Auth }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Auth-nocache</label>
           <!--strong><span style="color:#337ab7" title="&quot;auth-nocache&quot;">!</span></strong --><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it:
@@ -158,7 +158,7 @@
             value="{{ .Settings.AuthNoCache }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Tls-client</label>
           <!--strong><span style="color:#337ab7" title="&quot;tls-client&quot;">!</span></strong --><span
             class="text-muted" style="font-size: 80%;"> Comment out this line if you don't need it: "#tls-client"</span>
@@ -166,7 +166,7 @@
             value="{{ .Settings.TlsClient }}">
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Client logs verbose level</label>
           <!--strong><span style="color:#337ab7" title="&quot;3&quot;">!</span></strong -->
           <input type="text" class="form-control" id="Verbose" name="Verbose" placeholder="3"
@@ -174,7 +174,7 @@
           <span class="text-muted">From 0 to 4, where 0 is no logs, 4 - maximum verbose level.</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Custom Client Template Option One</label>
           <input type="text" class="form-control" id="CustomConfOne" name="CustomConfOne"
             placeholder="#Custom Option One" value="{{ .Settings.CustomConfOne }}">
@@ -182,7 +182,7 @@
             option (to disable - comment with #)</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Custom Client Template Option Two</label>
           <input type="text" class="form-control" id="CustomConfTwo" name="CustomConfTwo"
             placeholder="#Custom Option Two" value="{{ .Settings.CustomConfTwo }}">
@@ -190,7 +190,7 @@
             option (to disable - comment with #)</span>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
           <label for="name">Custom Client Template Option Three</label>
           <textarea class="form-control" name="CustomConfThree" id="CustomConfThree" placeholder="#Custom Option Three"
             rows="2">{{ .Settings.CustomConfThree }}</textarea>
@@ -199,13 +199,13 @@
         </div>
 
         <!--  comented out to avoid client/server confusion
-      <div class="form-group">
+      <div class="mb-3">
         <label for="name">Device type</label>
         <input type="text" class="form-control" id="Device" name="Device" placeholder="tun"
           value="{{ .Settings.Device }}">
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="name">Protocol</label>
         <input type="text" class="form-control" id="Proto" name="Proto" placeholder="udp"
           value="{{ .Settings.Proto }}">
@@ -217,8 +217,8 @@
         <button type="submit" style="width: 125px;" class="btn btn-primary"
           onclick="return confirm('Are you sure you want to Save new configuration file?\nCurrent configuration will be overwritten!');">Save
           Config</button> &nbsp; &nbsp;
-        <button type="button" style="width: 125px;" class="btn btn-primary" data-toggle="modal"
-          data-target="#config-view-modal">View config</button>
+        <button type="button" style="width: 125px;" class="btn btn-primary" data-bs-toggle="modal"
+          data-bs-target="#config-view-modal">View config</button>
       </div>
       <!-- /.card-body -->
     </form>
@@ -230,8 +230,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{{ .BeeSettings.OVConfigPath }}/config/client.conf</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- /.card-header -->
@@ -240,10 +239,10 @@
         <form role="server-config" role="form" action="{{urlfor "OVClientConfigController.Edit"}}" method="post">
           <div class="card-body">
 
-            <div class="form-group">
+            <div class="mb-3">
               <!--div class="card-group" id="accordion">
                       <span >
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">
+                        <a data-bs-toggle="collapse" data-bs-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">
                           <i class="fa fa-fw fa-info-circle" style="color: #f39c12; font-size: 15px;"></i> <b style="color: #f39c12;">Please note</b>
                         </a>
                       </span>
@@ -260,8 +259,8 @@
 
             {{ .xsrfdata }}
 
-            <button type="button" class="btn btn-default pull-left" style="width: 135px;"
-              data-dismiss="modal">Close</button> &nbsp; &nbsp;
+            <button type="button" class="btn btn-secondary" style="width: 135px;"
+              data-bs-dismiss="modal">Close</button> &nbsp; &nbsp;
             <!--button type="submit" class="btn btn-primary" style="width: 135px;" onclick="return confirm('Are you sure you want to Save updated configuration file?\nTemplate will not be updated!'); window.location.reload();">Save</button-->
           </div>
           <!-- /.card-body -->
@@ -272,7 +271,7 @@
   </div>
 </div>
 
-<div class="card card-default">
+<div class="card">
   <!-- /.card-body -->
   <!-- /.card-header -->
   <!-- form start -->
@@ -280,7 +279,7 @@
     <form role="form" action="{{urlfor "OVClientConfigController.Post"}}" method="post">
       {{ .xsrfdata }}
       <!--    <div class="card-boddy">
-      <a href="javascript:$.MyAPP.Restart('SIGUSR1')" class="btn btn-warning btn-primary" style="width: 135px;" title="Conditional Restart (SIGUSR1)">Restart Server</a>
+      <a href="javascript:void(MyAPP.Restart('SIGUSR1'))" class="btn btn-warning btn-primary" style="width: 135px;" title="Conditional Restart (SIGUSR1)">Restart Server</a>
       <span style="color:grey;"> &nbsp; OpenVPN Server Conditional Restart will apply new configuration and re-initiate all active clients sessions.</span> 
     </div> -->
       <!-- /.card-body -->
@@ -288,7 +287,6 @@
   </div>
 </div>
 <!-- /.card -->
-{{end}}
 
 <script>
   const funcModeSelect = document.getElementById('FuncMode');
@@ -313,12 +311,13 @@
   funcModeSelect.addEventListener('change', checkFuncMode);
 
   window.addEventListener('load', () => {
-    // Check if "themeEditor" is set in localStorage
+    // AdminLTE 4 keeps the resolved theme on the html data-bs-theme attribute
     checkFuncMode();
-    if (localStorage.getItem("theme") === "dark") {
+    if (document.documentElement.getAttribute("data-bs-theme") === "dark") {
       createEditor("ClientTemplate", "550px", "clouds_midnight", "ovpn", true);
     } else {
       createEditor("ClientTemplate", "550px", "clouds", "ovpn", true);
     }
   });
 </script>
+{{end}}

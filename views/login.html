@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="light">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,20 +10,19 @@
   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
   <!-- Ionicons 2.0.0-->
   <link rel="stylesheet" href="/static/css/ionicons.min.css">
-  <!-- Theme style 3.2.0-->
-  <link rel="stylesheet" href="/static/css/AdminLTE.min.3.2.0.css">
+  <!-- Theme style: AdminLTE 4.10.0 (Bootstrap 5.3.8 CSS входит в эту сборку) -->
+  <link rel="stylesheet" href="/static/css/adminlte.min.4.10.0.css">
   
   <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/static/img/favicon/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/static/img/favicon/favicon-192x192.png">
 </head>
-<body class="hold-transition login-page">
+<body class="login-page">
 <div class="login-box">
   <div class="login-logo">
     <a href="#"><b>OpenVPN</b> UI</a>
   </div>
-  <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg"><small>Sign in to start your session</small></p>
@@ -37,46 +36,37 @@
       <form action='{{urlfor "LoginController.Login"}}' method="post">
         <div class="input-group mb-3">
           <input type="text" class="form-control" name="login" placeholder="Login">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
+          <span class="input-group-text"><i class="fas fa-user"></i></span>
         </div>
 
         <div class="input-group mb-3">
           <input type="password" class="form-control" name="password" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
+          <span class="input-group-text"><i class="fas fa-lock"></i></span>
         </div>
 
         {{ .xsrfdata }}
-        <button type="submit" class="btn btn-primary btn-block">
+        <button type="submit" class="btn btn-primary w-100">
         <img src="/static/img/openvpn-win.svg" alt="Sign In Icon" style="height: 23px; vertical-align: middle; filter: invert(1);"> &nbsp;Sign In</button>
       </form>
       <br>
-      <a href='{{urlfor "LoginController.GoogleLogin"}}' class="btn btn-block btn-danger">
+      <a href='{{urlfor "LoginController.GoogleLogin"}}' class="btn w-100 btn-danger">
         <i class="fab fa-google"></i> &nbsp;Sign in with Google
       </a>
       <p class="login-box-msg"><small><a href="https://github.com/d3vilh/openvpn-ui?tab=readme-ov-file#authentication-with-google-apis-oauth-20" target="_blank">How to Sign In</a> with Google</small></p>
     </div>
-    <!-- /.login-box-body -->
   </div>
 </div>
 <!-- /.login-box -->
 
 <script>
-  // Get a reference to the body element
-  const body = document.body;
-
-  // Check localStorage for the user's theme preference
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    body.classList.add('dark-mode');
-  }
+  // AdminLTE 4 uses Bootstrap 5.3 color mode (data-bs-theme on <html>) instead of
+  // the old body.dark-mode class. Read the preference saved by newer releases;
+  // fall back to the old "theme" key from older releases.
+  (function () {
+    var t = localStorage.getItem('lte-theme');
+    if (!t && localStorage.getItem('theme') === 'dark') t = 'dark';
+    if (t === 'dark') document.documentElement.setAttribute('data-bs-theme', 'dark');
+  })();
 </script>
 </body>
 </html>

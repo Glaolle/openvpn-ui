@@ -1,3 +1,18 @@
+/* AdminLTE 4: brand-image/brand-text only defined inside .sidebar-brand.
+   Restore navbar-brand sizing (was in AL3 .layout-top-nav section). */
+.navbar-brand .brand-image {
+  float: left;
+  height: 33px;
+  margin-right: .2rem;
+  margin-top: -.5rem;
+  max-height: 33px;
+  width: auto;
+}
+.navbar-brand .brand-text {
+  margin-left: .5rem;
+  line-height: 2.2rem;
+}
+
 .info-box-number2{
   font-weight:bold;
   font-size:18px;

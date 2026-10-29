@@ -1,69 +1,68 @@
-$.MyAPP = {};
+// OpenVPN UI helpers.
+// AdminLTE 4 ships no jQuery, so everything here is plain DOM API.
+// Bootstrap 5 components (Modal/Dropdown/Collapse/Tab) are driven by their
+// data-bs-* attributes, and AdminLTE 4 widgets by data-lte-toggle — none of
+// them need to be instantiated from JS here.
 
-$.MyAPP.Disconnect = function (cname){
+const MyAPP = {}
+
+// Fire an API request the way the old $.ajax wrapper did: reload either way.
+MyAPP.call = function (method, url, payload) {
+  fetch(url, {
+    method: method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+    .then(function (response) { return response.json().catch(function () { return null }) })
+    .then(function (data) { console.log(data) })
+    .catch(function () { })
+    .finally(function () { location.reload() })
+}
+
+MyAPP.Disconnect = function (cname) {
   console.log(cname)
-  $.ajax({
-    type: "DELETE",
-    dataType: "json",
-    url: "api/v1/session",
-    data: JSON.stringify({ "cname": cname }),
-    success: function(data) {
-      location.reload();
-      console.log(data);
-    },
-    error: function(a,b,c) {
-      console.log(a,b,c)
-      location.reload();
-    }
-  });
+  MyAPP.call("DELETE", "api/v1/session", { "cname": cname })
 }
 
-$.MyAPP.Restart = function (sname){
+MyAPP.Restart = function (sname) {
   console.log(sname)
-  $.ajax({
-    type: "POST",
-    dataType: "json",
-    url: "api/v1/signal",
-    data: JSON.stringify({ "sname": sname }),
-    success: function(data) {
-      location.reload();
-      console.log(data);
-    },
-    error: function(a,b,c) {
-      console.log(a,b,c)
-      location.reload();
-    }
-  });
+  MyAPP.call("POST", "api/v1/signal", { "sname": sname })
 }
 
-// Copy modal content to clipboard
-// custom.js loads in <head>, so the modal buttons do not exist yet —
-// wait for the DOM before binding the handler.
-$(function () {
-  $('.copy-modal-data-btn').on('click', function () {
-  var $modal = $(this).closest('.modal');
-  var content = '';
-  $modal.find('.copy-details').each(function () {
-    content += $(this).text().replace(/:\s/g, ': ') + '\n';
-  });
-  content = content.replace(/:\s\n/g, ': ');
-  var $tempTextArea = $('<textarea>').val(content).css('position', 'absolute').css('left', '-9999px');
-  $('body').append($tempTextArea);
-  $tempTextArea.select();
-  document.execCommand('copy');
-  $tempTextArea.remove();
-  });
-});
+// Copy modal content to clipboard.
+// custom.js is loaded with `defer`, so it runs after the document is parsed.
+// The async Clipboard API is only exposed in secure contexts, but openvpn-ui is
+// commonly served over plain HTTP on a LAN, so keep the legacy fallback.
+function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).catch(function () { })
+    return
+  }
+  var area = document.createElement("textarea")
+  area.value = text
+  area.style.position = "absolute"
+  area.style.left = "-9999px"
+  document.body.appendChild(area)
+  area.select()
+  document.execCommand("copy")
+  document.body.removeChild(area)
+}
 
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".copy-modal-data-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var modal = button.closest(".modal")
+      if (!modal) return
+      var content = ""
+      modal.querySelectorAll(".copy-details").forEach(function (el) {
+        content += el.textContent.replace(/:\s/g, ": ") + "\n"
+      })
+      content = content.replace(/:\s\n/g, ": ")
+      copyToClipboard(content)
+    })
+  })
+})
 
-//$(function() {
-//  new Clipboard('.button-copy');
-
-  ////$( ".btn-disconnect" ).click(function() {
-  ////  alert( "Handler for .click() called." );
-  ////});
-  ////window.location.reload();
-//})
 
 function createEditor(name, size, theme, mode, readonly) {
   // find the textarea
