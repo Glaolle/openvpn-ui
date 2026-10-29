@@ -121,8 +121,7 @@
             - {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%
           </span>
           <div class="progress progress-xs">
-            <div class="progress-bar bg-primary progress-bar-striped"
-              style="width: {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}%">
+            <div class="progress-bar bg-primary progress-bar-striped" style="--pct: {{percent .sysinfo.Memory.Used .sysinfo.Memory.Total}}; width: calc(var(--pct, 0) * 1%);">
             </div>
           </div>
         </div>
@@ -141,8 +140,7 @@
             - {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%
           </span>
           <div class="progress progress-xs">
-            <div class="progress-bar bg-primary progress-bar-striped"
-              style="width: {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}%">
+            <div class="progress-bar bg-primary progress-bar-striped" style="--pct: {{percent .sysinfo.Swap.Used .sysinfo.Swap.Total}}; width: calc(var(--pct, 0) * 1%);">
             </div>
           </div>
         </div>
